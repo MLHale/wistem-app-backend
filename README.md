@@ -1,2 +1,2 @@
-# Service to integrate with Littlebits
-Basic Django REST API for Interfacing with Littlebits
+# WiSTEM Backend API
+Details go here
