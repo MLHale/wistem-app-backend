@@ -6,5 +6,7 @@ from django.contrib import admin
 from api.models import *
 
 # Register your models here.
-admin.site.register(Event, EventAdmin)
-admin.site.register(ApiKey, ApiKeyAdmin)
+admin.site.register(Award)
+admin.site.register(StemField)
+admin.site.register(AwardPurpose)
+admin.site.register(AreaOfInterest)
