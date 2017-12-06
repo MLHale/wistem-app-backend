@@ -79,8 +79,8 @@ class Award(models.Model):
     award_link = models.URLField(max_length=1000, blank=False)
     sponsor_org = models.CharField(max_length=1000, blank=False)
     stem_field = models.ManyToManyField('StemField')
-    recurring = models.BooleanField()
-    nom_req = models.BooleanField()
+    recurring = models.BooleanField(default=False)
+    nom_req = models.BooleanField(default=False)
     recur_interval = models.CharField(max_length=1000, blank=False)
     open_date = models.DateTimeField()
     nom_deadline = models.DateTimeField()
@@ -110,3 +110,6 @@ class AwardPurpose(models.Model):
 
 class AreaOfInterest(models.Model):
     area = models.CharField(max_length=1000, blank=False)
+
+    def __str__(self):
+        return str(self.area)

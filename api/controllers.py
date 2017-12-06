@@ -19,6 +19,7 @@ from django.shortcuts import *
 from django.db import models
 from django.contrib.auth.models import *
 from api.models import *
+from api.serializers import *
 
 #REST API
 from rest_framework import viewsets, filters, parsers, renderers
