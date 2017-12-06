@@ -39,6 +39,7 @@ from rest_framework.authentication import *
 from api.pagination import *
 import json, datetime, pytz
 from django.core import serializers
+from django.core.exceptions import *
 import requests
 from django.shortcuts import get_object_or_404
 import bleach
@@ -426,6 +427,78 @@ class AreaOfInterestDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
 
+
+class ApplicantTypeList(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser, parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer,)
+
+    def get(self, request):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        appType = ApplicantType.objects.all()
+        json_data = serializers.serialize('json', appType)
+        return HttpResponse(json_data, content_type='json')
+
+    def post(self, request):
+        print('REQUEST DATA')
+        print(str(request.data))
+        appType = bleach.clean(request.data.get('appType'))
+
+        newApplicantType = ApplicantType(
+            appType=appType
+        )
+        try:
+            newApplicantType.clean_fields()
+        except ValidationError as e:
+            print(e)
+            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newApplicantType.save()
+        print('New Applicant Type added: ' + appType)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class ApplicantTypeDetail(APIView):
+    def get(self, request, id=None, format=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        try:
+            applicanttype = ApplicantType.objects.get(pk=id)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = ApplicantTypeSerializer(applicanttype)
+        json_data = JSONRenderer().render(serializer.data)
+        return HttpResponse(json_data, content_type='json')
+
+    def put(self, request, id=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        try:
+            applicanttype = ApplicantType.objects.get(pk=id)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        if request.data.get('appType') != None:
+            applicanttype.appType = bleach.clean(request.data.get('appType'))
+        try:
+            applicanttype.clean_fields()
+        except ValidationError as e:
+            print(e)
+            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+        applicanttype.save()
+        print('Applicatant type updated: ' + applicanttype.appType)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+    def delete(self, request, id=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        ApplicantType.objects.get(pk=id).delete()
+        return Response({'success': True}, status=status.HTTP_200_OK)
 class Register(APIView):
     permission_classes = (AllowAny,)
 
