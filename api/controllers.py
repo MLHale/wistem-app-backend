@@ -327,6 +327,7 @@ class AwardPurposeDetail(APIView):
             awardpurpose = AwardPurpose.objects.get(pk=id)
         except ObjectDoesNotExist as e:
             return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
         if request.data.get('awardpurpose') != None:
             awardpurpose.purpose = bleach.clean(request.data.get('purpose'))
         try:
@@ -344,6 +345,77 @@ class AwardPurposeDetail(APIView):
         print(str(request.data))
 
         AwardPurpose.objects.get(pk=id).delete()
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class AreaOfInterestList(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser, parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer,)
+
+    def get(self, request):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        area = AreaOfInterest.objects.all()
+        json_data = serializers.serialize('json', area)
+        return HttpResponse(json_data, content_type='json')
+
+    def post(self, request):
+        area = bleach.clean(request.data.get('area'))
+
+        newAreaOfInterest = AreaOfInterest(
+            area=area
+        )
+        try:
+            newAreaOfInterest.clean_fields()
+        except ValidationError as e:
+            print(e)
+            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newAreaOfInterest.save()
+        print('New Area of Interest added: ' + area)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class AreaOfInterestDetail(APIView):
+    def get(self, request, id=None, format=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        try:
+            areaofinterest = AreaOfInterest.objects.get(pk=id)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = PageSerializer(areaofinterest)
+        json_data = JSONRenderer().render(serializer.data)
+        return HttpResponse(json_data, content_type='json')
+
+    def put(self, request, id=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        try:
+            areaofinterest = AreaOfInterest.objects.get(pk=id)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        if request.data.get('area') != None:
+            areaofinterest.area = bleach.clean(request.data.get('area'))
+        try:
+            areaofinterest.clean_fields()
+        except ValidationError as e:
+            print(e)
+            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+            areaofinterest.save()
+        print('Area of Interest updated: ' + stemfield.title)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+    def delete(self, request, id=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        AreaOfInterest.objects.get(pk=id).delete()
         return Response({'success': True}, status=status.HTTP_200_OK)
 
 
