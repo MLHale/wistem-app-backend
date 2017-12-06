@@ -96,6 +96,8 @@ class Award(models.Model):
     def __str__(self):
         return str(self.title)
 
+
+
 class StemField(models.Model):
     field = models.CharField(max_length=1000, blank=False)
 

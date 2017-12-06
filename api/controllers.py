@@ -38,7 +38,7 @@ from api.pagination import *
 import json, datetime, pytz
 from django.core import serializers
 import requests
-
+from django.shortcuts import get_object_or_404
 import bleach
 
 
@@ -77,6 +77,7 @@ class AwardList(APIView):
         award_link = bleach.clean(request.data.get('award_link'))
         sponsor_org = bleach.clean(request.data.get('sponsor_org'))
         stem_field = bleach.clean(request.data.get('stem_field'))
+        stem_field_id = StemField.objects.filter(field=stem_field)
         recurring = bleach.clean(request.data.get('recurring'))
         nom_req = bleach.clean(request.data.get('nom_req'))
         recur_interval = bleach.clean(request.data.get('recur_interval'))
@@ -85,20 +86,24 @@ class AwardList(APIView):
         subm_deadline = int(request.data.get('subm_deadline'))
         applicant_type = bleach.clean(request.data.get('applicant_type'))
         award_purpose = bleach.clean(request.data.get('award_purpose'))
+        award_purpose_id = StemField.objects.filter(field=award_purpose)
         additional_info = bleach.clean(request.data.get('additional_info'))
         source = bleach.clean(request.data.get('source'))
         previous_applicants = int(request.data.get('previous_applicants'))
-        created_by = bleach.clean(request.data.get('created_by'))
+        created_by = request.user.id # TODO input validation
+        user = get_object_or_404(User, pk=created_by)
+        profile = Profile.objects.get(user=user)
+        print(profile)
         created_on = int(request.data.get('created_on'))
 
-        print("Creating new Page")
+        print("Creating new Award")
 
         newAward = Award(
             title=title,
             description=description,
             award_link=award_link,
             sponsor_org=sponsor_org,
-            stem_field=stem_field,
+            stem_field=stem_field_id,
             recurring=recurring,
             nom_req=nom_req,
             recur_interval=recur_interval,
@@ -106,11 +111,11 @@ class AwardList(APIView):
             nom_deadline=nom_deadline,
             subm_deadline=subm_deadline,
             applicant_type=applicant_type,
-            award_purpose=award_purpose,
+            award_purpose=award_purpose_id,
             additional_info=additional_info,
             source=source,
             previous_applicants=previous_applicants,
-            created_by=created_by,
+            created_by=profile,
             created_on=created_on
         )
 
@@ -244,7 +249,7 @@ class StemFieldDetail(APIView):
             stemfield = StemField.objects.get(pk=id)
         except ObjectDoesNotExist as e:
             return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = PageSerializer(stemfield)
+        serializer = StemFieldSerializer(stemfield)
         json_data = JSONRenderer().render(serializer.data)
         return HttpResponse(json_data, content_type='json')
 
