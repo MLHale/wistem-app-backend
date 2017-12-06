@@ -322,7 +322,7 @@ class AwardPurposeDetail(APIView):
             awardpurpose = AwardPurpose.objects.get(pk=id)
         except ObjectDoesNotExist as e:
             return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = PageSerializer(awardpurpose)
+        serializer = AwardPurposeSerializer(awardpurpose)
         json_data = JSONRenderer().render(serializer.data)
         return HttpResponse(json_data, content_type='json')
 
@@ -335,7 +335,7 @@ class AwardPurposeDetail(APIView):
         except ObjectDoesNotExist as e:
             return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-        if request.data.get('awardpurpose') != None:
+        if request.data.get('purpose') != None:
             awardpurpose.purpose = bleach.clean(request.data.get('purpose'))
         try:
             awardpurpose.clean_fields()
@@ -344,7 +344,7 @@ class AwardPurposeDetail(APIView):
             return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
 
         awardpurpose.save()
-        print('Award Purpose updated: ' + stemfield.title)
+        print('Award Purpose updated: ' + awardpurpose.purpose)
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
@@ -394,7 +394,7 @@ class AreaOfInterestDetail(APIView):
             areaofinterest = AreaOfInterest.objects.get(pk=id)
         except ObjectDoesNotExist as e:
             return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = PageSerializer(areaofinterest)
+        serializer = AreaOfInterestSerializer(areaofinterest)
         json_data = JSONRenderer().render(serializer.data)
         return HttpResponse(json_data, content_type='json')
 
@@ -414,8 +414,8 @@ class AreaOfInterestDetail(APIView):
             print(e)
             return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
 
-            areaofinterest.save()
-        print('Area of Interest updated: ' + stemfield.title)
+        areaofinterest.save()
+        print('Area of Interest updated: ' + areaofinterest.area)
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
