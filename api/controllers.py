@@ -69,7 +69,6 @@ class AwardList(APIView):
 
         awards = Award.objects.all()
         json_data = serializers.serialize('json', awards)
-        content = {'awards': json_data}
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
@@ -162,7 +161,7 @@ class AwardDetail(APIView):
         if request.data.get('stem_field') != None:
             award.stem_field = bleach.clean(request.data.get('stem_field'))
         if request.data.get('recurring') != None:
-            award.recurring= bleach.clean(request.data.get('recurring'))
+            award.recurring = bleach.clean(request.data.get('recurring'))
         if request.data.get('nom_req') != None:
             award.nom_req = bleach.clean(request.data.get('nom_req'))
         if request.data.get('recur_interval') != None:
@@ -188,7 +187,6 @@ class AwardDetail(APIView):
         if request.data.get('created_on') != None:
             award.created_on = int(request.data.get('created_on'))
 
-
         try:
             award.clean_fields()
         except ValidationError as e:
@@ -204,6 +202,148 @@ class AwardDetail(APIView):
         print(str(request.data))
 
         Award.objects.get(pk=id).delete()
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class StemFieldList(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser, parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer,)
+
+    def get(self, request):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        field = StemField.objects.all()
+        json_data = serializers.serialize('json', field)
+        return HttpResponse(json_data, content_type='json')
+
+    def post(self, request):
+        field = bleach.clean(request.data.get('field'))
+
+        newStemField = StemField(
+            field=field
+        )
+        try:
+            newStemField.clean_fields()
+        except ValidationError as e:
+            print(e)
+            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newStemField.save()
+        print('New Stem Field added: ' + field)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class StemFieldDetail(APIView):
+    def get(self, request, id=None, format=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        try:
+            stemfield = StemField.objects.get(pk=id)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = PageSerializer(stemfield)
+        json_data = JSONRenderer().render(serializer.data)
+        return HttpResponse(json_data, content_type='json')
+
+    def put(self, request, id=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        try:
+            stemfield = StemField.objects.get(pk=id)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        if request.data.get('field') != None:
+            stemfield.field = bleach.clean(request.data.get('field'))
+        try:
+            stemfield.clean_fields()
+        except ValidationError as e:
+            print(e)
+            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+        stemfield.save()
+        print('Stem Field updated: ' + stemfield.title)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+    def delete(self, request, id=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        StemField.objects.get(pk=id).delete()
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class AwardPurposeList(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser, parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer,)
+
+    def get(self, request):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        purpose = AwardPurpose.objects.all()
+        json_data = serializers.serialize('json', purpose)
+        return HttpResponse(json_data, content_type='json')
+
+    def post(self, request):
+        purpose = bleach.clean(request.data.get('purpose'))
+
+        newAwardPurpose = AwardPurpose(
+            purpose=purpose
+        )
+        try:
+            newAwardPurpose.clean_fields()
+        except ValidationError as e:
+            print(e)
+            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+        newAwardPurpose.save()
+        print('New Award Purpose added: ' + purpose)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+
+class AwardPurposeDetail(APIView):
+    def get(self, request, id=None, format=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        try:
+            awardpurpose = AwardPurpose.objects.get(pk=id)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = PageSerializer(awardpurpose)
+        json_data = JSONRenderer().render(serializer.data)
+        return HttpResponse(json_data, content_type='json')
+
+    def put(self, request, id=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        try:
+            awardpurpose = AwardPurpose.objects.get(pk=id)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        if request.data.get('awardpurpose') != None:
+            awardpurpose.purpose = bleach.clean(request.data.get('purpose'))
+        try:
+            awardpurpose.clean_fields()
+        except ValidationError as e:
+            print(e)
+            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+
+        awardpurpose.save()
+        print('Award Purpose updated: ' + stemfield.title)
+        return Response({'success': True}, status=status.HTTP_200_OK)
+
+    def delete(self, request, id=None):
+        print('REQUEST DATA')
+        print(str(request.data))
+
+        AwardPurpose.objects.get(pk=id).delete()
         return Response({'success': True}, status=status.HTTP_200_OK)
 
 
