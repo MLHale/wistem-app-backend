@@ -10,6 +10,9 @@ class AwardPurposeSerializer(serializers.Serializer):
 class AreaOfInterestSerializer(serializers.Serializer):
     area = serializers.CharField(max_length=1000, allow_blank=False)
 
+class ApplicantTypeSerializer(serializers.Serializer):
+    appType = serializers.CharField(max_length=1000, allow_blank=False)
+
 class UserSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150, allow_blank=False)
     first_name = serializers.CharField(max_length=30, allow_blank=True)
@@ -38,28 +41,6 @@ class ProfileSerializer(serializers.Serializer):
     areas_of_interest = AreaOfInterestSerializer(many=True)
 
 class AwardSerializerAdmin(serializers.Serializer):
-    # Applicant Type Choices
-    STAFF = 'staff'
-    PROF_FAC = 'faculty_professor'
-    TENURED_FAC = 'tenured_faculty'
-    NON_TENURED_FAC = 'non_tenured_faculty'
-    PHD = 'phd'
-    GRAD_FAC = 'graduate_faculty'
-    GRAD_STUD = 'graduate_student'
-    UGRAD_STUD = 'undergraduate_student'
-    TYPE_OTHER = 'other'
-    APPLICANT_TYPE_CHOICES = (
-        (STAFF, 'Staff'),
-        (PROF_FAC, 'Faculty - Professor'),
-        (TENURED_FAC, 'Faculty - Tenured'),
-        (NON_TENURED_FAC, 'Faculty - Non-Tenured'),
-        (GRAD_FAC, 'Faculty - Graduate'),
-        (PHD, 'PhD Required'),
-        (GRAD_STUD, 'Student - Graduate'),
-        (UGRAD_STUD, 'Student - Undergraduate'),
-        (TYPE_OTHER, 'Other')
-    )
-
     # Award Source choices
     FED = 'federal'
     LOCAL = 'local'
@@ -87,7 +68,7 @@ class AwardSerializerAdmin(serializers.Serializer):
     open_date = serializers.DateTimeField()
     nom_deadline = serializers.DateTimeField()
     subm_deadline = serializers.DateTimeField()
-    applicant_type = serializers.ChoiceField(choices=APPLICANT_TYPE_CHOICES)
+    applicant_type = ApplicantTypeSerializer(many=True)
     award_purpose = AwardPurposeSerializer(many=True)
     additional_info = serializers.CharField(allow_blank=True)
     source = serializers.ChoiceField(choices=AWARD_SOURCE_CHOICES)
