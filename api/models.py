@@ -36,29 +36,7 @@ class Profile(models.Model):
         return str(self.user.username)
 
 class Award(models.Model):
-    # Applicant Type Choices
-    STAFF = 'staff'
-    PROF_FAC = 'faculty_professor'
-    TENURED_FAC = 'tenured_faculty'
-    NON_TENURED_FAC = 'non_tenured_faculty'
-    PHD = 'phd'
-    GRAD_FAC = 'graduate_faculty'
-    GRAD_STUD = 'graduate_student'
-    UGRAD_STUD = 'undergraduate_student'
-    TYPE_OTHER = 'other'
-    APPLICANT_TYPE_CHOICES = (
-        (STAFF, 'Staff'),
-        (PROF_FAC, 'Faculty - Professor'),
-        (TENURED_FAC, 'Faculty - Tenured'),
-        (NON_TENURED_FAC, 'Faculty - Non-Tenured'),
-        (GRAD_FAC, 'Faculty - Graduate'),
-        (PHD, 'PhD Required'),
-        (GRAD_STUD, 'Student - Graduate'),
-        (UGRAD_STUD, 'Student - Undergraduate'),
-        (TYPE_OTHER, 'Other')
-    )
-
-    # Award Source choices
+        # Award Source choices
     FED = 'federal'
     LOCAL = 'local'
     STATE = 'state'
@@ -79,13 +57,13 @@ class Award(models.Model):
     award_link = models.URLField(max_length=1000, blank=False)
     sponsor_org = models.CharField(max_length=1000, blank=False)
     stem_field = models.ManyToManyField('StemField')
-    recurring = models.BooleanField()
-    nom_req = models.BooleanField()
+    recurring = models.BooleanField(default=False)
+    nom_req = models.BooleanField(default=False)
     recur_interval = models.CharField(max_length=1000, blank=False)
     open_date = models.DateTimeField()
     nom_deadline = models.DateTimeField()
     subm_deadline = models.DateTimeField()
-    applicant_type = models.CharField(max_length=30, choices=APPLICANT_TYPE_CHOICES, default=TYPE_OTHER)
+    applicant_type = models.ManyToManyField('ApplicantType')
     award_purpose = models.ManyToManyField('AwardPurpose')
     additional_info = models.TextField(blank=True)
     source = models.CharField(max_length=30, choices=AWARD_SOURCE_CHOICES, default=SOURCE_OTHER)
@@ -95,6 +73,12 @@ class Award(models.Model):
 
     def __str__(self):
         return str(self.title)
+
+class ApplicantType(models.Model):
+    appType = models.CharField(max_length=1000, blank=False)
+
+    def __str__(self):
+        return str(self.appType)
 
 class StemField(models.Model):
     field = models.CharField(max_length=1000, blank=False)
@@ -110,3 +94,6 @@ class AwardPurpose(models.Model):
 
 class AreaOfInterest(models.Model):
     area = models.CharField(max_length=1000, blank=False)
+
+    def __str__(self):
+        return str(self.area)
