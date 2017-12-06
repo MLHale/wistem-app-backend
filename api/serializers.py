@@ -1,6 +1,21 @@
 from rest_framework import serializers
 from api.models import *
 
+class StemFieldSerializer(serializers.Serializer):
+    field = serializers.CharField(max_length=1000, allow_blank=False)
+
+class AwardPurposeSerializer(serializers.Serializer):
+    purpose = serializers.CharField(max_length=1000, allow_blank=False)
+
+class AreaOfInterestSerializer(serializers.Serializer):
+    area = serializers.CharField(max_length=1000, allow_blank=False)
+
+class UserSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150, allow_blank=False)
+    first_name = serializers.CharField(max_length=30, allow_blank=True)
+    last_name = serializers.CharField(max_length=30, allow_blank=True)
+    email = serializers.EmailField(allow_blank=True)
+
 class ProfileSerializer(serializers.Serializer):
     UNL = 'unl'
     UNO = 'uno'
@@ -134,12 +149,3 @@ class AwardSerializer(serializers.Serializer):
     award_purpose = AwardPurposeSerializer(many=True)
     additional_info = serializers.CharField(allow_blank=True)
     source = serializers.ChoiceField(choices=AWARD_SOURCE_CHOICES)
-
-class StemFieldSerializer(serializers.Serializer):
-    field = serializers.CharField(max_length=1000, allow_blank=False)
-
-class AwardPurposeSerializer(serializers.Serializer):
-    purpose = serializers.CharField(max_length=1000, allow_blank=False)
-
-class AreaOfInterestSerializer(serializers.Serializer):
-    area = serializers.CharField(max_length=1000, allow_blank=False)
