@@ -49,13 +49,6 @@ def home(request):
    return render_to_response('ember/index.html',
                {}, RequestContext(request))
 
-def xss_example(request):
-  """
-  Send requests to xss-example/ to the insecure client app
-  """
-  return render_to_response('dumb-test-app/index.html',
-              {}, RequestContext(request))
-
 class Register(APIView):
     permission_classes = (AllowAny,)
 
@@ -119,6 +112,43 @@ class Session(APIView):
         # Logout
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class Search(APIView):
+    permission_classes = (AllowAny,)
+
+    def get(self, request, *args, **kwargs):
+
+        awards = Award.objects.all()
+        #These are the fields we want to allow searches on/by.
+        #Dates are duplicated an a 'start' or 'end' is appended so we can search in a date range.
+        valid_fields=['title', 'description', 'award_link','sponsor_org','stem_field','recurring', 'nom_req',
+                      'recur_interval', 'open_date_start', 'open_date_end', 'nom_deadline_start', 'nom_deadline_end',
+                      'subm_deadline_start', 'subm_deadline_end', 'applicant_type', 'award_purpose','additional_info',
+                      'source',  'previous_applicants' ,'created_by', 'created_on_start',
+                      'created_on_end' ]
+
+        other_models=['stem_field', 'applicant_type', 'award_purpose' ]
+
+        for query_param in request.query_params:
+            #Drop any query params that we do not want to allow searches by. We can simply drop them like below
+            if query_param not in valid_fields:
+                continue
+
+            #dates end with 'start' or 'end'. The filtering in these is a bit different then
+            if ('start' in query_param) or ('end' in query_param):
+                print ('Logic to filter by dates goes here')
+
+            elif query_param in other_models:
+                print ('Logic to filter by other models goes here')
+            else:
+                awards.objects.filter(query_param=request.query_params[query_param])
+            print request.query_params[query_param]
+
+
+        return HttpResponse('Placeholder')
+
+
+
 
 class Events(APIView):
     permission_classes = (AllowAny,)
