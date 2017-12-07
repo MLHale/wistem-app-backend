@@ -93,7 +93,7 @@ class AwardList(APIView):
         additional_info = bleach.clean(request.data.get('additional_info'))
         source = bleach.clean(request.data.get('source'))
         previous_applicants = int(request.data.get('previous_applicants'))
-        created_by = request.user.id # TODO input validation
+        created_by = request.user.id  # TODO input validation
         user = get_object_or_404(User, pk=created_by)
         profile = Profile.objects.get(user=user)
         print(profile)
@@ -146,13 +146,12 @@ class AwardDetail(APIView):
             award = Award.objects.get(pk=id)
         except ObjectDoesNotExist as e:
             return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = PageSerializer(award)
+        serializer = AwardSerializer(award)
         json_data = JSONRenderer().render(serializer.data)
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-        print('REQUEST DATA')
-        print(str(request.data))
+
 
         try:
             award = Award.objects.get(pk=id)
@@ -427,7 +426,6 @@ class AreaOfInterestDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
 
-
 class ApplicantTypeList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
@@ -499,6 +497,8 @@ class ApplicantTypeDetail(APIView):
 
         ApplicantType.objects.get(pk=id).delete()
         return Response({'success': True}, status=status.HTTP_200_OK)
+
+
 class Register(APIView):
     permission_classes = (AllowAny,)
 
