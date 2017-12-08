@@ -82,28 +82,31 @@ class AwardList(APIView):
         award_link = bleach.clean(request.data.get('award_link'))
         sponsor_org = bleach.clean(request.data.get('sponsor_org'))
         stem_field = bleach.clean(request.data.get('stem_field'))
-        stem_field_id = StemField.objects.filter(field=stem_field)
-        print("stem field " + str(stem_field_id))
-        recurring = bleach.clean(request.data.get('recurring'))
-        nom_req = bleach.clean(request.data.get('nom_req'))
+        print("stem field request data",stem_field)
+        stem_field_object = StemField.objects.get_or_create(field=stem_field)
+        print("stem field " + str(stem_field_object))
+        recurring = bool(bleach.clean(request.data.get('recurring')))
+        nom_req = bool(bleach.clean(request.data.get('nom_req')))
         recur_interval = bleach.clean(request.data.get('recur_interval'))
-        open_date = int(request.data.get('open_date'))
-        nom_deadline = int(request.data.get('nom_deadline'))
-        subm_deadline = int(request.data.get('subm_deadline'))
+        open_date = datetime.datetime.fromtimestamp(request.data.get('open_date'),pytz.utc)
+        print("opendate",open_date)
+        nom_deadline = datetime.datetime.fromtimestamp(request.data.get('nom_deadline'),pytz.utc)
+        subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         applicant_type = bleach.clean(request.data.get('applicant_type'))
+        applicant_type_object = ApplicantType.objects.get_or_create(appType=applicant_type)
         award_purpose = bleach.clean(request.data.get('award_purpose'))
-        award_purpose_id = StemField.objects.filter(field=award_purpose)
-        print("award purpose = " + str(award_purpose_id))
+        award_purpose_object = AwardPurpose.objects.get_or_create(purpose=award_purpose)
+        print("award purpose = " + str(award_purpose_object))
         additional_info = bleach.clean(request.data.get('additional_info'))
         source = bleach.clean(request.data.get('source'))
         previous_applicants = int(request.data.get('previous_applicants'))
         created_by = "1"#request.user.id  # TODO input validation - make this take user from request - cant get postman to work
-        print("created by: " + str(created_by))
+        print("created by:", created_by)
         user = get_object_or_404(User, pk=created_by)
         print("user=" + str(user))
         profile = Profile.objects.get(user=user)
         print(profile)
-        created_on = int(request.data.get('created_on'))
+        # created_on = int(request.data.get('created_on'))
 
         print("Creating new Award")
 
@@ -112,22 +115,22 @@ class AwardList(APIView):
             description=description,
             award_link=award_link,
             sponsor_org=sponsor_org,
-            #stem_field=stem_field_id,
+            # stem_field=stem_field_object,
             recurring=recurring,
             nom_req=nom_req,
             recur_interval=recur_interval,
             open_date=open_date,
             nom_deadline=nom_deadline,
             subm_deadline=subm_deadline,
-            applicant_type=applicant_type,
-            award_purpose=award_purpose_id,
+            # applicant_type=applicant_type_object,
+            # award_purpose=award_purpose_object,
             additional_info=additional_info,
             source=source,
             previous_applicants=previous_applicants,
             created_by=profile,
-            created_on=created_on
+            # created_on=created_on
         )
-        Award.stem_field.add(stem_field_id)
+        # Award.stem_field.add(stem_field_object)
         try:
             newAward.clean_fields()
         except ValidationError as e:
