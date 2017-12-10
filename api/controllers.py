@@ -166,7 +166,7 @@ class AwardDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         try:
             award = Award.objects.get(pk=id)
@@ -220,7 +220,7 @@ class AwardDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
@@ -275,7 +275,7 @@ class StemFieldDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
@@ -297,7 +297,7 @@ class StemFieldDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
@@ -352,7 +352,7 @@ class AwardPurposeDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
@@ -375,7 +375,7 @@ class AwardPurposeDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
@@ -430,7 +430,7 @@ class AreaOfInterestDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
@@ -452,7 +452,7 @@ class AreaOfInterestDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
@@ -509,7 +509,7 @@ class ApplicantTypeDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
@@ -531,7 +531,7 @@ class ApplicantTypeDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
-        if not request.user.is_superuser or not request.user.is_authenticated:
+        if not request.user.is_superuser:
             raise Http404
         print('REQUEST DATA')
         print(str(request.data))
