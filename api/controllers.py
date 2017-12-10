@@ -121,22 +121,19 @@ class AwardList(APIView):
             description=description,
             award_link=award_link,
             sponsor_org=sponsor_org,
-            #stem_field=stem_field_object,
             recurring=recurring,
             nom_req=nom_req,
             recur_interval=recur_interval,
             open_date=open_date,
             nom_deadline=nom_deadline,
             subm_deadline=subm_deadline,
-            #applicant_type=applicant_type_object,
-            #award_purpose=award_purpose_object,
             additional_info=additional_info,
             source=source,
             previous_applicants=previous_applicants,
-            created_by=profile
+            created_by=profile,
+            created_on= datetime.datetime.now()
 
         )
-
         try:
             newAward.clean_fields()
         except ValidationError as e:
@@ -144,9 +141,9 @@ class AwardList(APIView):
             return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
 
         newAward.save()
-        newAward.stem_field.add(stem_field_object)
-        newAward.applicant.add(applicant_type_object)
-        newAward.award_purpose.add(award_purpose_object)
+        newAward.stem_field.add(StemField.objects.get(field=request.data.get('stem_field')))
+        newAward.applicant_type.add(ApplicantType.objects.get(appType=request.data.get('applicant_type')))
+        newAward.award_purpose.add(AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
 
         print('New Page added: ' + title)
         return Response({'success': True}, status=status.HTTP_200_OK)
