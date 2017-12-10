@@ -559,29 +559,33 @@ class Register(APIView):
     def post(self, request, *args, **kwargs):
         # Login
         username = request.POST.get('username')  # you need to apply validators to these
-        print
-        username
+        #print username
         password = request.POST.get('password')  # you need to apply validators to these
         email = request.POST.get('email')  # you need to apply validators to these
-        gender = request.POST.get('gender')  # you need to apply validators to these
-        age = request.POST.get('age')  # you need to apply validators to these
-        educationlevel = request.POST.get('educationlevel')  # you need to apply validators to these
-        city = request.POST.get('city')  # you need to apply validators to these
-        state = request.POST.get('state')  # you need to apply validators to these
+        #gender = request.POST.get('gender')  # you need to apply validators to these
+        #age = request.POST.get('age')  # you need to apply validators to these
+        #educationlevel = request.POST.get('educationlevel')  # you need to apply validators to these
+        #city = request.POST.get('city')  # you need to apply validators to these
+        #state = request.POST.get('state')  # you need to apply validators to these
+        org = request.POST.get('org')  # you need to apply validators to these
+        college = request.POST.get('college')  # you need to apply validators to these
+        dept = request.POST.get('dept')  # you need to apply validators to these
+        other_details = request.POST.get('other_details')  # you need to apply validators to these
+        areas_of_interest = request.POST.get('areas_of_interest')
+        areas_of_interest = AreaOfInterest.objects.get_or_create(area=areas_of_interest)
 
-        print
-        request.POST.get('username')
+        print request.POST.get('username')
         if User.objects.filter(username=username).exists():
             return Response({'username': 'Username is taken.', 'status': 'error'})
         elif User.objects.filter(email=email).exists():
             return Response({'email': 'Email is taken.', 'status': 'error'})
-
         # especially before you pass them in here
         newuser = User.objects.create_user(email=email, username=username, password=password)
-        newprofile = Profile(user=newuser, gender=gender, age=age, educationlevel=educationlevel, city=city,
-                             state=state)
-        newprofile.save()
 
+        newprofile = Profile(user=newuser, org=org, college=college, dept=dept, other_details=other_details)
+                           #  areas_of_interest=areas_of_interest)
+        newprofile.save()
+        newprofile.areas_of_interest.add(AreaOfInterest.objects.get(area=request.POST.get('areas_of_interest')))
         return Response({'status': 'success', 'userid': newuser.id, 'profile': newprofile.id})
 
 
