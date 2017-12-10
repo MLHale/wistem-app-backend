@@ -67,6 +67,10 @@ class AwardList(APIView):
     renderer_classes = (renderers.JSONRenderer,)
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            print(request.user)
+        if request.user.is_superuser:
+            print(request.user.groups)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -75,6 +79,8 @@ class AwardList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
         title = bleach.clean(request.data.get('title'))
@@ -160,8 +166,8 @@ class AwardDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-
-
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         try:
             award = Award.objects.get(pk=id)
         except ObjectDoesNotExist as e:
@@ -214,6 +220,8 @@ class AwardDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -235,6 +243,8 @@ class StemFieldList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         field = bleach.clean(request.data.get('field'))
 
         newStemField = StemField(
@@ -265,6 +275,8 @@ class StemFieldDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -285,6 +297,8 @@ class StemFieldDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -306,6 +320,8 @@ class AwardPurposeList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         purpose = bleach.clean(request.data.get('purpose'))
 
         newAwardPurpose = AwardPurpose(
@@ -336,6 +352,8 @@ class AwardPurposeDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -357,6 +375,8 @@ class AwardPurposeDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -378,6 +398,8 @@ class AreaOfInterestList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         area = bleach.clean(request.data.get('area'))
 
         newAreaOfInterest = AreaOfInterest(
@@ -408,6 +430,8 @@ class AreaOfInterestDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -428,6 +452,8 @@ class AreaOfInterestDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -449,6 +475,8 @@ class ApplicantTypeList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
         appType = bleach.clean(request.data.get('appType'))
@@ -481,6 +509,8 @@ class ApplicantTypeDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -501,6 +531,8 @@ class ApplicantTypeDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            raise Http404
         print('REQUEST DATA')
         print(str(request.data))
 
