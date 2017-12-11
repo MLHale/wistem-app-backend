@@ -52,15 +52,6 @@ def home(request):
     return render_to_response('ember/index.html',
                               {}, RequestContext(request))
 
-
-def xss_example(request):
-    """
-    Send requests to xss-example/ to the insecure client app
-    """
-    return render_to_response('dumb-test-app/index.html',
-                              {}, RequestContext(request))
-
-
 class AwardList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
@@ -79,8 +70,8 @@ class AwardList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
-        if not request.user.is_superuser or not request.user.is_authenticated:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
+       # if not request.user.is_superuser or not request.user.is_authenticated:
+       #     return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
         title = bleach.clean(request.data.get('title'))
@@ -147,7 +138,6 @@ class AwardList(APIView):
 
         print('New Page added: ' + title)
         return Response({'success': True}, status=status.HTTP_200_OK)
-
 
 class AwardDetail(APIView):
     permission_classes = (AllowAny,)
@@ -243,7 +233,6 @@ class AwardDetail(APIView):
         Award.objects.get(pk=id).delete()
         return Response({'success': True}, status=status.HTTP_200_OK)
 
-
 class StemFieldList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
@@ -274,7 +263,6 @@ class StemFieldList(APIView):
         newStemField.save()
         print('New Stem Field added: ' + field)
         return Response({'success': True}, status=status.HTTP_200_OK)
-
 
 class StemFieldDetail(APIView):
     def get(self, request, id=None, format=None):
@@ -320,7 +308,6 @@ class StemFieldDetail(APIView):
         StemField.objects.get(pk=id).delete()
         return Response({'success': True}, status=status.HTTP_200_OK)
 
-
 class AwardPurposeList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
@@ -351,7 +338,6 @@ class AwardPurposeList(APIView):
         newAwardPurpose.save()
         print('New Award Purpose added: ' + purpose)
         return Response({'success': True}, status=status.HTTP_200_OK)
-
 
 class AwardPurposeDetail(APIView):
     def get(self, request, id=None, format=None):
@@ -398,7 +384,6 @@ class AwardPurposeDetail(APIView):
         AwardPurpose.objects.get(pk=id).delete()
         return Response({'success': True}, status=status.HTTP_200_OK)
 
-
 class AreaOfInterestList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
@@ -429,7 +414,6 @@ class AreaOfInterestList(APIView):
         newAreaOfInterest.save()
         print('New Area of Interest added: ' + area)
         return Response({'success': True}, status=status.HTTP_200_OK)
-
 
 class AreaOfInterestDetail(APIView):
     def get(self, request, id=None, format=None):
@@ -475,7 +459,6 @@ class AreaOfInterestDetail(APIView):
         AreaOfInterest.objects.get(pk=id).delete()
         return Response({'success': True}, status=status.HTTP_200_OK)
 
-
 class ApplicantTypeList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
@@ -508,7 +491,6 @@ class ApplicantTypeList(APIView):
         newApplicantType.save()
         print('New Applicant Type added: ' + appType)
         return Response({'success': True}, status=status.HTTP_200_OK)
-
 
 class ApplicantTypeDetail(APIView):
     def get(self, request, id=None, format=None):
@@ -554,7 +536,6 @@ class ApplicantTypeDetail(APIView):
         ApplicantType.objects.get(pk=id).delete()
         return Response({'success': True}, status=status.HTTP_200_OK)
 
-
 class Register(APIView):
     permission_classes = (AllowAny,)
 
@@ -589,7 +570,6 @@ class Register(APIView):
         newprofile.save()
         newprofile.areas_of_interest.add(AreaOfInterest.objects.get(area=request.POST.get('areas_of_interest')))
         return Response({'status': 'success', 'userid': newuser.id, 'profile': newprofile.id})
-
 
 class Session(APIView):
     permission_classes = (AllowAny,)
@@ -627,15 +607,3 @@ class Session(APIView):
         # Logout
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
-
-
-class Events(APIView):
-    permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
-
-
-class ActivateIFTTT(APIView):
-    permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
