@@ -79,8 +79,8 @@ class AwardList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
-        #if not request.user.is_superuser or not request.user.is_authenticated:
-        #    return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
         title = bleach.clean(request.data.get('title'))
@@ -181,10 +181,6 @@ class AwardDetail(APIView):
             award.award_link = bleach.clean(request.data.get('award_link'))
         if request.data.get('sponsor_org') != None:
             award.sponsor_org = bleach.clean(request.data.get('sponsor_org'))
-        #if request.data.get('stem_field') != None:
-        #    stem_field = bleach.clean(request.data.get('stem_field'))
-        #    print("stem field request data", stem_field)
-        #    award.stem_field = StemField.objects.get_or_create(field=stem_field)
         if request.data.get('recurring') != None:
             award.recurring = bool(bleach.clean(request.data.get('recurring')))
         if request.data.get('nom_req') != None:
@@ -199,7 +195,7 @@ class AwardDetail(APIView):
             award.subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         if request.data.get('applicant_type') != None:
             applicant_type = bleach.clean(request.data.get('applicant_type'))
-            award.ApplicantType.objects.get_or_create(appType=applicant_type)
+            award.applicant_type.objects.get_or_create(appType=applicant_type)
         if request.data.get('award_purpose') != None:
             award_purpose = bleach.clean(request.data.get('award_purpose'))
             award.AwardPurpose.objects.get_or_create(purpose=award_purpose)
