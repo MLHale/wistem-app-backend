@@ -181,9 +181,9 @@ class AwardDetail(APIView):
             award.award_link = bleach.clean(request.data.get('award_link'))
         if request.data.get('stem_field') != None:
             stem_field = bleach.clean(request.data.get('stem_field'))
-            print("stem field:", stem_field)
             stem_field_object = StemField.objects.get_or_create(field=stem_field)
-            #award.stem_field = stem_field_object
+            award.stem_field.clear()
+            award.stem_field.add(StemField.objects.get(field=request.data.get('stem_field')))
         if request.data.get('sponsor_org') != None:
             award.sponsor_org = bleach.clean(request.data.get('sponsor_org'))
         if request.data.get('recurring') != None:
@@ -200,10 +200,14 @@ class AwardDetail(APIView):
             award.subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         if request.data.get('applicant_type') != None:
             applicant_type = bleach.clean(request.data.get('applicant_type'))
-            #award.applicant_type.objects.get_or_create(appType=applicant_type)
+            applicant_type = ApplicantType.objects.get_or_create(appType=applicant_type)
+            award.applicant_type.clear()
+            award.applicant_type.add(ApplicantType.objects.get(appType=request.data.get('applicant_type')))
         if request.data.get('award_purpose') != None:
             award_purpose = bleach.clean(request.data.get('award_purpose'))
-            #award.AwardPurpose.objects.get_or_create(purpose=award_purpose)
+            award_purpose = AwardPurpose.objects.get_or_create(purpose=award_purpose)
+            award.award_purpose.clear()
+            award.award_purpose.add(AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
         if request.data.get('additional_info') != None:
             award.additional_info = bleach.clean(request.data.get('additional_info'))
         if request.data.get('source') != None:
