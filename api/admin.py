@@ -10,4 +10,6 @@ admin.site.register(Award)
 admin.site.register(StemField)
 admin.site.register(AwardPurpose)
 admin.site.register(AreaOfInterest)
+admin.site.register(Profile)
 admin.site.register(ApplicantType)
+
