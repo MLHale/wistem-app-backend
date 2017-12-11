@@ -116,37 +116,48 @@ class Session(APIView):
 class Search(APIView):
     permission_classes = (AllowAny,)
 
-    def get(self, request, *args, **kwargs):
-
-        awards = Award.objects.all()
-        #These are the fields we want to allow searches on/by.
-        #Dates are duplicated an a 'start' or 'end' is appended so we can search in a date range.
-        valid_fields=['title', 'description', 'award_link','sponsor_org','stem_field','recurring', 'nom_req',
-                      'recur_interval', 'open_date_start', 'open_date_end', 'nom_deadline_start', 'nom_deadline_end',
-                      'subm_deadline_start', 'subm_deadline_end', 'applicant_type', 'award_purpose','additional_info',
-                      'source',  'previous_applicants' ,'created_by', 'created_on_start',
-                      'created_on_end' ]
-
-        other_models=['stem_field', 'applicant_type', 'award_purpose' ]
-
+    def get_valid_fields(self, request, valid_fields):
+        query_dict = {}
         for query_param in request.query_params:
-            #Drop any query params that we do not want to allow searches by. We can simply drop them like below
-            if query_param not in valid_fields:
-                continue
+            if query_param in valid_fields:
+                query_dict[query_param] = request.query_params[query_param]
+        return query_dict
 
-            #dates end with 'start' or 'end'. The filtering in these is a bit different then
-            if ('start' in query_param) or ('end' in query_param):
-                print ('Logic to filter by dates goes here')
+    def build_date_search(self,date_params,search_dict):
+        for date_param in date_params:
+            if 'start' in date_param:
+                start_date = datetime.datetime.fromtimestamp(float(date_params[date_param]), pytz.utc)
+                search_dict[date_param.split('start')[0] + '_range'] = (start_date,datetime.datetime.max)
+            if 'end' in date_param:
+                end_date = datetime.datetime.fromtimestamp(float(date_params[date_param]), pytz.utc)
+                search_dict[date_param.split('end')[0] + '_range'] = (datetime.datetime.min, end_date)
+        return search_dict
 
-            elif query_param in other_models:
-                print ('Logic to filter by other models goes here')
-            else:
-                awards.objects.filter(query_param=request.query_params[query_param])
-            print request.query_params[query_param]
+    def build_model_search(self, model_params,search_dict):
+        for model_param in model_params:
+            if model_param == 'stem_field':
+                search_dict[model_param + '__field'] = model_params[model_param]
+            elif model_param == 'applicant_type':
+                search_dict[model_param + '__appType'] = model_params[model_param]
+            elif model_param == 'award_purpose':
+                search_dict[model_param + '__purpose'] = model_params[model_param]
+        return search_dict
+
+    def get(self, request, *args, **kwargs):
+        matches = Award.objects.all()
+        model_fields = ['stem_field', 'applicant_type', 'award_purpose']
+        normal_fields =['title', 'description', 'award_link','sponsor_org','recurring', 'nom_req',
+                        'recur_interval', 'additional_info', 'source', 'previous_applicants' ,'created_by' ]
+        date_fields = ['open_date_start', 'open_date_end', 'nom_deadline_start', 'nom_deadline_end', 'subm_deadline_start',
+                      'subm_deadline_end', 'created_on_start', 'created_on_end' ]
+
+        search_dict = self.get_valid_fields(request, normal_fields)
+        search_dict = self.build_date_search(self.get_valid_fields(request, date_fields),search_dict)
+        search_dict = self.build_model_search(self.get_valid_fields(request, model_fields),search_dict)
+        matches = Award.objects.filter(**search_dict)
 
 
         return HttpResponse('Placeholder')
-
 
 
 
