@@ -167,8 +167,8 @@ class AwardDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-        #if not request.user.is_superuser:
-        #    return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         try:
             award = Award.objects.get(pk=id)
         except ObjectDoesNotExist as e:
