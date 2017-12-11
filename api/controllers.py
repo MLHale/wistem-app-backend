@@ -141,9 +141,9 @@ class AwardList(APIView):
             return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
 
         newAward.save()
-        newAward.stem_field.add(StemField.objects.get(field=request.data.get('stem_field')))
-        newAward.applicant_type.add(ApplicantType.objects.get(appType=request.data.get('applicant_type')))
-        newAward.award_purpose.add(AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
+        newAward.stem_field.add(stem_field_object[0])
+        newAward.applicant_type.add(applicant_type_object[0])
+        newAward.award_purpose.add(award_purpose[0])
 
         print('New Page added: ' + title)
         return Response({'success': True}, status=status.HTTP_200_OK)
@@ -183,7 +183,7 @@ class AwardDetail(APIView):
             stem_field = bleach.clean(request.data.get('stem_field'))
             stem_field_object = StemField.objects.get_or_create(field=stem_field)
             award.stem_field.clear()
-            award.stem_field.add(StemField.objects.get(field=request.data.get('stem_field')))
+            award.stem_field.add(stem_field_object[0])
         if request.data.get('sponsor_org') != None:
             award.sponsor_org = bleach.clean(request.data.get('sponsor_org'))
         if request.data.get('recurring') != None:
@@ -200,14 +200,14 @@ class AwardDetail(APIView):
             award.subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         if request.data.get('applicant_type') != None:
             applicant_type = bleach.clean(request.data.get('applicant_type'))
-            applicant_type = ApplicantType.objects.get_or_create(appType=applicant_type)
+            applicant_type_object = ApplicantType.objects.get_or_create(appType=applicant_type)
             award.applicant_type.clear()
-            award.applicant_type.add(ApplicantType.objects.get(appType=request.data.get('applicant_type')))
+            award.applicant_type.add(applicant_type_object[0])
         if request.data.get('award_purpose') != None:
             award_purpose = bleach.clean(request.data.get('award_purpose'))
-            award_purpose = AwardPurpose.objects.get_or_create(purpose=award_purpose)
+            award_purpose_object = AwardPurpose.objects.get_or_create(purpose=award_purpose)
             award.award_purpose.clear()
-            award.award_purpose.add(AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
+            award.award_purpose.add(award_purpose_object[0])
         if request.data.get('additional_info') != None:
             award.additional_info = bleach.clean(request.data.get('additional_info'))
         if request.data.get('source') != None:
