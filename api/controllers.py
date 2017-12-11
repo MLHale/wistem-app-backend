@@ -143,7 +143,7 @@ class AwardList(APIView):
         newAward.save()
         newAward.stem_field.add(stem_field_object[0])
         newAward.applicant_type.add(applicant_type_object[0])
-        newAward.award_purpose.add(award_purpose[0])
+        newAward.award_purpose.add(award_purpose_object[0])
 
         print('New Page added: ' + title)
         return Response({'success': True}, status=status.HTTP_200_OK)
