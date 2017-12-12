@@ -32,7 +32,8 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import *
 from rest_framework.decorators import *
 from rest_framework.authentication import *
-
+#email
+from templated_email import send_templated_mail
 # filters
 # from filters.mixins import *
 
@@ -533,7 +534,19 @@ class Register(APIView):
         newprofile = Profile(user=newuser, gender=gender, age=age, educationlevel=educationlevel, city=city,
                              state=state)
         newprofile.save()
-
+        # Send email msg
+        send_templated_mail(
+        template_name='welcome',
+        from_email='from@example.com',
+        recipient_list=[email],
+        context={
+            'username':username,
+            'email':email,
+        },
+        # Optional:
+        # cc=['cc@example.com'],
+        # bcc=['bcc@example.com'],
+        )
         return Response({'status': 'success', 'userid': newuser.id, 'profile': newprofile.id})
 
 
