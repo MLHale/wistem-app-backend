@@ -23,5 +23,6 @@ urlpatterns = [
     url(r'^applicanttypes/(?P<id>\d+)', csrf_exempt(controllers.ApplicantTypeDetail.as_view())),
     url(r'^applicanttypes', csrf_exempt(controllers.ApplicantTypeList.as_view())),
     url(r'^activateifttt', csrf_exempt(controllers.ActivateIFTTT.as_view())),
+     url(r'^search', csrf_exempt(controllers.Search.as_view())),
     url(r'^', include(router.urls)),
 ]

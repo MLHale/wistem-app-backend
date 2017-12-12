@@ -628,6 +628,60 @@ class Session(APIView):
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+class Search(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get_valid_fields(self, request, valid_fields):
+        query_dict = {}
+        for query_param in request.query_params:
+            if query_param in valid_fields:
+                query_dict[query_param] = request.query_params[query_param]
+        return query_dict
+
+    def build_date_search(self,date_params,search_dict):
+        for date_param in date_params:
+            if 'start' in date_param:
+                start_date = datetime.datetime.fromtimestamp(float(date_params[date_param]), pytz.utc)
+                search_dict[date_param.split('start')[0] + '_range'] = (start_date,datetime.datetime.max)
+            if 'end' in date_param:
+                end_date = datetime.datetime.fromtimestamp(float(date_params[date_param]), pytz.utc)
+                search_dict[date_param.split('end')[0] + '_range'] = (datetime.datetime.min, end_date)
+        return search_dict
+
+    def build_model_search(self, model_params,search_dict):
+        for model_param in model_params:
+            if model_param == 'stem_field':
+                search_dict[model_param + '__field'] = model_params[model_param]
+            elif model_param == 'applicant_type':
+                search_dict[model_param + '__appType'] = model_params[model_param]
+            elif model_param == 'award_purpose':
+                search_dict[model_param + '__purpose'] = model_params[model_param]
+        return search_dict
+
+    def get(self, request, *args, **kwargs):
+        matches = Award.objects.all()
+        model_fields = ['stem_field', 'applicant_type', 'award_purpose']
+        normal_fields =['title', 'description', 'award_link','sponsor_org','recurring', 'nom_req',
+                        'recur_interval', 'additional_info', 'source', 'previous_applicants' ,'created_by' ]
+        date_fields = ['open_date_start', 'open_date_end', 'nom_deadline_start', 'nom_deadline_end', 'subm_deadline_start',
+                      'subm_deadline_end', 'created_on_start', 'created_on_end' ]
+
+        search_dict = self.get_valid_fields(request, normal_fields)
+        search_dict = self.build_date_search(self.get_valid_fields(request, date_fields),search_dict)
+        search_dict = self.build_model_search(self.get_valid_fields(request, model_fields),search_dict)
+
+        try:
+            matches = Award.objects.filter(**search_dict)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        json_data = serializers.serialize('json',matches)
+        content = {'matches': json_data}
+        return HttpResponse(json_data, content_type='json')
+
+
 
 class Events(APIView):
     permission_classes = (AllowAny,)
