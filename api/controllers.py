@@ -44,23 +44,6 @@ import requests
 from django.shortcuts import get_object_or_404
 import bleach
 
-
-def home(request):
-    """
-    Send requests to / to the ember.js clientside app
-    """
-    return render_to_response('ember/index.html',
-                              {}, RequestContext(request))
-
-
-def xss_example(request):
-    """
-    Send requests to xss-example/ to the insecure client app
-    """
-    return render_to_response('dumb-test-app/index.html',
-                              {}, RequestContext(request))
-
-
 class AwardList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
