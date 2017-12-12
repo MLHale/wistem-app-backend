@@ -115,6 +115,8 @@ class Session(APIView):
 
 class Search(APIView):
     permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
 
     def get_valid_fields(self, request, valid_fields):
         query_dict = {}
@@ -154,10 +156,15 @@ class Search(APIView):
         search_dict = self.get_valid_fields(request, normal_fields)
         search_dict = self.build_date_search(self.get_valid_fields(request, date_fields),search_dict)
         search_dict = self.build_model_search(self.get_valid_fields(request, model_fields),search_dict)
-        matches = Award.objects.filter(**search_dict)
 
+        try:
+            matches = Award.objects.filter(**search_dict)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-        return HttpResponse('Placeholder')
+        json_data = serializers.serialize('json',matches)
+        content = {'matches': json_data}
+        return HttpResponse(json_data, content_type='json')
 
 
 
