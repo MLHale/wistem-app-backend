@@ -52,15 +52,6 @@ def home(request):
     return render_to_response('ember/index.html',
                               {}, RequestContext(request))
 
-
-def xss_example(request):
-    """
-    Send requests to xss-example/ to the insecure client app
-    """
-    return render_to_response('dumb-test-app/index.html',
-                              {}, RequestContext(request))
-
-
 class AwardList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
@@ -183,7 +174,7 @@ class AwardDetail(APIView):
             stem_field = bleach.clean(request.data.get('stem_field'))
             stem_field_object = StemField.objects.get_or_create(field=stem_field)
             award.stem_field.clear()
-            award.stem_field.add(StemField.objects.get(field=request.data.get('stem_field')))
+            award.stem_field.add(stem_field_object[0])
         if request.data.get('sponsor_org') != None:
             award.sponsor_org = bleach.clean(request.data.get('sponsor_org'))
         if request.data.get('recurring') != None:
@@ -200,14 +191,14 @@ class AwardDetail(APIView):
             award.subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         if request.data.get('applicant_type') != None:
             applicant_type = bleach.clean(request.data.get('applicant_type'))
-            applicant_type = ApplicantType.objects.get_or_create(appType=applicant_type)
+            applicant_type_object = ApplicantType.objects.get_or_create(appType=applicant_type)
             award.applicant_type.clear()
-            award.applicant_type.add(ApplicantType.objects.get(appType=request.data.get('applicant_type')))
+            award.applicant_type.add(applicant_type_object[0])
         if request.data.get('award_purpose') != None:
             award_purpose = bleach.clean(request.data.get('award_purpose'))
-            award_purpose = AwardPurpose.objects.get_or_create(purpose=award_purpose)
+            award_purpose_object = AwardPurpose.objects.get_or_create(purpose=award_purpose)
             award.award_purpose.clear()
-            award.award_purpose.add(AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
+            award.award_purpose.add(award_purpose_object[0])
         if request.data.get('additional_info') != None:
             award.additional_info = bleach.clean(request.data.get('additional_info'))
         if request.data.get('source') != None:
