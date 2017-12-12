@@ -70,8 +70,8 @@ class AwardList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
-       # if not request.user.is_superuser or not request.user.is_authenticated:
-       #     return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
         title = bleach.clean(request.data.get('title'))
