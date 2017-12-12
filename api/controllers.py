@@ -32,7 +32,8 @@ from django.contrib.auth import authenticate, login, logout
 from rest_framework.permissions import *
 from rest_framework.decorators import *
 from rest_framework.authentication import *
-
+#email
+from templated_email import send_templated_mail
 # filters
 # from filters.mixins import *
 
@@ -166,7 +167,7 @@ class AwardDetail(APIView):
             stem_field = bleach.clean(request.data.get('stem_field'))
             stem_field_object = StemField.objects.get_or_create(field=stem_field)
             award.stem_field.clear()
-            award.stem_field.add(StemField.objects.get(field=request.data.get('stem_field')))
+            award.stem_field.add(stem_field_object[0])
         if request.data.get('sponsor_org') != None:
             award.sponsor_org = bleach.clean(request.data.get('sponsor_org'))
         if request.data.get('recurring') != None:
@@ -183,14 +184,14 @@ class AwardDetail(APIView):
             award.subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         if request.data.get('applicant_type') != None:
             applicant_type = bleach.clean(request.data.get('applicant_type'))
-            applicant_type = ApplicantType.objects.get_or_create(appType=applicant_type)
+            applicant_type_object = ApplicantType.objects.get_or_create(appType=applicant_type)
             award.applicant_type.clear()
-            award.applicant_type.add(ApplicantType.objects.get(appType=request.data.get('applicant_type')))
+            award.applicant_type.add(applicant_type_object[0])
         if request.data.get('award_purpose') != None:
             award_purpose = bleach.clean(request.data.get('award_purpose'))
-            award_purpose = AwardPurpose.objects.get_or_create(purpose=award_purpose)
+            award_purpose_object = AwardPurpose.objects.get_or_create(purpose=award_purpose)
             award.award_purpose.clear()
-            award.award_purpose.add(AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
+            award.award_purpose.add(award_purpose_object[0])
         if request.data.get('additional_info') != None:
             award.additional_info = bleach.clean(request.data.get('additional_info'))
         if request.data.get('source') != None:
@@ -570,7 +571,19 @@ class Register(APIView):
         newprofile = Profile(user=newuser, org=org, college=college, dept=dept, other_details=other_details)
                            #  areas_of_interest=areas_of_interest)
         newprofile.save()
-        newprofile.areas_of_interest.add(AreaOfInterest.objects.get(area=request.POST.get('areas_of_interest')))
+        # Send email msg
+        send_templated_mail(
+        template_name='welcome',
+        from_email='from@example.com',
+        recipient_list=[email],
+        context={
+            'username':username,
+            'email':email,
+        },
+        # Optional:
+        # cc=['cc@example.com'],
+        # bcc=['bcc@example.com'],
+        )
         return Response({'status': 'success', 'userid': newuser.id, 'profile': newprofile.id})
 
 
@@ -610,6 +623,60 @@ class Session(APIView):
         # Logout
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class Search(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get_valid_fields(self, request, valid_fields):
+        query_dict = {}
+        for query_param in request.query_params:
+            if query_param in valid_fields:
+                query_dict[query_param] = request.query_params[query_param]
+        return query_dict
+
+    def build_date_search(self,date_params,search_dict):
+        for date_param in date_params:
+            if 'start' in date_param:
+                start_date = datetime.datetime.fromtimestamp(float(date_params[date_param]), pytz.utc)
+                search_dict[date_param.split('start')[0] + '_range'] = (start_date,datetime.datetime.max)
+            if 'end' in date_param:
+                end_date = datetime.datetime.fromtimestamp(float(date_params[date_param]), pytz.utc)
+                search_dict[date_param.split('end')[0] + '_range'] = (datetime.datetime.min, end_date)
+        return search_dict
+
+    def build_model_search(self, model_params,search_dict):
+        for model_param in model_params:
+            if model_param == 'stem_field':
+                search_dict[model_param + '__field'] = model_params[model_param]
+            elif model_param == 'applicant_type':
+                search_dict[model_param + '__appType'] = model_params[model_param]
+            elif model_param == 'award_purpose':
+                search_dict[model_param + '__purpose'] = model_params[model_param]
+        return search_dict
+
+    def get(self, request, *args, **kwargs):
+        matches = Award.objects.all()
+        model_fields = ['stem_field', 'applicant_type', 'award_purpose']
+        normal_fields =['title', 'description', 'award_link','sponsor_org','recurring', 'nom_req',
+                        'recur_interval', 'additional_info', 'source', 'previous_applicants' ,'created_by' ]
+        date_fields = ['open_date_start', 'open_date_end', 'nom_deadline_start', 'nom_deadline_end', 'subm_deadline_start',
+                      'subm_deadline_end', 'created_on_start', 'created_on_end' ]
+
+        search_dict = self.get_valid_fields(request, normal_fields)
+        search_dict = self.build_date_search(self.get_valid_fields(request, date_fields),search_dict)
+        search_dict = self.build_model_search(self.get_valid_fields(request, model_fields),search_dict)
+
+        try:
+            matches = Award.objects.filter(**search_dict)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        json_data = serializers.serialize('json',matches)
+        content = {'matches': json_data}
+        return HttpResponse(json_data, content_type='json')
+
 
 
 class Events(APIView):
