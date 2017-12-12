@@ -17,3 +17,7 @@ DATABASES = {
         'PORT': 5432,
     }
 }
+
+ALLOWED_HOSTS = ['localhost', 'django']
+DEBUG=False
+ENVIRONMENT = "PROD"

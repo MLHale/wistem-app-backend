@@ -53,21 +53,16 @@ def home(request):
     return render_to_response('ember/index.html',
                               {}, RequestContext(request))
 
-
-def xss_example(request):
-    """
-    Send requests to xss-example/ to the insecure client app
-    """
-    return render_to_response('dumb-test-app/index.html',
-                              {}, RequestContext(request))
-
-
 class AwardList(APIView):
     permission_classes = (AllowAny,)
     parser_classes = (parsers.JSONParser, parsers.FormParser)
     renderer_classes = (renderers.JSONRenderer,)
 
     def get(self, request):
+        if not request.user.is_authenticated:
+            print(request.user)
+        if request.user.is_superuser:
+            print(request.user.groups)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -76,6 +71,8 @@ class AwardList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
         title = bleach.clean(request.data.get('title'))
@@ -83,28 +80,31 @@ class AwardList(APIView):
         award_link = bleach.clean(request.data.get('award_link'))
         sponsor_org = bleach.clean(request.data.get('sponsor_org'))
         stem_field = bleach.clean(request.data.get('stem_field'))
-        stem_field_id = StemField.objects.filter(field=stem_field)
-        print("stem field " + str(stem_field_id))
-        recurring = bleach.clean(request.data.get('recurring'))
-        nom_req = bleach.clean(request.data.get('nom_req'))
+        print("stem field request data", stem_field)
+        stem_field_object = StemField.objects.get_or_create(field=stem_field)
+        print("stem field " + str(stem_field_object))
+        recurring = bool(bleach.clean(request.data.get('recurring')))
+        nom_req = bool(bleach.clean(request.data.get('nom_req')))
         recur_interval = bleach.clean(request.data.get('recur_interval'))
-        open_date = int(request.data.get('open_date'))
-        nom_deadline = int(request.data.get('nom_deadline'))
-        subm_deadline = int(request.data.get('subm_deadline'))
+        open_date = datetime.datetime.fromtimestamp(request.data.get('open_date'),pytz.utc)
+        print("opendate",open_date)
+        nom_deadline = datetime.datetime.fromtimestamp(request.data.get('nom_deadline'),pytz.utc)
+        subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         applicant_type = bleach.clean(request.data.get('applicant_type'))
+        applicant_type_object = ApplicantType.objects.get_or_create(appType=applicant_type)
         award_purpose = bleach.clean(request.data.get('award_purpose'))
-        award_purpose_id = StemField.objects.filter(field=award_purpose)
-        print("award purpose = " + str(award_purpose_id))
+        award_purpose_object = AwardPurpose.objects.get_or_create(purpose=award_purpose)
+        print("award purpose = " + str(award_purpose_object))
         additional_info = bleach.clean(request.data.get('additional_info'))
         source = bleach.clean(request.data.get('source'))
         previous_applicants = int(request.data.get('previous_applicants'))
         created_by = "1"#request.user.id  # TODO input validation - make this take user from request - cant get postman to work
-        print("created by: " + str(created_by))
+        print("created by:", created_by)
         user = get_object_or_404(User, pk=created_by)
         print("user=" + str(user))
         profile = Profile.objects.get(user=user)
         print(profile)
-        created_on = int(request.data.get('created_on'))
+        # created_on = int(request.data.get('created_on'))
 
         print("Creating new Award")
 
@@ -113,22 +113,19 @@ class AwardList(APIView):
             description=description,
             award_link=award_link,
             sponsor_org=sponsor_org,
-            #stem_field=stem_field_id,
             recurring=recurring,
             nom_req=nom_req,
             recur_interval=recur_interval,
             open_date=open_date,
             nom_deadline=nom_deadline,
             subm_deadline=subm_deadline,
-            applicant_type=applicant_type,
-            award_purpose=award_purpose_id,
             additional_info=additional_info,
             source=source,
             previous_applicants=previous_applicants,
             created_by=profile,
-            created_on=created_on
+            created_on= datetime.datetime.now()
+
         )
-        Award.stem_field.add(stem_field_id)
         try:
             newAward.clean_fields()
         except ValidationError as e:
@@ -136,6 +133,10 @@ class AwardList(APIView):
             return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
 
         newAward.save()
+        newAward.stem_field.add(StemField.objects.get(field=request.data.get('stem_field')))
+        newAward.applicant_type.add(ApplicantType.objects.get(appType=request.data.get('applicant_type')))
+        newAward.award_purpose.add(AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
+
         print('New Page added: ' + title)
         return Response({'success': True}, status=status.HTTP_200_OK)
 
@@ -158,8 +159,8 @@ class AwardDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
-
-
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         try:
             award = Award.objects.get(pk=id)
         except ObjectDoesNotExist as e:
@@ -170,26 +171,35 @@ class AwardDetail(APIView):
             award.description = bleach.clean(request.data.get('description'))
         if request.data.get('award_link') != None:
             award.award_link = bleach.clean(request.data.get('award_link'))
+        if request.data.get('stem_field') != None:
+            stem_field = bleach.clean(request.data.get('stem_field'))
+            stem_field_object = StemField.objects.get_or_create(field=stem_field)
+            award.stem_field.clear()
+            award.stem_field.add(stem_field_object[0])
         if request.data.get('sponsor_org') != None:
             award.sponsor_org = bleach.clean(request.data.get('sponsor_org'))
-        if request.data.get('stem_field') != None:
-            award.stem_field = bleach.clean(request.data.get('stem_field'))
         if request.data.get('recurring') != None:
-            award.recurring = bleach.clean(request.data.get('recurring'))
+            award.recurring = bool(bleach.clean(request.data.get('recurring')))
         if request.data.get('nom_req') != None:
-            award.nom_req = bleach.clean(request.data.get('nom_req'))
+            award.nom_req = bool(bleach.clean(request.data.get('nom_req')))
         if request.data.get('recur_interval') != None:
             award.recur_interval = bleach.clean(request.data.get('recur_interval'))
         if request.data.get('open_date') != None:
-            award.open_date = int(request.data.get('open_date'))
+            award.open_date = datetime.datetime.fromtimestamp(request.data.get('open_date'),pytz.utc)
         if request.data.get('nom_deadline') != None:
-            award.nom_deadline = int(request.data.get('nom_deadline'))
+            award.nom_deadline = datetime.datetime.fromtimestamp(request.data.get('nom_deadline'),pytz.utc)
         if request.data.get('subm_deadline') != None:
-            award.subm_deadline = int(request.data.get('subm_deadline'))
+            award.subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         if request.data.get('applicant_type') != None:
-            award.applicant_type = bleach.clean(request.data.get('applicant_type'))
+            applicant_type = bleach.clean(request.data.get('applicant_type'))
+            applicant_type_object = ApplicantType.objects.get_or_create(appType=applicant_type)
+            award.applicant_type.clear()
+            award.applicant_type.add(applicant_type_object[0])
         if request.data.get('award_purpose') != None:
-            award.award_purpose = bleach.clean(request.data.get('award_purpose'))
+            award_purpose = bleach.clean(request.data.get('award_purpose'))
+            award_purpose_object = AwardPurpose.objects.get_or_create(purpose=award_purpose)
+            award.award_purpose.clear()
+            award.award_purpose.add(award_purpose_object[0])
         if request.data.get('additional_info') != None:
             award.additional_info = bleach.clean(request.data.get('additional_info'))
         if request.data.get('source') != None:
@@ -197,7 +207,12 @@ class AwardDetail(APIView):
         if request.data.get('previous_applicants') != None:
             award.previous_applicants = int(request.data.get('previous_applicants'))
         if request.data.get('created_by') != None:
-            award.created_by = bleach.clean(request.data.get('created_by'))
+            created_by = "1"  # request.user.id  # TODO input validation - make this take user from request - cant get postman to work
+            print("created by:", created_by)
+            user = get_object_or_404(User, pk=created_by)
+            print("user=" + str(user))
+            profile = Profile.objects.get(user=user)
+            award.created_by = profile
         if request.data.get('created_on') != None:
             award.created_on = int(request.data.get('created_on'))
 
@@ -212,6 +227,8 @@ class AwardDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -233,6 +250,8 @@ class StemFieldList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         field = bleach.clean(request.data.get('field'))
 
         newStemField = StemField(
@@ -263,6 +282,8 @@ class StemFieldDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -283,6 +304,8 @@ class StemFieldDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -304,6 +327,8 @@ class AwardPurposeList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         purpose = bleach.clean(request.data.get('purpose'))
 
         newAwardPurpose = AwardPurpose(
@@ -334,6 +359,8 @@ class AwardPurposeDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -355,6 +382,8 @@ class AwardPurposeDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -376,6 +405,8 @@ class AreaOfInterestList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         area = bleach.clean(request.data.get('area'))
 
         newAreaOfInterest = AreaOfInterest(
@@ -406,6 +437,8 @@ class AreaOfInterestDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -426,6 +459,8 @@ class AreaOfInterestDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -447,6 +482,8 @@ class ApplicantTypeList(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def post(self, request):
+        if not request.user.is_superuser or not request.user.is_authenticated:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
         appType = bleach.clean(request.data.get('appType'))
@@ -479,6 +516,8 @@ class ApplicantTypeDetail(APIView):
         return HttpResponse(json_data, content_type='json')
 
     def put(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -499,6 +538,8 @@ class ApplicantTypeDetail(APIView):
         return Response({'success': True}, status=status.HTTP_200_OK)
 
     def delete(self, request, id=None):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
         print('REQUEST DATA')
         print(str(request.data))
 
@@ -512,27 +553,31 @@ class Register(APIView):
     def post(self, request, *args, **kwargs):
         # Login
         username = request.POST.get('username')  # you need to apply validators to these
-        print
-        username
+        #print username
         password = request.POST.get('password')  # you need to apply validators to these
         email = request.POST.get('email')  # you need to apply validators to these
-        gender = request.POST.get('gender')  # you need to apply validators to these
-        age = request.POST.get('age')  # you need to apply validators to these
-        educationlevel = request.POST.get('educationlevel')  # you need to apply validators to these
-        city = request.POST.get('city')  # you need to apply validators to these
-        state = request.POST.get('state')  # you need to apply validators to these
+        #gender = request.POST.get('gender')  # you need to apply validators to these
+        #age = request.POST.get('age')  # you need to apply validators to these
+        #educationlevel = request.POST.get('educationlevel')  # you need to apply validators to these
+        #city = request.POST.get('city')  # you need to apply validators to these
+        #state = request.POST.get('state')  # you need to apply validators to these
+        org = request.POST.get('org')  # you need to apply validators to these
+        college = request.POST.get('college')  # you need to apply validators to these
+        dept = request.POST.get('dept')  # you need to apply validators to these
+        other_details = request.POST.get('other_details')  # you need to apply validators to these
+        areas_of_interest = request.POST.get('areas_of_interest')
+        areas_of_interest = AreaOfInterest.objects.get_or_create(area=areas_of_interest)
 
-        print
-        request.POST.get('username')
+        print request.POST.get('username')
         if User.objects.filter(username=username).exists():
             return Response({'username': 'Username is taken.', 'status': 'error'})
         elif User.objects.filter(email=email).exists():
             return Response({'email': 'Email is taken.', 'status': 'error'})
-
         # especially before you pass them in here
         newuser = User.objects.create_user(email=email, username=username, password=password)
-        newprofile = Profile(user=newuser, gender=gender, age=age, educationlevel=educationlevel, city=city,
-                             state=state)
+
+        newprofile = Profile(user=newuser, org=org, college=college, dept=dept, other_details=other_details)
+                           #  areas_of_interest=areas_of_interest)
         newprofile.save()
         # Send email msg
         send_templated_mail(
@@ -586,6 +631,60 @@ class Session(APIView):
         # Logout
         logout(request)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+class Search(APIView):
+    permission_classes = (AllowAny,)
+    parser_classes = (parsers.JSONParser,parsers.FormParser)
+    renderer_classes = (renderers.JSONRenderer, )
+
+    def get_valid_fields(self, request, valid_fields):
+        query_dict = {}
+        for query_param in request.query_params:
+            if query_param in valid_fields:
+                query_dict[query_param] = request.query_params[query_param]
+        return query_dict
+
+    def build_date_search(self,date_params,search_dict):
+        for date_param in date_params:
+            if 'start' in date_param:
+                start_date = datetime.datetime.fromtimestamp(float(date_params[date_param]), pytz.utc)
+                search_dict[date_param.split('start')[0] + '_range'] = (start_date,datetime.datetime.max)
+            if 'end' in date_param:
+                end_date = datetime.datetime.fromtimestamp(float(date_params[date_param]), pytz.utc)
+                search_dict[date_param.split('end')[0] + '_range'] = (datetime.datetime.min, end_date)
+        return search_dict
+
+    def build_model_search(self, model_params,search_dict):
+        for model_param in model_params:
+            if model_param == 'stem_field':
+                search_dict[model_param + '__field'] = model_params[model_param]
+            elif model_param == 'applicant_type':
+                search_dict[model_param + '__appType'] = model_params[model_param]
+            elif model_param == 'award_purpose':
+                search_dict[model_param + '__purpose'] = model_params[model_param]
+        return search_dict
+
+    def get(self, request, *args, **kwargs):
+        matches = Award.objects.all()
+        model_fields = ['stem_field', 'applicant_type', 'award_purpose']
+        normal_fields =['title', 'description', 'award_link','sponsor_org','recurring', 'nom_req',
+                        'recur_interval', 'additional_info', 'source', 'previous_applicants' ,'created_by' ]
+        date_fields = ['open_date_start', 'open_date_end', 'nom_deadline_start', 'nom_deadline_end', 'subm_deadline_start',
+                      'subm_deadline_end', 'created_on_start', 'created_on_end' ]
+
+        search_dict = self.get_valid_fields(request, normal_fields)
+        search_dict = self.build_date_search(self.get_valid_fields(request, date_fields),search_dict)
+        search_dict = self.build_model_search(self.get_valid_fields(request, model_fields),search_dict)
+
+        try:
+            matches = Award.objects.filter(**search_dict)
+        except ObjectDoesNotExist as e:
+            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+        json_data = serializers.serialize('json',matches)
+        content = {'matches': json_data}
+        return HttpResponse(json_data, content_type='json')
+
 
 
 class Events(APIView):
