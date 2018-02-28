@@ -118,6 +118,747 @@ define('wistem-app-frontend/components/basic-dropdown/trigger', ['exports', 'emb
     }
   });
 });
+define('wistem-app-frontend/components/bs-accordion', ['exports', 'ember-bootstrap/components/bs-accordion'], function (exports, _bsAccordion) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsAccordion.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-accordion/item', ['exports', 'ember-bootstrap/components/bs-accordion/item'], function (exports, _item) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _item.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-accordion/item/body', ['exports', 'ember-bootstrap/components/bs-accordion/item/body'], function (exports, _body) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _body.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-accordion/item/title', ['exports', 'ember-bootstrap/components/bs-accordion/item/title'], function (exports, _title) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _title.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-alert', ['exports', 'ember-bootstrap/components/bs-alert'], function (exports, _bsAlert) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsAlert.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-button-group', ['exports', 'ember-bootstrap/components/bs-button-group'], function (exports, _bsButtonGroup) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsButtonGroup.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-button-group/button', ['exports', 'ember-bootstrap/components/bs-button-group/button'], function (exports, _button) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _button.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-button', ['exports', 'ember-bootstrap/components/bs-button'], function (exports, _bsButton) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsButton.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-collapse', ['exports', 'ember-bootstrap/components/bs-collapse'], function (exports, _bsCollapse) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsCollapse.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-dropdown', ['exports', 'ember-bootstrap/components/bs-dropdown'], function (exports, _bsDropdown) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsDropdown.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-dropdown/button', ['exports', 'ember-bootstrap/components/bs-dropdown/button'], function (exports, _button) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _button.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-dropdown/menu', ['exports', 'ember-bootstrap/components/bs-dropdown/menu'], function (exports, _menu) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _menu.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-dropdown/menu/divider', ['exports', 'ember-bootstrap/components/bs-dropdown/menu/divider'], function (exports, _divider) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _divider.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-dropdown/menu/item', ['exports', 'ember-bootstrap/components/bs-dropdown/menu/item'], function (exports, _item) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _item.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-dropdown/menu/link-to', ['exports', 'ember-bootstrap/components/bs-dropdown/menu/link-to'], function (exports, _linkTo) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _linkTo.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-dropdown/toggle', ['exports', 'ember-bootstrap/components/bs-dropdown/toggle'], function (exports, _toggle) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _toggle.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form', ['exports', 'ember-bootstrap/components/bs-form'], function (exports, _bsForm) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsForm.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element', ['exports', 'ember-bootstrap/components/bs-form/element'], function (exports, _element) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _element.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/control', ['exports', 'ember-bootstrap/components/bs-form/element/control'], function (exports, _control) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _control.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/control/checkbox', ['exports', 'ember-bootstrap/components/bs-form/element/control/checkbox'], function (exports, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _checkbox.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/control/input', ['exports', 'ember-bootstrap/components/bs-form/element/control/input'], function (exports, _input) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _input.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/control/textarea', ['exports', 'ember-bootstrap/components/bs-form/element/control/textarea'], function (exports, _textarea) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _textarea.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/errors', ['exports', 'ember-bootstrap/components/bs-form/element/errors'], function (exports, _errors) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _errors.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/feedback-icon', ['exports', 'ember-bootstrap/components/bs-form/element/feedback-icon'], function (exports, _feedbackIcon) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _feedbackIcon.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/help-text', ['exports', 'ember-bootstrap/components/bs-form/element/help-text'], function (exports, _helpText) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _helpText.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/label', ['exports', 'ember-bootstrap/components/bs-form/element/label'], function (exports, _label) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _label.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/layout/horizontal', ['exports', 'ember-bootstrap/components/bs-form/element/layout/horizontal'], function (exports, _horizontal) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _horizontal.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/layout/horizontal/checkbox', ['exports', 'ember-bootstrap/components/bs-form/element/layout/horizontal/checkbox'], function (exports, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _checkbox.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/layout/inline', ['exports', 'ember-bootstrap/components/bs-form/element/layout/inline'], function (exports, _inline) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _inline.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/layout/inline/checkbox', ['exports', 'ember-bootstrap/components/bs-form/element/layout/inline/checkbox'], function (exports, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _checkbox.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/layout/vertical', ['exports', 'ember-bootstrap/components/bs-form/element/layout/vertical'], function (exports, _vertical) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _vertical.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/element/layout/vertical/checkbox', ['exports', 'ember-bootstrap/components/bs-form/element/layout/vertical/checkbox'], function (exports, _checkbox) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _checkbox.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-form/group', ['exports', 'ember-bootstrap/components/bs-form/group'], function (exports, _group) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _group.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-modal-simple', ['exports', 'ember-bootstrap/components/bs-modal-simple'], function (exports, _bsModalSimple) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsModalSimple.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-modal', ['exports', 'ember-bootstrap/components/bs-modal'], function (exports, _bsModal) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsModal.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-modal/body', ['exports', 'ember-bootstrap/components/bs-modal/body'], function (exports, _body) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _body.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-modal/dialog', ['exports', 'ember-bootstrap/components/bs-modal/dialog'], function (exports, _dialog) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _dialog.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-modal/footer', ['exports', 'ember-bootstrap/components/bs-modal/footer'], function (exports, _footer) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _footer.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-modal/header', ['exports', 'ember-bootstrap/components/bs-modal/header'], function (exports, _header) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _header.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-modal/header/close', ['exports', 'ember-bootstrap/components/bs-modal/header/close'], function (exports, _close) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _close.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-modal/header/title', ['exports', 'ember-bootstrap/components/bs-modal/header/title'], function (exports, _title) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _title.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-nav', ['exports', 'ember-bootstrap/components/bs-nav'], function (exports, _bsNav) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsNav.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-nav/item', ['exports', 'ember-bootstrap/components/bs-nav/item'], function (exports, _item) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _item.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-nav/link-to', ['exports', 'ember-bootstrap/components/bs-nav/link-to'], function (exports, _linkTo) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _linkTo.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-navbar', ['exports', 'ember-bootstrap/components/bs-navbar'], function (exports, _bsNavbar) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsNavbar.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-navbar/content', ['exports', 'ember-bootstrap/components/bs-navbar/content'], function (exports, _content) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _content.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-navbar/link-to', ['exports', 'ember-bootstrap/components/bs-navbar/link-to'], function (exports, _linkTo) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _linkTo.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-navbar/nav', ['exports', 'ember-bootstrap/components/bs-navbar/nav'], function (exports, _nav) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _nav.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-navbar/toggle', ['exports', 'ember-bootstrap/components/bs-navbar/toggle'], function (exports, _toggle) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _toggle.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-popover', ['exports', 'ember-bootstrap/components/bs-popover'], function (exports, _bsPopover) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsPopover.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-popover/element', ['exports', 'ember-bootstrap/components/bs-popover/element'], function (exports, _element) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _element.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-progress', ['exports', 'ember-bootstrap/components/bs-progress'], function (exports, _bsProgress) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsProgress.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-progress/bar', ['exports', 'ember-bootstrap/components/bs-progress/bar'], function (exports, _bar) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bar.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-tab', ['exports', 'ember-bootstrap/components/bs-tab'], function (exports, _bsTab) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsTab.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-tab/pane', ['exports', 'ember-bootstrap/components/bs-tab/pane'], function (exports, _pane) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _pane.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-tooltip', ['exports', 'ember-bootstrap/components/bs-tooltip'], function (exports, _bsTooltip) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsTooltip.default;
+    }
+  });
+});
+define('wistem-app-frontend/components/bs-tooltip/element', ['exports', 'ember-bootstrap/components/bs-tooltip/element'], function (exports, _element) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _element.default;
+    }
+  });
+});
 define('wistem-app-frontend/components/edit-award', ['exports'], function (exports) {
   'use strict';
 
@@ -140,6 +881,19 @@ define('wistem-app-frontend/components/ember-login', ['exports', 'ember-login/co
     value: true
   });
   exports.default = _emberLogin.default;
+});
+define('wistem-app-frontend/components/ember-popper', ['exports', 'ember-popper/components/ember-popper'], function (exports, _emberPopper) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _emberPopper.default;
+    }
+  });
 });
 define('wistem-app-frontend/components/ember-wormhole', ['exports', 'ember-wormhole/components/ember-wormhole'], function (exports, _emberWormhole) {
   'use strict';
@@ -1318,20 +2072,33 @@ define('wistem-app-frontend/controllers/login', ['exports'], function (exports) 
   exports.default = Controller.extend({
     actions: {
       login: function login(username, password) {
-        console.log(username);
-        console.log(password);
         if (username === 'admin' && password === 'password') {
-          console.log('success');
           this.set('currentuser', user);
-          console.log(this.get('currentuser'));
+          this.transitionToRoute('search');
         } else {
           this.set('hidden', true);
-          console.log('failure');
-          return 'Wrong username and/or password';
         }
       }
     }
   });
+});
+define('wistem-app-frontend/controllers/register', ['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var Controller = Ember.Controller;
+  exports.default = Controller.extend({
+    actions: {
+      create: function create(username, password, email, college, department) {
+        if (username === 'admin') {
+          this.transitionToRoute('search');
+        } else {
+          this.set('hidden', true);
+        }
+      }
+    } });
 });
 define('wistem-app-frontend/controllers/search', ['exports'], function (exports) {
   'use strict';
@@ -1345,8 +2112,6 @@ define('wistem-app-frontend/controllers/search', ['exports'], function (exports)
 
       /* Dialog */
       openDialog: function openDialog(item, event) {
-        console.log(event);
-        console.log(item);
         this.set('dialogOrigin', $(event.currentTarget));
         this.set('selectedAward', item);
         this.set('showDialog', true);
@@ -1355,19 +2120,8 @@ define('wistem-app-frontend/controllers/search', ['exports'], function (exports)
         this.set('result', result);
         this.set('showDialog', false);
       },
-      flatButton: function flatButton(title, fields, applicanttype) {
-        console.log(title);
-
-        alert('You are searching for title ' + title + ' Fields: ' + fields + ' Applicant types: ' + applicanttype);
-      },
-      toggleHidden: function toggleHidden() {
-        if (this.get('hidden')) {
-          console.log('here');
-          this.set('hidden', false);
-        } else {
-          console.log('else');
-          this.set('hidden', true);
-        }
+      flatButton: function flatButton(title, fields, applicanttype, description, url, sponsor) {
+        alert('You are searching for title ' + title + ' Fields: ' + fields + ' Applicant types: ' + applicanttype + ' description ' + description + ' url ' + url + ' sponsor ' + sponsor);
       }
     }
   });
@@ -1433,6 +2187,44 @@ define('wistem-app-frontend/helpers/app-version', ['exports', 'wistem-app-fronte
   }
 
   exports.default = Ember.Helper.helper(appVersion);
+});
+define('wistem-app-frontend/helpers/bs-contains', ['exports', 'ember-bootstrap/helpers/bs-contains'], function (exports, _bsContains) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsContains.default;
+    }
+  });
+  Object.defineProperty(exports, 'bsContains', {
+    enumerable: true,
+    get: function () {
+      return _bsContains.bsContains;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/bs-eq', ['exports', 'ember-bootstrap/helpers/bs-eq'], function (exports, _bsEq) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _bsEq.default;
+    }
+  });
+  Object.defineProperty(exports, 'eq', {
+    enumerable: true,
+    get: function () {
+      return _bsEq.eq;
+    }
+  });
 });
 define('wistem-app-frontend/helpers/cancel-all', ['exports', 'ember-concurrency/-helpers'], function (exports, _helpers) {
   'use strict';
@@ -1941,6 +2733,22 @@ define('wistem-app-frontend/initializers/injectStore', ['exports'], function (ex
     initialize: function initialize() {}
   };
 });
+define('wistem-app-frontend/initializers/load-bootstrap-config', ['exports', 'wistem-app-frontend/config/environment', 'ember-bootstrap/config'], function (exports, _environment, _config) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.initialize = initialize;
+  function initialize() /* container, application */{
+    _config.default.load(_environment.default['ember-bootstrap'] || {});
+  }
+
+  exports.default = {
+    name: 'load-bootstrap-config',
+    initialize: initialize
+  };
+});
 define('wistem-app-frontend/initializers/store', ['exports'], function (exports) {
   'use strict';
 
@@ -2102,7 +2910,7 @@ define('wistem-app-frontend/routes/awards', ['exports'], function (exports) {
       //   awardType: 'important',
       //   image: 'http://srts.info/wp-content/uploads/2014/09/gold-trophy.jpg',
       // }];
-      this.store.findAll('award');
+      return this.store.findAll('award');
     }
   });
 });
@@ -2169,15 +2977,10 @@ define('wistem-app-frontend/routes/search', ['exports'], function (exports) {
         applicant_type: 'Type',
         award_purpose: ["Science", "Math", "Technology"],
         additional_info: 'a long text',
-        source: 'Somewhere',
+        source: 'Federal government',
         previous_applicants: 20,
         created_by: 'Ties to profile',
-        created_on: '2017-10-03',
-
-        category: 'cat1',
-        requirements: 'string for now, requirements',
-        criteria: 'string for criteriat',
-        typeofapplicant: ["Faculty", "Student", "Staff"]
+        created_on: '2017-10-03'
 
       });
       items.addObject({
@@ -2197,15 +3000,11 @@ define('wistem-app-frontend/routes/search', ['exports'], function (exports) {
         applicant_type: 'Type',
         award_purpose: ["Science", "Math", "Technology"],
         additional_info: 'a long text',
-        source: 'Somewhere',
+        source: 'Federal government',
         previous_applicants: 20,
         created_by: 'Ties to profile',
-        created_on: '2017-10-03',
+        created_on: '2017-10-03'
 
-        category: 'cat1',
-        requirements: 'string for now, requirements',
-        criteria: 'string for criteriat',
-        typeofapplicant: ["Faculty", "Student", "Staff"]
       });
       items.addObject({
         id: 3,
@@ -2224,15 +3023,11 @@ define('wistem-app-frontend/routes/search', ['exports'], function (exports) {
         applicant_type: 'Type',
         award_purpose: ["Science", "Math", "Technology"],
         additional_info: 'a long text',
-        source: 'Somewhere',
+        source: 'Federal government',
         previous_applicants: 20,
         created_by: 'Ties to profile',
-        created_on: '2017-10-03',
+        created_on: '2017-10-03'
 
-        category: 'cat1',
-        requirements: 'string for now, requirements',
-        criteria: 'string for criteriat',
-        typeofapplicant: ["Faculty", "Student", "Staff"]
       });
       items.addObject({
         id: 4,
@@ -2251,15 +3046,11 @@ define('wistem-app-frontend/routes/search', ['exports'], function (exports) {
         applicant_type: 'Type',
         award_purpose: ["Science", "Math", "Technology"],
         additional_info: 'a long text',
-        source: 'Somewhere',
+        source: 'Federal government',
         previous_applicants: 20,
         created_by: 'Ties to profile',
-        created_on: '2017-10-03',
+        created_on: '2017-10-03'
 
-        category: 'cat1',
-        requirements: 'string for now, requirements',
-        criteria: 'string for criteriat',
-        typeofapplicant: ["Faculty", "Student", "Staff"]
       });
       return items;
     },
@@ -2267,7 +3058,9 @@ define('wistem-app-frontend/routes/search', ['exports'], function (exports) {
       var data = {
         awards: this.getData(),
         stemfields: this.getStemFields(),
-        applicanttype: this.getApplicantTypes()
+        applicanttype: this.getApplicantTypes(),
+        awardsources: this.getAwardSources(),
+        awardpurpose: this.getAwardPurpose()
       };
       return data;
     },
@@ -2284,6 +3077,23 @@ define('wistem-app-frontend/routes/search', ['exports'], function (exports) {
       items.addObject("Faculty");
       items.addObject("Staff");
       items.addObject("Students");
+      return items;
+    },
+    getAwardSources: function getAwardSources() {
+      var items = Ember.A([]);
+      items.addObject("Federal Government");
+      items.addObject("State Government");
+      items.addObject("Local Government");
+      items.addObject("Internal");
+      items.addObject("Private Industry");
+      items.addObject("Other");
+      return items;
+    },
+    getAwardPurpose: function getAwardPurpose() {
+      var items = Ember.A([]);
+      items.addObject("Mentoring");
+      items.addObject("Projects");
+      items.addObject("Other");
       return items;
     }
   });
@@ -2661,7 +3471,7 @@ define("wistem-app-frontend/templates/awardinfo", ["exports"], function (exports
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "mBRKk9aa", "block": "{\"symbols\":[\"form\"],\"statements\":[[0,\"\\n\"],[4,\"paper-content\",null,null,{\"statements\":[[4,\"paper-form\",null,null,{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-column centered-form\"],[7],[0,\"\\n          \"],[6,\"h4\"],[7],[0,\"Enter New Award Information\"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Awart Title\",[20,[\"awardtitle\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardtitle\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Sponsoring Organization\",[20,[\"sponser\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"sponser\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"URL/Web link for the Award\",[20,[\"awardurl\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardurl\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Select the STEM field targeted by the Award. Check all that apply.\\n                If the award targets a very specific area, check 'Other' and Specify area \"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"science\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"science\"]]],null]],null]]],{\"statements\":[[0,\"              Natural Science \"],[1,[18,\"science\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"it\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"it\"]]],null]],null]]],{\"statements\":[[0,\"              Information Technology \"],[1,[18,\"it\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"engineering\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"engineering\"]]],null]],null]]],{\"statements\":[[0,\"              Engineering \"],[1,[18,\"engineering\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"math\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"math\"]]],null]],null]]],{\"statements\":[[0,\"              Mathematics \"],[1,[18,\"math\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"stem\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"stem\"]]],null]],null]]],{\"statements\":[[0,\"              The Art part of STEM (STEAM) \"],[1,[18,\"stem\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"discipline\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"discipline\"]]],null]],null]]],{\"statements\":[[0,\"              All Disciplines \"],[1,[18,\"discipline\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"other\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"other\"]]],null]],null]]],{\"statements\":[[0,\"              Other: \"],[1,[18,\"other\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other area\",[20,[\"other\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"other\"]]],null]],null],true]]],false],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"layout layout-sm-column\"],[7],[0,\"\\n          \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex\",\"Submission date\",\"date\",[20,[\"date\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"date\"]]],null]],null]]]],false],[0,\"\\n        \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Select the applicant type. Check all that apply.\"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"staff\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"staff\"]]],null]],null]]],{\"statements\":[[0,\"              Staff \"],[1,[18,\"staff\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"professor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"professor\"]]],null]],null]]],{\"statements\":[[0,\"              Faculty-Professor \"],[1,[18,\"professor\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"tenured\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"tenured\"]]],null]],null]]],{\"statements\":[[0,\"              Tenured-Faculty \"],[1,[18,\"tenured\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"nontenured\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"nontenured\"]]],null]],null]]],{\"statements\":[[0,\"              Non-tenured Faculty \"],[1,[18,\"nontenured\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"phd\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"phd\"]]],null]],null]]],{\"statements\":[[0,\"              PhD Required \"],[1,[18,\"phd\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"discipline\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"discipline\"]]],null]],null]]],{\"statements\":[[0,\"              Graduare Faculty\"],[1,[18,\"discipline\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"Graduate\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"Graduate\"]]],null]],null]]],{\"statements\":[[0,\"              Student (Graduate) \"],[1,[18,\"Graduate\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"Undergraduate\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"Undergraduate\"]]],null]],null]]],{\"statements\":[[0,\"              Student (Undergraduate) \"],[1,[18,\"Undergraduate\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"otherstaff\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherstaff\"]]],null]],null]]],{\"statements\":[[0,\"              Other: \"],[1,[18,\"otherstaff\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other staff\",[20,[\"otherstf\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherstf\"]]],null]],null],true]]],false],[0,\"\\n        \"],[8],[0,\"\\n\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Award Requirements. Check all that apply.\"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"advise\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"advise\"]]],null]],null]]],{\"statements\":[[0,\"              Advising \"],[1,[18,\"advise\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"mentor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"mentor\"]]],null]],null]]],{\"statements\":[[0,\"              Mentoring \"],[1,[18,\"mentor\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"research\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"research\"]]],null]],null]]],{\"statements\":[[0,\"              Research and Creativity \"],[1,[18,\"research\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"teaching\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"teaching\"]]],null]],null]]],{\"statements\":[[0,\"              Teaching \"],[1,[18,\"teaching\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"outreach\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"outreach\"]]],null]],null]]],{\"statements\":[[0,\"              Outreach (Community Engagement) \"],[1,[18,\"outreach\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"service\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"service\"]]],null]],null]]],{\"statements\":[[0,\"              Service Learning\"],[1,[18,\"service\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"otherreq\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherreq\"]]],null]],null]]],{\"statements\":[[0,\"              Other : \"],[1,[18,\"otherreq\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"              \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other requirements\",[20,[\"othersreq\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"othersreq\"]]],null]],null],true]]],false],[0,\"\\n        \"],[4,\"component\",[[19,1,[\"submit-button\"]]],[[\"raised\",\"primary\"],[true,true]],{\"statements\":[[0,\"Submit\"]],\"parameters\":[]},null],[0,\"\\n      \"],[8],[0,\"\\n      \"],[8],[0,\"\\n\"]],\"parameters\":[1]},null]],\"parameters\":[]},null],[1,[18,\"outlet\"],false],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/awardinfo.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "P70xsCLD", "block": "{\"symbols\":[\"form\"],\"statements\":[[4,\"paper-content\",null,null,{\"statements\":[[4,\"paper-form\",null,null,{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-column centered-form\"],[7],[0,\"\\n          \"],[6,\"h4\"],[7],[0,\"Enter New Award Information\"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Award Title\",[20,[\"awardtitle\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardtitle\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Sponsoring Organization\",[20,[\"sponser\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"sponser\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"URL/Web link for the Award\",[20,[\"awardurl\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardurl\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Select the STEM field targeted by the Award. Check all that apply.\\n                If the award targets a very specific area, check 'Other' and Specify area \"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"science\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"science\"]]],null]],null]]],{\"statements\":[[0,\"              Natural Science \"],[1,[18,\"science\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"it\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"it\"]]],null]],null]]],{\"statements\":[[0,\"              Information Technology \"],[1,[18,\"it\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"engineering\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"engineering\"]]],null]],null]]],{\"statements\":[[0,\"              Engineering \"],[1,[18,\"engineering\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"math\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"math\"]]],null]],null]]],{\"statements\":[[0,\"              Mathematics \"],[1,[18,\"math\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"stem\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"stem\"]]],null]],null]]],{\"statements\":[[0,\"              The Art part of STEM (STEAM) \"],[1,[18,\"stem\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"discipline\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"discipline\"]]],null]],null]]],{\"statements\":[[0,\"              All Disciplines \"],[1,[18,\"discipline\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"other\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"other\"]]],null]],null]]],{\"statements\":[[0,\"              Other: \"],[1,[18,\"other\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other area\",[20,[\"other\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"other\"]]],null]],null],true]]],false],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"layout layout-sm-column\"],[7],[0,\"\\n          \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex\",\"Submission date\",\"date\",[20,[\"date\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"date\"]]],null]],null]]]],false],[0,\"\\n        \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-sm-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Select the applicant type. Check all that apply.\"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"staff\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"staff\"]]],null]],null]]],{\"statements\":[[0,\"              Staff \"],[1,[18,\"staff\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"professor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"professor\"]]],null]],null]]],{\"statements\":[[0,\"              Faculty-Professor \"],[1,[18,\"professor\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"tenured\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"tenured\"]]],null]],null]]],{\"statements\":[[0,\"              Tenured-Faculty \"],[1,[18,\"tenured\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"nontenured\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"nontenured\"]]],null]],null]]],{\"statements\":[[0,\"              Non-tenured Faculty \"],[1,[18,\"nontenured\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"phd\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"phd\"]]],null]],null]]],{\"statements\":[[0,\"              PhD Required \"],[1,[18,\"phd\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"discipline\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"discipline\"]]],null]],null]]],{\"statements\":[[0,\"              Graduare Faculty\"],[1,[18,\"discipline\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"Graduate\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"Graduate\"]]],null]],null]]],{\"statements\":[[0,\"              Student (Graduate) \"],[1,[18,\"Graduate\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"Undergraduate\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"Undergraduate\"]]],null]],null]]],{\"statements\":[[0,\"              Student (Undergraduate) \"],[1,[18,\"Undergraduate\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"otherstaff\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherstaff\"]]],null]],null]]],{\"statements\":[[0,\"              Other: \"],[1,[18,\"otherstaff\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other staff\",[20,[\"otherstf\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherstf\"]]],null]],null],true]]],false],[0,\"\\n        \"],[8],[0,\"\\n\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Award Requirements. Check all that apply.\"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"advise\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"advise\"]]],null]],null]]],{\"statements\":[[0,\"              Advising \"],[1,[18,\"advise\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"mentor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"mentor\"]]],null]],null]]],{\"statements\":[[0,\"              Mentoring \"],[1,[18,\"mentor\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"research\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"research\"]]],null]],null]]],{\"statements\":[[0,\"              Research and Creativity \"],[1,[18,\"research\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"teaching\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"teaching\"]]],null]],null]]],{\"statements\":[[0,\"              Teaching \"],[1,[18,\"teaching\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"outreach\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"outreach\"]]],null]],null]]],{\"statements\":[[0,\"              Outreach (Community Engagement) \"],[1,[18,\"outreach\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"service\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"service\"]]],null]],null]]],{\"statements\":[[0,\"              Service Learning\"],[1,[18,\"service\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"otherreq\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherreq\"]]],null]],null]]],{\"statements\":[[0,\"              Other :\\n\"]],\"parameters\":[]},null],[0,\"              \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other requirements\",[20,[\"othersreq\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"othersreq\"]]],null]],null],true]]],false],[0,\"\\n        \"],[4,\"component\",[[19,1,[\"submit-button\"]]],[[\"raised\",\"primary\"],[true,true]],{\"statements\":[[0,\"Submit for review\"]],\"parameters\":[]},null],[0,\"\\n      \"],[8],[0,\"\\n      \"],[8],[0,\"\\n\"]],\"parameters\":[1]},null]],\"parameters\":[]},null],[1,[18,\"outlet\"],false],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/awardinfo.hbs" } });
 });
 define("wistem-app-frontend/templates/awards", ["exports"], function (exports) {
   "use strict";
@@ -2685,7 +3495,7 @@ define("wistem-app-frontend/templates/components/award-display", ["exports"], fu
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "YJIwg306", "block": "{\"symbols\":[],\"statements\":[[6,\"div\"],[7],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Deadline: \"],[1,[20,[\"selectedAward\",\"subm_deadline\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Description: \"],[1,[20,[\"selectedAward\",\"description\"]],false],[0,\"\\n  \"],[8],[0,\"\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/award-display.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "PzC+dDMT", "block": "{\"symbols\":[\"purpose\",\"stem\"],\"statements\":[[6,\"div\"],[7],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Deadline: \"],[1,[20,[\"selectedAward\",\"subm_deadline\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Description: \"],[1,[20,[\"selectedAward\",\"description\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Sponsor: \"],[1,[20,[\"selectedAward\",\"sponsor_org\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    STEM Fields:\\n\"],[4,\"each\",[[20,[\"selectedAward\",\"stem_field\"]]],null,{\"statements\":[[0,\"      \"],[1,[19,2,[]],false],[0,\"\\n\"]],\"parameters\":[2]},null],[0,\"  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Award Purpose:\\n\"],[4,\"each\",[[20,[\"selectedAward\",\"award_purpose\"]]],null,{\"statements\":[[0,\"      \"],[1,[19,1,[]],false],[0,\"\\n\"]],\"parameters\":[1]},null],[0,\"  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Source: \"],[1,[20,[\"selectedAward\",\"source\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Additional Information: \"],[1,[20,[\"selectedAward\",\"additional_info\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Nomination Required: \"],[1,[20,[\"selectedAward\",\"nom_req\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Submition deadline: \"],[1,[20,[\"selectedAward\",\"subm_deadline\"]],false],[0,\"\\n  \"],[8],[0,\"\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/award-display.hbs" } });
 });
 define("wistem-app-frontend/templates/components/award-listing", ["exports"], function (exports) {
   "use strict";
@@ -2710,6 +3520,19 @@ define("wistem-app-frontend/templates/components/ember-login", ["exports"], func
     value: true
   });
   exports.default = Ember.HTMLBars.template({ "id": "Q+x88Hoj", "block": "{\"symbols\":[],\"statements\":[[6,\"section\"],[9,\"id\",\"login\"],[7],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"container\"],[7],[0,\"\\n    \\t\"],[6,\"div\"],[9,\"class\",\"row\"],[7],[0,\"\\n    \\t    \"],[6,\"div\"],[9,\"class\",\"col-xs-12\"],[7],[0,\"\\n        \\t    \"],[6,\"div\"],[9,\"class\",\"form-wrap\"],[7],[0,\"\\n              \"],[6,\"h1\"],[7],[0,\"Login\"],[8],[0,\"\\n                    \"],[6,\"form\"],[9,\"role\",\"form\"],[9,\"method\",\"post\"],[9,\"id\",\"login-form\"],[9,\"autocomplete\",\"off\"],[3,\"action\",[[19,0,[]],\"login\"],[[\"on\"],[\"submit\"]]],[7],[0,\"\\n                        \"],[6,\"div\"],[9,\"class\",\"form-group\"],[7],[0,\"\\n                            \"],[6,\"label\"],[9,\"for\",\"username\"],[9,\"class\",\"sr-only\"],[7],[0,\"Username\"],[8],[0,\"\\n                            \"],[1,[25,\"input\",null,[[\"type\",\"required\",\"class\",\"value\",\"placeholder\"],[\"text\",\"required\",\"form-control\",[20,[\"username\"]],\"Username\"]]],false],[0,\"\\n                            \"],[8],[0,\"\\n                        \"],[6,\"div\"],[9,\"class\",\"form-group\"],[7],[0,\"\\n                            \"],[6,\"label\"],[9,\"for\",\"key\"],[9,\"class\",\"sr-only\"],[7],[0,\"Password\"],[8],[0,\"\\n                            \"],[1,[25,\"input\",null,[[\"type\",\"required\",\"pattern\",\"autocomplete\",\"class\",\"value\",\"placeholder\"],[\"password\",\"required\",\".{6,}\",\"off\",\"form-control\",[20,[\"password\"]],\"Password\"]]],false],[0,\"\\n                        \"],[8],[0,\"\\n                      \"],[6,\"input\"],[9,\"type\",\"submit\"],[9,\"id\",\"btn-login\"],[9,\"class\",\"btn btn-custom btn-lg btn-block\"],[9,\"value\",\"Log in\"],[7],[8],[0,\"\\n                    \"],[8],[0,\"\\n                    \"],[8],[0,\"\\n              \"],[8],[0,\"\\n    \\t\"],[8],[0,\"\\n    \"],[8],[0,\"\\n\"],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/ember-login.hbs" } });
+});
+define('wistem-app-frontend/templates/components/ember-popper', ['exports', 'ember-popper/templates/components/ember-popper'], function (exports, _emberPopper) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _emberPopper.default;
+    }
+  });
 });
 define("wistem-app-frontend/templates/components/transition-group", ["exports"], function (exports) {
   "use strict";
@@ -2749,7 +3572,7 @@ define("wistem-app-frontend/templates/login", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "AoT9Vygt", "block": "{\"symbols\":[],\"statements\":[[1,[18,\"outlet\"],false]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/login.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "jU5fjef8", "block": "{\"symbols\":[],\"statements\":[[6,\"div\"],[9,\"style\",\"border-style: outset;\"],[9,\"align\",\"center\"],[7],[0,\"\\n  \"],[6,\"h3\"],[7],[0,\"Please log in\"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n  \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Name\",[20,[\"name\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"name\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n  \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex-40\",\"Password\",\"password\",[20,[\"password\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"password\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"login\",[20,[\"name\"]],[20,[\"password\"]]],null]]],{\"statements\":[[0,\"login\"]],\"parameters\":[]},null],[0,\"\\n\\n\\n  \"],[6,\"div\"],[10,\"class\",[26,[[25,\"if\",[[25,\"not\",[[20,[\"hidden\"]]],null],\"hidden\"],null]]]],[9,\"style\",\"color:red\"],[7],[0,\"\\n    Wrong user name and / or password. Please try again\\n  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\"],[6,\"div\"],[9,\"align\",\"center\"],[7],[0,\"\\n  Don't have an account?\\n\"],[4,\"link-to\",[\"register\"],[[\"class\"],[\"button\"]],{\"statements\":[[0,\"  Sign up!\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/login.hbs" } });
 });
 define("wistem-app-frontend/templates/register", ["exports"], function (exports) {
   "use strict";
@@ -2757,7 +3580,7 @@ define("wistem-app-frontend/templates/register", ["exports"], function (exports)
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "zkTxpQVi", "block": "{\"symbols\":[],\"statements\":[[1,[18,\"outlet\"],false]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/register.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "+aBo4/SW", "block": "{\"symbols\":[],\"statements\":[[6,\"div\"],[9,\"style\",\"border-style: outset;\"],[9,\"align\",\"center\"],[7],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Username\",[20,[\"name\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"name\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex-40\",\"Password\",\"password\",[20,[\"password\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"password\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Email\",[20,[\"email\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"email\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-40\",\"College\",[20,[\"college\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"college\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Department\",[20,[\"department\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"department\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"create\",[20,[\"name\"]],[20,[\"password\"]]],null]]],{\"statements\":[[0,\"Create Account\"]],\"parameters\":[]},null],[0,\"\\n\\n  \"],[6,\"div\"],[10,\"class\",[26,[[25,\"if\",[[25,\"not\",[[20,[\"hidden\"]]],null],\"hidden\"],null]]]],[9,\"style\",\"color:red\"],[7],[0,\"\\n    The create failed.. add some reason why\\n  \"],[8],[0,\"\\n\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/register.hbs" } });
 });
 define("wistem-app-frontend/templates/search", ["exports"], function (exports) {
   "use strict";
@@ -2765,7 +3588,7 @@ define("wistem-app-frontend/templates/search", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "iElxwNOx", "block": "{\"symbols\":[\"item\",\"applicant\",\"stemfields\"],\"statements\":[[6,\"div\"],[9,\"class\",\"jumbo\"],[7],[0,\"\\n  \"],[6,\"div\"],[7],[0,\"\\n\\n  \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Award Title\",[20,[\"title\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"title\"]]],null]],null]]]],false],[0,\"\\n      \"],[6,\"br\"],[7],[8],[0,\"\\n       Stem Fields:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"stemfields\"]],[20,[\"stemfield\"]],\"Select some fields...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"stemfield\"]]],null]],null]]],{\"statements\":[[0,\"        \"],[1,[19,3,[]],false],[0,\"\\n\"]],\"parameters\":[3]},null],[0,\"      \"],[6,\"br\"],[7],[8],[0,\"\\n       Applicants:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"applicanttype\"]],[20,[\"applicanttype\"]],\"Select some applicants...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"applicanttype\"]]],null]],null]]],{\"statements\":[[0,\"        \"],[1,[19,2,[]],false],[0,\"\\n\"]],\"parameters\":[2]},null],[0,\"      \"],[6,\"div\"],[10,\"class\",[26,[[25,\"if\",[[20,[\"hidden\"]],\"hidden\"],null]]]],[9,\"style\",\"color:blue;\"],[7],[0,\"\\n          \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"toggleHidden\"],null]]],{\"statements\":[[0,\"Advance Filters....\"]],\"parameters\":[]},null],[0,\"\\n      \"],[8],[0,\"\\n\\n\\n\\n      \"],[6,\"div\"],[10,\"class\",[26,[[25,\"if\",[[25,\"not\",[[20,[\"hidden\"]]],null],\"hidden\"],null]]]],[7],[0,\"\\n        Other options are going here\\n        \"],[6,\"br\"],[7],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"style\",\"color:blue;\"],[7],[0,\"\\n          \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"toggleHidden\"],null]]],{\"statements\":[[0,\"Hide Filters....\"]],\"parameters\":[]},null],[0,\"\\n        \"],[8],[0,\"\\n      \"],[8],[0,\"\\n\\n\\n\\n\"],[6,\"div\"],[9,\"align\",\"right\"],[7],[0,\"\\n  \"],[4,\"paper-button\",null,[[\"raised\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"flatButton\",[20,[\"title\"]],[20,[\"stemfield\"]],[20,[\"applicanttype\"]]],null]]],{\"statements\":[[0,\"Search\"]],\"parameters\":[]},null],[0,\"\\n\"],[8],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"div\"],[7],[0,\"\\n\"],[4,\"paper-list\",null,null,{\"statements\":[[4,\"each\",[[20,[\"model\",\"awards\"]]],null,{\"statements\":[[4,\"paper-item\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"openDialog\",[19,1,[]]],null]]],{\"statements\":[[0,\"        \"],[1,[25,\"award-listing\",null,[[\"item\"],[[19,1,[]]]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[1]},null]],\"parameters\":[]},null],[0,\"  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\\n\\n\"],[4,\"if\",[[20,[\"showDialog\"]]],null,{\"statements\":[[4,\"paper-dialog\",null,[[\"class\",\"onClose\",\"origin\",\"clickOutsideToClose\"],[\"flex-77\",[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null],[20,[\"dialogOrigin\"]],true]],{\"statements\":[[4,\"paper-toolbar\",null,null,{\"statements\":[[4,\"paper-toolbar-tools\",null,null,{\"statements\":[[0,\"        \"],[6,\"h2\"],[7],[1,[20,[\"selectedAward\",\"title\"]],false],[8],[0,\"\\n        \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n        \"],[4,\"paper-button\",null,[[\"iconButton\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null]]],{\"statements\":[[1,[25,\"paper-icon\",null,[[\"icon\"],[\"close\"]]],false]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-content\",null,null,{\"statements\":[[0,\"      \"],[1,[25,\"award-display\",null,[[\"selectedAward\"],[[20,[\"selectedAward\"]]]]],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-actions\",null,[[\"class\"],[\"layout-row\"]],{\"statements\":[[0,\"      \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n      \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"closeDialog\",\"ok\"],null]]],{\"statements\":[[0,\"OK\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/search.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "ghyJrMN/", "block": "{\"symbols\":[\"item\",\"acc\",\"aitem\",\"purpose\",\"awardsource\",\"applicant\",\"stemfields\"],\"statements\":[[6,\"div\"],[9,\"class\",\"jumbo\"],[7],[0,\"\\n  \"],[6,\"div\"],[7],[0,\"\\n\\n  \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Award Title\",[20,[\"title\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"title\"]]],null]],null]]]],false],[0,\"\\n      \"],[6,\"br\"],[7],[8],[0,\"\\n       Stem Fields:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"stemfields\"]],[20,[\"stemfield\"]],\"Select some fields...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"stemfield\"]]],null]],null]]],{\"statements\":[[0,\"        \"],[1,[19,7,[]],false],[0,\"\\n\"]],\"parameters\":[7]},null],[0,\"      \"],[6,\"br\"],[7],[8],[0,\"\\n       Applicants:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"applicanttype\"]],[20,[\"applicanttype\"]],\"Select some applicants...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"applicanttype\"]]],null]],null]]],{\"statements\":[[0,\"        \"],[1,[19,6,[]],false],[0,\"\\n\"]],\"parameters\":[6]},null],[0,\"\\n\\n\"],[4,\"bs-accordion\",null,null,{\"statements\":[[4,\"component\",[[19,2,[\"item\"]]],[[\"value\"],[\"1\"]],{\"statements\":[[4,\"component\",[[19,3,[\"title\"]]],null,{\"statements\":[[0,\"          \"],[6,\"strong\"],[9,\"style\",\"color:blue;\"],[7],[0,\"Advanced Filter\"],[8],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"component\",[[19,3,[\"body\"]]],null,{\"statements\":[[0,\"          \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Description\",[20,[\"description\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"description\"]]],null]],null]]]],false],[0,\"\\n          \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Award URL\",[20,[\"awardurl\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardurl\"]]],null]],null]]]],false],[0,\"\\n          \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Sponsor\",[20,[\"sponsor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"sponsor\"]]],null]],null]]]],false],[0,\"\\n\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"awardsources\"]],[20,[\"awardsources\"]],\"Sources\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardsources\"]]],null]],null]]],{\"statements\":[[0,\"            \"],[1,[19,5,[]],false],[0,\"\\n\"]],\"parameters\":[5]},null],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"awardpurpose\"]],[20,[\"awardpurpose\"]],\"Purpose\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardpurpose\"]]],null]],null]]],{\"statements\":[[0,\"            \"],[1,[19,4,[]],false],[0,\"\\n\"]],\"parameters\":[4]},null]],\"parameters\":[]},null]],\"parameters\":[3]},null]],\"parameters\":[2]},null],[0,\"\\n\\n\\n\"],[6,\"div\"],[9,\"align\",\"right\"],[7],[0,\"\\n  \"],[4,\"paper-button\",null,[[\"raised\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"flatButton\",[20,[\"title\"]],[20,[\"stemfield\"]],[20,[\"applicanttype\"]],[20,[\"description\"]],[20,[\"awardurl\"]],[20,[\"sponsor\"]]],null]]],{\"statements\":[[0,\"Search\"]],\"parameters\":[]},null],[0,\"\\n\"],[8],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"div\"],[7],[0,\"\\n\"],[4,\"paper-list\",null,null,{\"statements\":[[4,\"each\",[[20,[\"model\",\"awards\"]]],null,{\"statements\":[[4,\"paper-item\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"openDialog\",[19,1,[]]],null]]],{\"statements\":[[0,\"        \"],[1,[25,\"award-listing\",null,[[\"item\"],[[19,1,[]]]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[1]},null]],\"parameters\":[]},null],[0,\"  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\\n\\n\"],[4,\"if\",[[20,[\"showDialog\"]]],null,{\"statements\":[[4,\"paper-dialog\",null,[[\"class\",\"onClose\",\"origin\",\"clickOutsideToClose\"],[\"flex-77\",[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null],[20,[\"dialogOrigin\"]],true]],{\"statements\":[[4,\"paper-toolbar\",null,null,{\"statements\":[[4,\"paper-toolbar-tools\",null,null,{\"statements\":[[0,\"        \"],[6,\"h2\"],[7],[1,[20,[\"selectedAward\",\"title\"]],false],[8],[0,\"\\n        \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n        \"],[4,\"paper-button\",null,[[\"iconButton\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null]]],{\"statements\":[[1,[25,\"paper-icon\",null,[[\"icon\"],[\"close\"]]],false]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-content\",null,null,{\"statements\":[[0,\"      \"],[1,[25,\"award-display\",null,[[\"selectedAward\"],[[20,[\"selectedAward\"]]]]],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-actions\",null,[[\"class\"],[\"layout-row\"]],{\"statements\":[[0,\"      \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n      \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"closeDialog\",\"ok\"],null]]],{\"statements\":[[0,\"OK\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/search.hbs" } });
 });
 define('wistem-app-frontend/utils/clamp', ['exports', 'ember-paper/utils/clamp'], function (exports, _clamp) {
   'use strict';
@@ -2802,6 +3625,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("wistem-app-frontend/app")["default"].create({"name":"wistem-app-frontend","version":"0.0.0+36e9a52d"});
+  require("wistem-app-frontend/app")["default"].create({"name":"wistem-app-frontend","version":"0.0.0+3f6e3568"});
 }
 //# sourceMappingURL=wistem-app-frontend.map

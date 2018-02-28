@@ -52,12 +52,17 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
 
   QUnit.test('controllers/login.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/login.js should pass ESLint\n\n14:7 - Unexpected console statement. (no-console)\n15:7 - Unexpected console statement. (no-console)\n17:9 - Unexpected console statement. (no-console)\n19:9 - Unexpected console statement. (no-console)\n24:9 - Unexpected console statement. (no-console)');
+    assert.ok(true, 'controllers/login.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('controllers/register.js', function (assert) {
+    assert.expect(1);
+    assert.ok(false, 'controllers/register.js should pass ESLint\n\n5:48 - \'department\' is defined but never used. (no-unused-vars)');
   });
 
   QUnit.test('controllers/search.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/search.js should pass ESLint\n\n8:7 - Unexpected console statement. (no-console)\n9:7 - Unexpected console statement. (no-console)\n10:32 - \'$\' is not defined. (no-undef)\n21:7 - Unexpected console statement. (no-console)\n29:9 - Unexpected console statement. (no-console)\n33:9 - Unexpected console statement. (no-console)');
+    assert.ok(false, 'controllers/search.js should pass ESLint\n\n8:32 - \'$\' is not defined. (no-undef)');
   });
 
   QUnit.test('models/award.js', function (assert) {
@@ -112,7 +117,7 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
 
   QUnit.test('routes/search.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'routes/search.js should pass ESLint\n\n5:17 - \'Ember\' is not defined. (no-undef)\n155:17 - \'Ember\' is not defined. (no-undef)\n163:17 - \'Ember\' is not defined. (no-undef)');
+    assert.ok(false, 'routes/search.js should pass ESLint\n\n5:17 - \'Ember\' is not defined. (no-undef)\n128:17 - \'Ember\' is not defined. (no-undef)\n136:17 - \'Ember\' is not defined. (no-undef)\n143:17 - \'Ember\' is not defined. (no-undef)\n153:17 - \'Ember\' is not defined. (no-undef)');
   });
 });
 define('wistem-app-frontend/tests/helpers/destroy-app', ['exports'], function (exports) {
@@ -378,6 +383,11 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
     assert.ok(true, 'test-helper.js should pass ESLint\n\n');
   });
 
+  QUnit.test('unit/controllers/register-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/controllers/register-test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('unit/controllers/search-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/controllers/search-test.js should pass ESLint\n\n');
@@ -406,6 +416,20 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
   QUnit.test('unit/routes/search-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/search-test.js should pass ESLint\n\n');
+  });
+});
+define('wistem-app-frontend/tests/unit/controllers/register-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('controller:register', 'Unit | Controller | register', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
   });
 });
 define('wistem-app-frontend/tests/unit/controllers/search-test', ['ember-qunit'], function (_emberQunit) {
