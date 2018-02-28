@@ -2797,6 +2797,28 @@ define('wistem-app-frontend/mixins/transition-mixin', ['exports', 'ember-css-tra
     }
   });
 });
+define('wistem-app-frontend/models/applicanttype', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberData.default.Model.extend({
+    name: _emberData.default.attr('string'),
+    awards: _emberData.default.hasMany('award')
+  });
+});
+define('wistem-app-frontend/models/areaofinterest', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberData.default.Model.extend({
+    name: _emberData.default.attr('string'),
+    awards: _emberData.default.hasMany('award')
+  });
+});
 define('wistem-app-frontend/models/award', ['exports', 'ember-data'], function (exports, _emberData) {
   'use strict';
 
@@ -2820,8 +2842,62 @@ define('wistem-app-frontend/models/award', ['exports', 'ember-data'], function (
     submdeadline: _emberData.default.attr('date'),
     source: _emberData.default.attr('string'),
     previousapplicants: _emberData.default.attr('number'),
-    createdon: _emberData.default.attr('date')
+    createdon: _emberData.default.attr('date'),
 
+    // Related fields
+    createdby: _emberData.default.belongsTo('user'),
+    applicanttypes: _emberData.default.hasMany('applicanttype'),
+    awardpurposes: _emberData.default.hasMany('awardpurpose'),
+    stemfields: _emberData.default.hasMany('stemfield')
+  });
+});
+define('wistem-app-frontend/models/awardpurpose', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberData.default.Model.extend({
+    name: _emberData.default.attr('string'),
+    awards: _emberData.default.hasMany('award')
+  });
+});
+define('wistem-app-frontend/models/profile', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberData.default.Model.extend({
+    org: _emberData.default.attr('string'),
+    college: _emberData.default.attr('string'),
+    dept: _emberData.default.attr('string'),
+    otherdetails: _emberData.default.attr('string'),
+    user: _emberData.default.belongsTo('user')
+  });
+});
+define('wistem-app-frontend/models/stemfield', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberData.default.Model.extend({
+    name: _emberData.default.attr('string'),
+    awards: _emberData.default.hasMany('award')
+  });
+});
+define('wistem-app-frontend/models/user', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberData.default.Model.extend({
+    username: _emberData.default.attr('string'),
+    email: _emberData.default.attr('string'),
+    firstname: _emberData.default.attr('string'),
+    lastname: _emberData.default.attr('string')
   });
 });
 define('wistem-app-frontend/resolver', ['exports', 'ember-resolver'], function (exports, _emberResolver) {
@@ -2917,7 +2993,7 @@ define('wistem-app-frontend/routes/awards', ['exports'], function (exports) {
       //   record.set('title','savable');
       //   record.save();
       // });
-      return this.store.findAll('awards');
+      return this.store.findAll('award', { include: 'applicanttypes,awardpurposes,stemfields,createdby' });
     }
   });
 });

@@ -3,17 +3,16 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: models.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T02:46:30-06:00
+# @Last modified time: 2018-02-28T11:59:10-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
 
 from __future__ import unicode_literals
-
 from django.db import models
-
 from django.contrib.auth.models import User
 from rest_framework_json_api import serializers
+
 
 class Profile(models.Model):
     UNL = 'unl'
@@ -29,24 +28,15 @@ class Profile(models.Model):
         (ORG_OTHER, 'Other'),
     )
 
-    user = models.ForeignKey(
-        User,
-        models.CASCADE
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     org = models.CharField(max_length=30, choices=ORG_CHOICES, default=UNO)
     college = models.CharField(max_length=1000, blank=True)
     dept = models.CharField(max_length=1000, blank=True)
-    other_details = models.CharField(max_length=1000, blank=True)
-    areas_of_interest = models.ManyToManyField('AreaOfInterest',blank=True)
+    otherdetails = models.CharField(max_length=1000, blank=True)
+    areasofinterest = models.ManyToManyField('AreaOfInterest',blank=True)
 
     def __str__(self):
         return str(self.user.username)
-
-class UserSerializer(serializers.Serializer):
-    username = serializers.CharField(max_length=150, allow_blank=False)
-    first_name = serializers.CharField(max_length=30, allow_blank=True)
-    last_name = serializers.CharField(max_length=30, allow_blank=True)
-    email = serializers.EmailField(allow_blank=True)
 
 
 class Award(models.Model):
@@ -84,10 +74,10 @@ class Award(models.Model):
     createdon = models.DateTimeField(auto_now_add=True)
 
     # Relationships
-    stemfield = models.ManyToManyField('StemField', blank=True)
-    applicanttype = models.ManyToManyField('ApplicantType', blank=True)
-    awardpurpose = models.ManyToManyField('AwardPurpose', blank=True)
-    createdby = models.ForeignKey('Profile', on_delete=models.PROTECT)
+    stemfields = models.ManyToManyField('StemField', related_name='awards', blank=True)
+    applicanttypes = models.ManyToManyField('ApplicantType', related_name='awards', blank=True)
+    awardpurposes = models.ManyToManyField('AwardPurpose', related_name='awards', blank=True)
+    createdby = models.ForeignKey('Profile', related_name='awards', on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.title)
@@ -95,53 +85,87 @@ class Award(models.Model):
 	class JSONAPIMeta:
 		resource_name = "awards"
 
-class ApplicantType(models.Model):
-    appType = models.CharField(max_length=1000, blank=False, unique=True)
+
+class Applicanttype(models.Model):
+    name = models.CharField(max_length=1000, blank=False, unique=True)
 
     def __str__(self):
-        return str(self.appType)
+        return str(self.name)
 
-class ApplicantTypeSerializer(serializers.Serializer):
-    appType = serializers.CharField(max_length=1000, allow_blank=False)
+	class JSONAPIMeta:
+		resource_name = "applicanttypes"
 
-class StemField(models.Model):
-    field = models.CharField(max_length=1000, blank=False, unique=True)
+class ApplicanttypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Applicanttype
+        fields = ('id','name')
 
-    def __str__(self):
-        return str(self.field)
 
-class StemFieldSerializer(serializers.Serializer):
-    field = serializers.CharField(max_length=1000, allow_blank=False)
-
-class AwardPurpose(models.Model):
-    purpose = models.CharField(max_length=1000, blank=False, unique=True)
+class Stemfield(models.Model):
+    name = models.CharField(max_length=1000, blank=False, unique=True)
 
     def __str__(self):
-        return str(self.purpose)
+        return str(self.name)
 
-class AwardPurposeSerializer(serializers.Serializer):
-    purpose = serializers.CharField(max_length=1000, allow_blank=False)
+	class JSONAPIMeta:
+		resource_name = "stemfields"
 
-class AreaOfInterest(models.Model):
-    area = models.CharField(max_length=1000, blank=False)
+class StemfieldSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Stemfield
+        fields = ('id','name')
+
+
+class Awardpurpose(models.Model):
+    name = models.CharField(max_length=1000, blank=False, unique=True)
 
     def __str__(self):
-        return str(self.area)
+        return str(self.name)
 
-class AreaOfInterestSerializer(serializers.Serializer):
-    area = serializers.CharField(max_length=1000, allow_blank=False)
+	class JSONAPIMeta:
+		resource_name = "awardpurposes"
+
+class AwardpurposeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Awardpurpose
+        fields = ('id','name')
+
+
+class Areaofinterest(models.Model):
+    name = models.CharField(max_length=1000, blank=False)
+
+    def __str__(self):
+        return str(self.name)
+
+	class JSONAPIMeta:
+		resource_name = "areaofinterests"
+
+class AreaofinterestSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Areaofinterest
+        fields = ('id','name')
+
+
+class UserSerializer(serializers.ModelSerializer):
+    lastname = serializers.CharField(source='last_name')
+    firstname = serializers.CharField(source='first_name')
+    class Meta:
+		resource_name = 'users'
+		model = User
+		fields = ('id', 'username', 'lastname', 'firstname', 'email',)
+
 
 class ProfileSerializer(serializers.ModelSerializer):
     included_serializers = {
         'user': UserSerializer,
     }
     # Related fields
-    user = UserSerializer()
-    areas_of_interest = AreaOfInterestSerializer(many=True)
+    # user = UserSerializer()
+    #areasofinterest = AreaOfInterestSerializer(many=True)
 
     class Meta:
         model = Profile
-        fields = ('id', 'user', 'org', 'college', 'dept', 'otherdetails')
+        fields = ('id', 'org', 'college', 'dept', 'otherdetails','user')
 
         #'applicanttype','createdby','awardpurpose','stemfield'
 
@@ -151,6 +175,9 @@ class ProfileSerializer(serializers.ModelSerializer):
 class AwardSerializer(serializers.ModelSerializer):
     included_serializers = {
         'createdby': ProfileSerializer,
+        'applicanttypes': ApplicanttypeSerializer,
+        'awardpurposes': AwardpurposeSerializer,
+        'stemfields': StemfieldSerializer
     }
 
     # Related fields
@@ -161,14 +188,8 @@ class AwardSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Award
-        fields = ('id', 'title', 'description', 'awardlink','sponsororg', 'recurring','nomreq','recurinterval','opendate','nomdeadline','submdeadline','additionalinfo','source','previousapplicants','createdon')
+        fields = ('id', 'title', 'description', 'awardlink','sponsororg', 'recurring','nomreq','recurinterval','opendate','nomdeadline','submdeadline','additionalinfo','source','previousapplicants','createdon','createdby','applicanttypes','awardpurposes','stemfields')
 
-        #'applicanttype','createdby','awardpurpose','stemfield'
 
     class JSONAPIMeta:
 		included_resources = ['createdby']
-# class AwardSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Award
-#         depth = 1
-#         fields = "__all__"

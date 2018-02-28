@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: controllers.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T02:56:19-06:00
+# @Last modified time: 2018-02-28T11:53:53-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -52,6 +52,18 @@ def home(request):
 
 	return render(request, 'index.html')
 
+def staff_or_401(request):
+    if not request.user.is_staff:
+        return Response({'success': False},status=status.HTTP_401_UNAUTHORIZED)
+
+def super_user_or_401(request):
+    if not request.user.is_superuser:
+        return Response({'success': False},status=status.HTTP_401_UNAUTHORIZED)
+
+def admin_or_401(request):
+    if not (request.user.is_staff or request.user.is_superuser):
+        return Response({'success': False},status=status.HTTP_401_UNAUTHORIZED)
+
 class AwardViewSet(viewsets.ModelViewSet):
     """
     Profile Endpoint, loaded upon login typically alongside User
@@ -60,10 +72,11 @@ class AwardViewSet(viewsets.ModelViewSet):
     queryset = api.Award.objects.all()
     serializer_class = api.AwardSerializer
     permission_classes = (AllowAny,)
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('id', 'title', 'description', 'awardlink','sponsororg', 'recurring','nomreq','recurinterval','opendate','nomdeadline','submdeadline','additionalinfo','source','previousapplicants','createdon')
 
     def create(self, request):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=status.HTTP_401_UNAUTHORIZED)
+        admin_or_401(request)
 
         serializer = api.AwardSerializer(data=request.data)
         if not serializer.is_valid():
@@ -74,8 +87,7 @@ class AwardViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def update(self, request, pk=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=status.HTTP_401_UNAUTHORIZED)
+        admin_or_401(request)
 
         serializer = api.AwardSerializer(data=request.data)
         if not serializer.is_valid():
@@ -85,316 +97,171 @@ class AwardViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+class UserViewSet(viewsets.ModelViewSet):
+	"""
+	Endpoint that allows user data to be viewed.
+	"""
+	resource_name = 'users'
+	serializer_class = api.UserSerializer
+	queryset = User.objects.all()
+	permission_classes = (IsAuthenticated,)
 
-class StemFieldList(APIView):
+	def get_queryset(self):
+		user = self.request.user
+		if user.is_superuser:
+			return User.objects.all()
+		return User.objects.filter(username=user.username)
+
+class ProfileViewSet(viewsets.ModelViewSet):
+	"""
+	Endpoint that allows user data to be viewed.
+	"""
+	resource_name = 'profiles'
+	serializer_class = api.ProfileSerializer
+	queryset = api.Profile.objects.all()
+	permission_classes = (IsAuthenticated,)
+
+	def get_queryset(self):
+		user = self.request.user
+		if user.is_superuser:
+			return api.Profile.objects.all()
+		return get_object_or_404(api.Profile, user__username=user.username)
+
+class StemfieldViewSet(viewsets.ModelViewSet):
+    """
+    Stemfield endpoint
+    """
+    resource_name = 'stemfields'
+    queryset = api.Stemfield.objects.all()
+    serializer_class = api.StemfieldSerializer
     permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('name',)
 
-    def get(self, request):
-        print('REQUEST DATA')
-        print(str(request.data))
+    def create(self, request):
+        admin_or_401(request)
 
-        field = StemField.objects.all()
-        json_data = serializers.serialize('json', field)
-        return HttpResponse(json_data, content_type='json')
+        serializer = api.StemfieldSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request):
-        if not request.user.is_superuser or not request.user.is_authenticated:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        field = bleach.clean(request.data.get('field'))
+        serializer.save()
 
-        newStemField = StemField(
-            field=field
-        )
-        try:
-            newStemField.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
 
-        newStemField.save()
-        print('New Stem Field added: ' + field)
-        return Response({'success': True}, status=status.HTTP_200_OK)
+    def update(self, request, pk=None):
+        admin_or_401(request)
+
+        serializer = api.StemfieldSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data)
 
 
-class StemFieldDetail(APIView):
-    def get(self, request, id=None, format=None):
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        try:
-            stemfield = StemField.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = StemFieldSerializer(stemfield)
-        json_data = JSONRenderer().render(serializer.data)
-        return HttpResponse(json_data, content_type='json')
-
-    def put(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        try:
-            stemfield = StemField.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        if request.data.get('field') != None:
-            stemfield.field = bleach.clean(request.data.get('field'))
-        try:
-            stemfield.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
-
-        stemfield.save()
-        print('Stem Field updated: ' + stemfield.field)
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-    def delete(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        StemField.objects.get(pk=id).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-
-class AwardPurposeList(APIView):
+class AwardpurposeViewSet(viewsets.ModelViewSet):
+    """
+    Awardpurpose endpoint
+    """
+    resource_name = 'awardpurposes'
+    queryset = api.Awardpurpose.objects.all()
+    serializer_class = api.AwardpurposeSerializer
     permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('name',)
 
-    def get(self, request):
-        print('REQUEST DATA')
-        print(str(request.data))
+    def create(self, request):
+        admin_or_401(request)
 
-        purpose = AwardPurpose.objects.all()
-        json_data = serializers.serialize('json', purpose)
-        return HttpResponse(json_data, content_type='json')
+        serializer = api.AwardpurposeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request):
-        if not request.user.is_superuser or not request.user.is_authenticated:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        purpose = bleach.clean(request.data.get('purpose'))
+        serializer.save()
 
-        newAwardPurpose = AwardPurpose(
-            purpose=purpose
-        )
-        try:
-            newAwardPurpose.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
 
-        newAwardPurpose.save()
-        print('New Award Purpose added: ' + purpose)
-        return Response({'success': True}, status=status.HTTP_200_OK)
+    def update(self, request, pk=None):
+        admin_or_401(request)
 
+        serializer = api.AwardpurposeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class AwardPurposeDetail(APIView):
-    def get(self, request, id=None, format=None):
-        print('REQUEST DATA')
-        print(str(request.data))
+        serializer.save()
 
-        try:
-            awardpurpose = AwardPurpose.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = AwardPurposeSerializer(awardpurpose)
-        json_data = JSONRenderer().render(serializer.data)
-        return HttpResponse(json_data, content_type='json')
+        return Response(serializer.data)
 
-    def put(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        try:
-            awardpurpose = AwardPurpose.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-        if request.data.get('purpose') != None:
-            awardpurpose.purpose = bleach.clean(request.data.get('purpose'))
-        try:
-            awardpurpose.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
-
-        awardpurpose.save()
-        print('Award Purpose updated: ' + awardpurpose.purpose)
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-    def delete(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        AwardPurpose.objects.get(pk=id).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-
-class AreaOfInterestList(APIView):
+class AreaofinterestViewSet(viewsets.ModelViewSet):
+    """
+    Area of interest endpoint
+    """
+    resource_name = 'areaofinterests'
+    queryset = api.Areaofinterest.objects.all()
+    serializer_class = api.AreaofinterestSerializer
     permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('name',)
 
-    def get(self, request):
-        print('REQUEST DATA')
-        print(str(request.data))
+    def create(self, request):
+        admin_or_401(request)
 
-        area = AreaOfInterest.objects.all()
-        json_data = serializers.serialize('json', area)
-        return HttpResponse(json_data, content_type='json')
+        serializer = api.AreaofinterestSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request):
-        if not request.user.is_superuser or not request.user.is_authenticated:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        area = bleach.clean(request.data.get('area'))
+        serializer.save()
 
-        newAreaOfInterest = AreaOfInterest(
-            area=area
-        )
-        try:
-            newAreaOfInterest.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
 
-        newAreaOfInterest.save()
-        print('New Area of Interest added: ' + area)
-        return Response({'success': True}, status=status.HTTP_200_OK)
+    def update(self, request, pk=None):
+        admin_or_401(request)
+
+        serializer = api.AreaofinterestSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data)
 
 
-class AreaOfInterestDetail(APIView):
-    def get(self, request, id=None, format=None):
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        try:
-            areaofinterest = AreaOfInterest.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = AreaOfInterestSerializer(areaofinterest)
-        json_data = JSONRenderer().render(serializer.data)
-        return HttpResponse(json_data, content_type='json')
-
-    def put(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        try:
-            areaofinterest = AreaOfInterest.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        if request.data.get('area') != None:
-            areaofinterest.area = bleach.clean(request.data.get('area'))
-        try:
-            areaofinterest.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
-
-        areaofinterest.save()
-        print('Area of Interest updated: ' + areaofinterest.area)
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-    def delete(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        AreaOfInterest.objects.get(pk=id).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-
-class ApplicantTypeList(APIView):
+class ApplicanttypeViewSet(viewsets.ModelViewSet):
+    """
+    ApplicantType endpoint
+    """
+    resource_name = 'applicanttypes'
+    queryset = api.Applicanttype.objects.all()
+    serializer_class = api.ApplicanttypeSerializer
     permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('name',)
 
-    def get(self, request):
-        print('REQUEST DATA')
-        print(str(request.data))
+    def create(self, request):
+        admin_or_401(request)
 
-        appType = ApplicantType.objects.all()
-        json_data = serializers.serialize('json', appType)
-        return HttpResponse(json_data, content_type='json')
+        serializer = api.ApplicanttypeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def post(self, request):
-        if not request.user.is_superuser or not request.user.is_authenticated:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-        appType = bleach.clean(request.data.get('appType'))
+        serializer.save()
 
-        newApplicantType = ApplicantType(
-            appType=appType
-        )
-        try:
-            newApplicantType.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data)
 
-        newApplicantType.save()
-        print('New Applicant Type added: ' + appType)
-        return Response({'success': True}, status=status.HTTP_200_OK)
+    def update(self, request, pk=None):
+        admin_or_401(request)
+
+        serializer = api.ApplicanttypeSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data)
 
 
-class ApplicantTypeDetail(APIView):
-    def get(self, request, id=None, format=None):
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        try:
-            applicanttype = ApplicantType.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = ApplicantTypeSerializer(applicanttype)
-        json_data = JSONRenderer().render(serializer.data)
-        return HttpResponse(json_data, content_type='json')
-
-    def put(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        try:
-            applicanttype = ApplicantType.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        if request.data.get('appType') != None:
-            applicanttype.appType = bleach.clean(request.data.get('appType'))
-        try:
-            applicanttype.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
-
-        applicanttype.save()
-        print('Applicatant type updated: ' + applicanttype.appType)
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-    def delete(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        ApplicantType.objects.get(pk=id).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
 
 
 class Register(APIView):
@@ -402,21 +269,17 @@ class Register(APIView):
 
     def post(self, request, *args, **kwargs):
         # Login
-        username = request.POST.get('username')  # you need to apply validators to these
-        #print username
-        password = request.POST.get('password')  # you need to apply validators to these
-        email = request.POST.get('email')  # you need to apply validators to these
-        #gender = request.POST.get('gender')  # you need to apply validators to these
-        #age = request.POST.get('age')  # you need to apply validators to these
-        #educationlevel = request.POST.get('educationlevel')  # you need to apply validators to these
-        #city = request.POST.get('city')  # you need to apply validators to these
-        #state = request.POST.get('state')  # you need to apply validators to these
-        org = request.POST.get('org')  # you need to apply validators to these
-        college = request.POST.get('college')  # you need to apply validators to these
-        dept = request.POST.get('dept')  # you need to apply validators to these
-        other_details = request.POST.get('other_details')  # you need to apply validators to these
-        areas_of_interest = request.POST.get('areas_of_interest')
-        areas_of_interest = AreaOfInterest.objects.get_or_create(area=areas_of_interest)
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        email = request.POST.get('email')
+        lastname = request.POST.get('lastname')
+        firstname = request.POST.get('firstname')
+        org = request.POST.get('org')
+        college = request.POST.get('college')
+        dept = request.POST.get('dept')
+        other_details = request.POST.get('otherdetails')
+        areas_of_interest = request.POST.get('areasofinterest')
+        areas_of_interest = api.Areaofinterest.objects.get_or_create(name=areas_of_interest)
 
         print request.POST.get('username')
         if User.objects.filter(username=username).exists():
@@ -424,9 +287,9 @@ class Register(APIView):
         elif User.objects.filter(email=email).exists():
             return Response({'email': 'Email is taken.', 'status': 'error'})
         # especially before you pass them in here
-        newuser = User.objects.create_user(email=email, username=username, password=password)
+        newuser = User.objects.create_user(email=email, last_name=lastname, first_name=firstname, username=username, password=password)
 
-        newprofile = Profile(user=newuser, org=org, college=college, dept=dept, other_details=other_details)
+        newprofile = api.Profile(user=newuser, org=org, college=college, dept=dept, otherdetails=other_details)
                            #  areas_of_interest=areas_of_interest)
         newprofile.save()
         # Send email msg

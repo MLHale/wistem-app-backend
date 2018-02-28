@@ -65,9 +65,39 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(false, 'controllers/search.js should pass ESLint\n\n8:32 - \'$\' is not defined. (no-undef)');
   });
 
+  QUnit.test('models/applicanttype.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'models/applicanttype.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('models/areaofinterest.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'models/areaofinterest.js should pass ESLint\n\n');
+  });
+
   QUnit.test('models/award.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'models/award.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('models/awardpurpose.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'models/awardpurpose.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('models/profile.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'models/profile.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('models/stemfield.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'models/stemfield.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('models/user.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'models/user.js should pass ESLint\n\n');
   });
 
   QUnit.test('resolver.js', function (assert) {
@@ -393,6 +423,36 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
     assert.ok(true, 'unit/controllers/search-test.js should pass ESLint\n\n');
   });
 
+  QUnit.test('unit/models/applicanttype-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/models/applicanttype-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/models/areaofinterest-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/models/areaofinterest-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/models/awardpurpose-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/models/awardpurpose-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/models/profile-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/models/profile-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/models/stemfield-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/models/stemfield-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/models/user-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/models/user-test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('unit/routes/awardinfo-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/awardinfo-test.js should pass ESLint\n\n');
@@ -444,6 +504,90 @@ define('wistem-app-frontend/tests/unit/controllers/search-test', ['ember-qunit']
   (0, _emberQunit.test)('it exists', function (assert) {
     var controller = this.subject();
     assert.ok(controller);
+  });
+});
+define('wistem-app-frontend/tests/unit/models/applicanttype-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleForModel)('applicanttype', 'Unit | Model | applicanttype', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var model = this.subject();
+    // let store = this.store();
+    assert.ok(!!model);
+  });
+});
+define('wistem-app-frontend/tests/unit/models/areaofinterest-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleForModel)('areaofinterest', 'Unit | Model | areaofinterest', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var model = this.subject();
+    // let store = this.store();
+    assert.ok(!!model);
+  });
+});
+define('wistem-app-frontend/tests/unit/models/awardpurpose-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleForModel)('awardpurpose', 'Unit | Model | awardpurpose', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var model = this.subject();
+    // let store = this.store();
+    assert.ok(!!model);
+  });
+});
+define('wistem-app-frontend/tests/unit/models/profile-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleForModel)('profile', 'Unit | Model | profile', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var model = this.subject();
+    // let store = this.store();
+    assert.ok(!!model);
+  });
+});
+define('wistem-app-frontend/tests/unit/models/stemfield-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleForModel)('stemfield', 'Unit | Model | stemfield', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var model = this.subject();
+    // let store = this.store();
+    assert.ok(!!model);
+  });
+});
+define('wistem-app-frontend/tests/unit/models/user-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleForModel)('user', 'Unit | Model | user', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var model = this.subject();
+    // let store = this.store();
+    assert.ok(!!model);
   });
 });
 define('wistem-app-frontend/tests/unit/routes/awardinfo-test', ['ember-qunit'], function (_emberQunit) {
