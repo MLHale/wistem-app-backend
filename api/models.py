@@ -1,12 +1,19 @@
+# @Author: Matthew Hale <matthale>
+# @Date:   2018-02-28T00:25:25-06:00
+# @Email:  mlhale@unomaha.edu
+# @Filename: models.py
+# @Last modified by:   matthale
+# @Last modified time: 2018-02-28T00:40:48-06:00
+# @Copyright: Copyright (C) 2018 Matthew L. Hale
+
+
+
 from __future__ import unicode_literals
 
 from django.db import models
-from django.core.validators import *
 
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User
 
-from django.contrib import admin
-import base64
 
 class Profile(models.Model):
     UNL = 'unl'
@@ -30,7 +37,7 @@ class Profile(models.Model):
     college = models.CharField(max_length=1000, blank=True)
     dept = models.CharField(max_length=1000, blank=True)
     other_details = models.CharField(max_length=1000, blank=True)
-    areas_of_interest = models.ManyToManyField('AreaOfInterest')
+    areas_of_interest = models.ManyToManyField('AreaOfInterest',blank=True)
 
     def __str__(self):
         return str(self.user.username)
@@ -56,15 +63,15 @@ class Award(models.Model):
     description = models.TextField(blank=True)
     award_link = models.URLField(max_length=1000, blank=False)
     sponsor_org = models.CharField(max_length=1000, blank=False)
-    stem_field = models.ManyToManyField('StemField', blank=False, null=True)
+    stem_field = models.ManyToManyField('StemField', blank=True)
     recurring = models.BooleanField(default=False)
     nom_req = models.BooleanField(default=False)
     recur_interval = models.CharField(max_length=1000, blank=False)
     open_date = models.DateTimeField()
     nom_deadline = models.DateTimeField()
     subm_deadline = models.DateTimeField()
-    applicant_type = models.ManyToManyField('ApplicantType', blank=False, null=True)
-    award_purpose = models.ManyToManyField('AwardPurpose', blank=False, null=True)
+    applicant_type = models.ManyToManyField('ApplicantType', blank=True)
+    award_purpose = models.ManyToManyField('AwardPurpose', blank=True)
     additional_info = models.TextField(blank=True)
     source = models.CharField(max_length=30, choices=AWARD_SOURCE_CHOICES, default=SOURCE_OTHER)
     previous_applicants = models.IntegerField(default=0, blank=False)

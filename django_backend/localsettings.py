@@ -1,3 +1,13 @@
+# @Author: Matthew Hale <matthale>
+# @Date:   2018-02-28T00:25:25-06:00
+# @Email:  mlhale@unomaha.edu
+# @Filename: localsettings.py
+# @Last modified by:   matthale
+# @Last modified time: 2018-02-28T00:32:57-06:00
+# @Copyright: Copyright (C) 2018 Matthew L. Hale
+
+
+
 # Set to DEV for debug and other configuration items.  PROD otherwise...
 ENVIRONMENT = 'DEV'
 
@@ -20,4 +30,4 @@ DATABASES = {
 
 ALLOWED_HOSTS = ['localhost', 'django']
 DEBUG=False
-ENVIRONMENT = "PROD"
+ENVIRONMENT = "DEV"

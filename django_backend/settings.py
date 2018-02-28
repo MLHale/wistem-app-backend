@@ -1,3 +1,13 @@
+# @Author: Matthew Hale <matthale>
+# @Date:   2018-02-28T00:25:25-06:00
+# @Email:  mlhale@unomaha.edu
+# @Filename: settings.py
+# @Last modified by:   matthale
+# @Last modified time: 2018-02-28T00:50:21-06:00
+# @Copyright: Copyright (C) 2018 Matthew L. Hale
+
+
+
 """
 Django settings for django_backend project.
 
@@ -40,10 +50,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    #just api in production...
     'api',
     'rest_framework',
-    #'axes',
+    'rest_framework_json_api',
+    'django_filters'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -61,7 +71,7 @@ MIDDLEWARE_CLASSES = [
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, "static/")],
+        'DIRS': [os.path.join(BASE_DIR, "static/ember/")],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -132,13 +142,30 @@ STATICFILES_DIRS = [
 
 REST_FRAMEWORK = {
     'PAGE_SIZE': 10,
+    'EXCEPTION_HANDLER': 'rest_framework_json_api.exceptions.exception_handler',
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework_json_api.pagination.PageNumberPagination',
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework_json_api.parsers.JSONParser',
+        'rest_framework.parsers.FormParser',
+        'rest_framework.parsers.MultiPartParser'
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework_json_api.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_METADATA_CLASS': 'rest_framework_json_api.metadata.JSONAPIMetadata',
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated'
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'api.rest_framework_config.CsrfExemptSessionAuthentication',
         'rest_framework.authentication.SessionAuthentication'
     ],
+    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',)
 }
 
-#email integration 
+#email integration
 TEMPLATED_EMAIL_BACKEND = 'templated_email.backends.vanilla_django.TemplateBackend'
 
 # You can use a shortcut version
