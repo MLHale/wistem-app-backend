@@ -1,36 +1,35 @@
-# from django.shortcuts import render
+# @Author: Matthew Hale <matthale>
+# @Date:   2018-02-28T00:25:25-06:00
+# @Email:  mlhale@unomaha.edu
+# @Filename: controllers.py
+# @Last modified by:   matthale
+# @Last modified time: 2018-02-28T02:09:45-06:00
+# @Copyright: Copyright (C) 2018 Matthew L. Hale
 
-# Create your views here.
-from django.contrib.auth.models import *
-from django.contrib.auth import *
-from rest_framework import viewsets
+
+# Handy Django Functions
+from django.shortcuts import get_object_or_404, render
+from django.contrib.auth import authenticate, login, logout
+import datetime, pytz
+
+# Models and serializers
+from django.contrib.auth.models import User
+import api.models as api
+
+# REST API Libraries
+from rest_framework import viewsets, parsers, renderers
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.renderers import JSONRenderer
-# from django.shortcuts import render_to_response
-from django.template import RequestContext
 from django_filters.rest_framework import DjangoFilterBackend
 
-from django.shortcuts import *
 
-# Import models
-from django.db import models
-from django.contrib.auth.models import *
-from api.models import *
-from api.serializers import *
 
-# REST API
-from rest_framework import viewsets, filters, parsers, renderers
-from django.http import Http404
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
 
-from django.contrib.auth import authenticate, login, logout
-from rest_framework.permissions import *
-from rest_framework.decorators import *
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.decorators import list_route
 from rest_framework.authentication import *
 #email
 from templated_email import send_templated_mail
@@ -38,12 +37,99 @@ from templated_email import send_templated_mail
 # from filters.mixins import *
 
 from api.pagination import *
-import json, datetime, pytz
+
 from django.core import serializers
-from django.core.exceptions import *
-import requests
-from django.shortcuts import get_object_or_404
+from django.core.exceptions import ValidationError
+
+
 import bleach
+
+
+def home(request):
+	"""
+	Send requests to '/' to the ember.js clientside app
+	"""
+
+	return render(request, 'index.html')
+
+class AwardViewSet(viewsets.ModelViewSet):
+    """
+    Profile Endpoint, loaded upon login typically alongside User
+    """
+    resource_name = 'awards'
+    queryset = api.Award.objects.all()
+    serializer_class = api.AwardSerializer
+    permission_classes = (AllowAny,)
+
+    def create(self, request):
+        if not request.user.is_superuser:
+            return Response({'success': False},status=status.HTTP_401_UNAUTHORIZED)
+
+        serializer = api.AwardSerializerAdmin(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data)
+
+
+        # title = bleach.clean(request.data.get('title'))
+        # description = bleach.clean(request.data.get('description'))
+        # award_link = bleach.clean(request.data.get('award_link'))
+        # sponsor_org = bleach.clean(request.data.get('sponsor_org'))
+        # recurring = bool(bleach.clean(request.data.get('recurring')))
+        # nom_req = bool(bleach.clean(request.data.get('nom_req')))
+        # recur_interval = bleach.clean(request.data.get('recur_interval'))
+        # open_date = datetime.datetime.fromtimestamp(request.data.get('open_date'),pytz.utc)
+        # nom_deadline = datetime.datetime.fromtimestamp(request.data.get('nom_deadline'),pytz.utc)
+        # subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
+        # additional_info = bleach.clean(request.data.get('additional_info'))
+        # source = bleach.clean(request.data.get('source'))
+        # previous_applicants = int(request.data.get('previous_applicants'))
+        # created_by = get_object_or_404(api.Profile,user=get_object_or_404(User,pk=request.user.id))
+        #
+        # newAward = api.Award.objects.create(
+        #     title=title,
+        #     description=description,
+        #     award_link=award_link,
+        #     sponsor_org=sponsor_org,
+        #     recurring=recurring,
+        #     nom_req=nom_req,
+        #     recur_interval=recur_interval,
+        #     open_date=open_date,
+        #     nom_deadline=nom_deadline,
+        #     subm_deadline=subm_deadline,
+        #     additional_info=additional_info,
+        #     source=source,
+        #     previous_applicants=previous_applicants,
+        #     created_by=created_by,
+        #     created_on= datetime.datetime.now()
+        #
+        # )
+        # try:
+        #     newAward.clean_fields()
+        # except ValidationError as e:
+        #     print(e)
+        #     return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+        #
+        # newAward.save()
+        #
+        # # Related fields
+        # applicant_type = bleach.clean(request.data.get('applicant_type'))
+        # applicant_type_object = api.ApplicantType.objects.get_or_create(appType=applicant_type)
+        # newAward.applicant_type.add(applicant_type_object)
+        #
+        # award_purpose = bleach.clean(request.data.get('award_purpose'))
+        # award_purpose_object = api.AwardPurpose.objects.get_or_create(purpose=award_purpose)
+        # newAward.award_purpose.add(award_purpose_object)
+        #
+        # stem_field = bleach.clean(request.data.get('stem_field'))
+        # stem_field_object = api.StemField.objects.get_or_create(field=stem_field)
+        # newAward.stem_field.add(stem_field_object)
+        #
+        # serializer = api.AwardSerializerAdmin(newAward)
+        # return Response(serializer.data)
 
 class AwardList(APIView):
     permission_classes = (AllowAny,)
@@ -58,7 +144,7 @@ class AwardList(APIView):
         print('REQUEST DATA')
         print(str(request.data))
 
-        awards = Award.objects.all()
+        awards = api.Award.objects.all()
         json_data = serializers.serialize('json', awards)
         return HttpResponse(json_data, content_type='json')
 
@@ -73,7 +159,7 @@ class AwardList(APIView):
         sponsor_org = bleach.clean(request.data.get('sponsor_org'))
         stem_field = bleach.clean(request.data.get('stem_field'))
         print("stem field request data", stem_field)
-        stem_field_object = StemField.objects.get_or_create(field=stem_field)
+        stem_field_object = api.StemField.objects.get_or_create(field=stem_field)
         print("stem field " + str(stem_field_object))
         recurring = bool(bleach.clean(request.data.get('recurring')))
         nom_req = bool(bleach.clean(request.data.get('nom_req')))
@@ -83,9 +169,9 @@ class AwardList(APIView):
         nom_deadline = datetime.datetime.fromtimestamp(request.data.get('nom_deadline'),pytz.utc)
         subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
         applicant_type = bleach.clean(request.data.get('applicant_type'))
-        applicant_type_object = ApplicantType.objects.get_or_create(appType=applicant_type)
+        applicant_type_object = api.ApplicantType.objects.get_or_create(appType=applicant_type)
         award_purpose = bleach.clean(request.data.get('award_purpose'))
-        award_purpose_object = AwardPurpose.objects.get_or_create(purpose=award_purpose)
+        award_purpose_object = api.AwardPurpose.objects.get_or_create(purpose=award_purpose)
         print("award purpose = " + str(award_purpose_object))
         additional_info = bleach.clean(request.data.get('additional_info'))
         source = bleach.clean(request.data.get('source'))
@@ -94,13 +180,13 @@ class AwardList(APIView):
         print("created by:", created_by)
         user = get_object_or_404(User, pk=created_by)
         print("user=" + str(user))
-        profile = Profile.objects.get(user=user)
+        profile = api.Profile.objects.get(user=user)
         print(profile)
         # created_on = int(request.data.get('created_on'))
 
         print("Creating new Award")
 
-        newAward = Award.objects.create(
+        newAward = api.Award.objects.create(
             title=title,
             description=description,
             award_link=award_link,
@@ -125,9 +211,9 @@ class AwardList(APIView):
             return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
 
         newAward.save()
-        newAward.stem_field.add(StemField.objects.get(field=request.data.get('stem_field')))
-        newAward.applicant_type.add(ApplicantType.objects.get(appType=request.data.get('applicant_type')))
-        newAward.award_purpose.add(AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
+        newAward.stem_field.add(api.StemField.objects.get(field=request.data.get('stem_field')))
+        newAward.applicant_type.add(api.ApplicantType.objects.get(appType=request.data.get('applicant_type')))
+        newAward.award_purpose.add(api.AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
 
         print('New Page added: ' + title)
         return Response({'success': True}, status=status.HTTP_200_OK)
@@ -588,41 +674,48 @@ class Register(APIView):
 
 
 class Session(APIView):
-    permission_classes = (AllowAny,)
+	"""
+	Returns a JSON structure: {'isauthenticated':<T|F>,'userid': <int:None>,'username': <string|None>,'profileid': <int|None>}
+	"""
+	permission_classes = (AllowAny,)
+	def form_response(self, isauthenticated, userid, username, profileid, error=""):
+		data = {
+			'isauthenticated': 	isauthenticated,
+			'userid': 			userid,
+			'username': 		username,
+			'profileid':		profileid,
+		}
+		if error:
+			data['message'] = error
 
-    def form_response(self, isauthenticated, userid, username, error=""):
-        data = {
-            'isauthenticated': isauthenticated,
-            'userid': userid,
-            'username': username
-        }
-        if error:
-            data['message'] = error
+		return Response(data)
 
-        return Response(data)
+	def get(self, request, *args, **kwargs):
+		# Get the current user
+		user = request.user
+		if user.is_authenticated():
+			profile = get_object_or_404(api.Profile,user__username=user.username)
+			return self.form_response(True, user.id, user.username, profile.id)
+		return self.form_response(False, None, None, None)
 
-    def get(self, request, *args, **kwargs):
-        # Get the current user
-        if request.user.is_authenticated():
-            return self.form_response(True, request.user.id, request.user.username)
-        return self.form_response(False, None, None)
+	def post(self, request, *args, **kwargs):
+		print(request.data)
+		# Login
+		username = request.POST.get('username')
+		password = request.POST.get('password')
+		user = authenticate(username=username, password=password)
+		if user is not None:
+			if user.is_active:
+				login(request, user)
+				profile = get_object_or_404(api.Profile,user__username=user.username)
+				return self.form_response(True, user.id, user.username, profile.id)
+			return self.form_response(False, None, None, None, "Account is suspended")
+		return self.form_response(False, None, None, None, "Invalid username or password")
 
-    def post(self, request, *args, **kwargs):
-        # Login
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None:
-            if user.is_active:
-                login(request, user)
-                return self.form_response(True, user.id, user.username)
-            return self.form_response(False, None, None, "Account is suspended")
-        return self.form_response(False, None, None, "Invalid username or password")
-
-    def delete(self, request, *args, **kwargs):
-        # Logout
-        logout(request)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+	def delete(self, request, *args, **kwargs):
+		# Logout
+		logout(request)
+		return Response(status=status.HTTP_204_NO_CONTENT)
 
 class Search(APIView):
     permission_classes = (AllowAny,)
@@ -676,16 +769,3 @@ class Search(APIView):
         json_data = serializers.serialize('json',matches)
         content = {'matches': json_data}
         return HttpResponse(json_data, content_type='json')
-
-
-
-class Events(APIView):
-    permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
-
-
-class ActivateIFTTT(APIView):
-    permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
