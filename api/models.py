@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: models.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T02:04:15-06:00
+# @Last modified time: 2018-02-28T02:46:30-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -70,20 +70,24 @@ class Award(models.Model):
     description = models.TextField(blank=True)
     awardlink = models.URLField(max_length=1000, blank=False)
     sponsororg = models.CharField(max_length=1000, blank=False)
-    stemfield = models.ManyToManyField('StemField', blank=True)
+
     recurring = models.BooleanField(default=False)
     nomreq = models.BooleanField(default=False)
     recurinterval = models.CharField(max_length=1000, blank=False)
     opendate = models.DateTimeField()
     nomdeadline = models.DateTimeField()
     submdeadline = models.DateTimeField()
-    applicanttype = models.ManyToManyField('ApplicantType', blank=True)
-    awardpurpose = models.ManyToManyField('AwardPurpose', blank=True)
+
     additionalinfo = models.TextField(blank=True)
     source = models.CharField(max_length=30, choices=AWARD_SOURCE_CHOICES, default=SOURCE_OTHER)
-    previous_applicants = models.IntegerField(default=0, blank=False)
-    createdby = models.ForeignKey('Profile', on_delete=models.PROTECT)
+    previousapplicants = models.IntegerField(default=0, blank=False)
     createdon = models.DateTimeField(auto_now_add=True)
+
+    # Relationships
+    stemfield = models.ManyToManyField('StemField', blank=True)
+    applicanttype = models.ManyToManyField('ApplicantType', blank=True)
+    awardpurpose = models.ManyToManyField('AwardPurpose', blank=True)
+    createdby = models.ForeignKey('Profile', on_delete=models.PROTECT)
 
     def __str__(self):
         return str(self.title)
@@ -127,71 +131,44 @@ class AreaOfInterest(models.Model):
 class AreaOfInterestSerializer(serializers.Serializer):
     area = serializers.CharField(max_length=1000, allow_blank=False)
 
-class ProfileSerializer(serializers.Serializer):
-    UNL = 'unl'
-    UNO = 'uno'
-    UNMC = 'unmc'
-    UNK = 'unk'
-    ORG_OTHER = 'other'
-    ORG_CHOICES = (
-        (UNL, 'University of Nebraska - Lincoln'),
-        (UNO, 'University of Nebraska - Omaha'),
-        (UNMC, 'University of Nebraska Medical Center'),
-        (UNK, 'University of Nebraska - Kearney'),
-        (ORG_OTHER, 'Other'),
-    )
-
+class ProfileSerializer(serializers.ModelSerializer):
+    included_serializers = {
+        'user': UserSerializer,
+    }
+    # Related fields
     user = UserSerializer()
-    org = serializers.ChoiceField(choices=ORG_CHOICES)
-    college = serializers.CharField(max_length=1000, allow_blank=True)
-    dept = serializers.CharField(max_length=1000, allow_blank=True)
-    other_details = serializers.CharField(max_length=1000, allow_blank=True)
     areas_of_interest = AreaOfInterestSerializer(many=True)
 
-class AwardSerializerAdmin(serializers.Serializer):
-    # Award Source choices
-    FED = 'federal'
-    LOCAL = 'local'
-    STATE = 'state'
-    PRIV = 'private_industry'
-    INT = 'internal'
-    SOURCE_OTHER = 'other'
-    AWARD_SOURCE_CHOICES = (
-        (FED, 'Federal Government'),
-        (STATE,'State Government'),
-        (LOCAL, 'Local Government'),
-        (INT, 'Internal'),
-        (PRIV, 'Private Industry'),
-        (SOURCE_OTHER, 'Other')
-    )
-
-    title = serializers.CharField(max_length=1000, allow_blank=False)
-    description = serializers.CharField(allow_blank=True)
-    awardlink = serializers.URLField(max_length=1000, allow_blank=False)
-    sponsororg = serializers.CharField(max_length=1000, allow_blank=False)
-    recurring = serializers.BooleanField()
-    nomreq = serializers.BooleanField()
-    recurinterval = serializers.CharField(max_length=1000, allow_blank=False)
-    opendate = serializers.DateTimeField()
-    nomdeadline = serializers.DateTimeField()
-    submdeadline = serializers.DateTimeField()
-    additionalinfo = serializers.CharField(allow_blank=True)
-    source = serializers.ChoiceField(choices=AWARD_SOURCE_CHOICES)
-    previousapplicants = serializers.IntegerField()
-    createdon = serializers.DateTimeField()
-
-    # Related fields
-    createdby = ProfileSerializer()
-    applicant_type = ApplicantTypeSerializer(many=True)
-    award_purpose = AwardPurposeSerializer(many=True)
-    stem_field = StemFieldSerializer(many=True)
-
     class Meta:
-        model = Award
-        fields = ('id', 'title', 'description', 'awardlink','sponsororg', 'recurring','nomreq','recurinterval','opendate','nomdeadline','submdeadline','additionalinfo','source','previousapplicants','createdby','ccreatedon')
+        model = Profile
+        fields = ('id', 'user', 'org', 'college', 'dept', 'otherdetails')
+
+        #'applicanttype','createdby','awardpurpose','stemfield'
+
+    class JSONAPIMeta:
+		included_resources = ['user']
 
 class AwardSerializer(serializers.ModelSerializer):
+    included_serializers = {
+        'createdby': ProfileSerializer,
+    }
+
+    # Related fields
+    # createdby = ProfileSerializer()
+    # applicanttype = ApplicantTypeSerializer(many=True, read_only=True)
+    # awardpurpose = AwardPurposeSerializer(many=True, read_only=True)
+    # stemfield = StemFieldSerializer(many=True, read_only=True)
+
     class Meta:
         model = Award
-        depth = 1
-        fields = "__all__"
+        fields = ('id', 'title', 'description', 'awardlink','sponsororg', 'recurring','nomreq','recurinterval','opendate','nomdeadline','submdeadline','additionalinfo','source','previousapplicants','createdon')
+
+        #'applicanttype','createdby','awardpurpose','stemfield'
+
+    class JSONAPIMeta:
+		included_resources = ['createdby']
+# class AwardSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Award
+#         depth = 1
+#         fields = "__all__"

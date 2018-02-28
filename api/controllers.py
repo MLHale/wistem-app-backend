@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: controllers.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T02:09:45-06:00
+# @Last modified time: 2018-02-28T02:56:19-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -65,7 +65,7 @@ class AwardViewSet(viewsets.ModelViewSet):
         if not request.user.is_superuser:
             return Response({'success': False},status=status.HTTP_401_UNAUTHORIZED)
 
-        serializer = api.AwardSerializerAdmin(data=request.data)
+        serializer = api.AwardSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -73,245 +73,17 @@ class AwardViewSet(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
-
-        # title = bleach.clean(request.data.get('title'))
-        # description = bleach.clean(request.data.get('description'))
-        # award_link = bleach.clean(request.data.get('award_link'))
-        # sponsor_org = bleach.clean(request.data.get('sponsor_org'))
-        # recurring = bool(bleach.clean(request.data.get('recurring')))
-        # nom_req = bool(bleach.clean(request.data.get('nom_req')))
-        # recur_interval = bleach.clean(request.data.get('recur_interval'))
-        # open_date = datetime.datetime.fromtimestamp(request.data.get('open_date'),pytz.utc)
-        # nom_deadline = datetime.datetime.fromtimestamp(request.data.get('nom_deadline'),pytz.utc)
-        # subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
-        # additional_info = bleach.clean(request.data.get('additional_info'))
-        # source = bleach.clean(request.data.get('source'))
-        # previous_applicants = int(request.data.get('previous_applicants'))
-        # created_by = get_object_or_404(api.Profile,user=get_object_or_404(User,pk=request.user.id))
-        #
-        # newAward = api.Award.objects.create(
-        #     title=title,
-        #     description=description,
-        #     award_link=award_link,
-        #     sponsor_org=sponsor_org,
-        #     recurring=recurring,
-        #     nom_req=nom_req,
-        #     recur_interval=recur_interval,
-        #     open_date=open_date,
-        #     nom_deadline=nom_deadline,
-        #     subm_deadline=subm_deadline,
-        #     additional_info=additional_info,
-        #     source=source,
-        #     previous_applicants=previous_applicants,
-        #     created_by=created_by,
-        #     created_on= datetime.datetime.now()
-        #
-        # )
-        # try:
-        #     newAward.clean_fields()
-        # except ValidationError as e:
-        #     print(e)
-        #     return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
-        #
-        # newAward.save()
-        #
-        # # Related fields
-        # applicant_type = bleach.clean(request.data.get('applicant_type'))
-        # applicant_type_object = api.ApplicantType.objects.get_or_create(appType=applicant_type)
-        # newAward.applicant_type.add(applicant_type_object)
-        #
-        # award_purpose = bleach.clean(request.data.get('award_purpose'))
-        # award_purpose_object = api.AwardPurpose.objects.get_or_create(purpose=award_purpose)
-        # newAward.award_purpose.add(award_purpose_object)
-        #
-        # stem_field = bleach.clean(request.data.get('stem_field'))
-        # stem_field_object = api.StemField.objects.get_or_create(field=stem_field)
-        # newAward.stem_field.add(stem_field_object)
-        #
-        # serializer = api.AwardSerializerAdmin(newAward)
-        # return Response(serializer.data)
-
-class AwardList(APIView):
-    permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
-
-    def get(self, request):
-        if not request.user.is_authenticated:
-            print(request.user)
-        if request.user.is_superuser:
-            print(request.user.groups)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        awards = api.Award.objects.all()
-        json_data = serializers.serialize('json', awards)
-        return HttpResponse(json_data, content_type='json')
-
-    def post(self, request):
-        if not request.user.is_superuser or not request.user.is_authenticated:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-        title = bleach.clean(request.data.get('title'))
-        description = bleach.clean(request.data.get('description'))
-        award_link = bleach.clean(request.data.get('award_link'))
-        sponsor_org = bleach.clean(request.data.get('sponsor_org'))
-        stem_field = bleach.clean(request.data.get('stem_field'))
-        print("stem field request data", stem_field)
-        stem_field_object = api.StemField.objects.get_or_create(field=stem_field)
-        print("stem field " + str(stem_field_object))
-        recurring = bool(bleach.clean(request.data.get('recurring')))
-        nom_req = bool(bleach.clean(request.data.get('nom_req')))
-        recur_interval = bleach.clean(request.data.get('recur_interval'))
-        open_date = datetime.datetime.fromtimestamp(request.data.get('open_date'),pytz.utc)
-        print("opendate",open_date)
-        nom_deadline = datetime.datetime.fromtimestamp(request.data.get('nom_deadline'),pytz.utc)
-        subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
-        applicant_type = bleach.clean(request.data.get('applicant_type'))
-        applicant_type_object = api.ApplicantType.objects.get_or_create(appType=applicant_type)
-        award_purpose = bleach.clean(request.data.get('award_purpose'))
-        award_purpose_object = api.AwardPurpose.objects.get_or_create(purpose=award_purpose)
-        print("award purpose = " + str(award_purpose_object))
-        additional_info = bleach.clean(request.data.get('additional_info'))
-        source = bleach.clean(request.data.get('source'))
-        previous_applicants = int(request.data.get('previous_applicants'))
-        created_by = "1"#request.user.id  # TODO input validation - make this take user from request - cant get postman to work
-        print("created by:", created_by)
-        user = get_object_or_404(User, pk=created_by)
-        print("user=" + str(user))
-        profile = api.Profile.objects.get(user=user)
-        print(profile)
-        # created_on = int(request.data.get('created_on'))
-
-        print("Creating new Award")
-
-        newAward = api.Award.objects.create(
-            title=title,
-            description=description,
-            award_link=award_link,
-            sponsor_org=sponsor_org,
-            recurring=recurring,
-            nom_req=nom_req,
-            recur_interval=recur_interval,
-            open_date=open_date,
-            nom_deadline=nom_deadline,
-            subm_deadline=subm_deadline,
-            additional_info=additional_info,
-            source=source,
-            previous_applicants=previous_applicants,
-            created_by=profile,
-            created_on= datetime.datetime.now()
-
-        )
-        try:
-            newAward.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
-
-        newAward.save()
-        newAward.stem_field.add(api.StemField.objects.get(field=request.data.get('stem_field')))
-        newAward.applicant_type.add(api.ApplicantType.objects.get(appType=request.data.get('applicant_type')))
-        newAward.award_purpose.add(api.AwardPurpose.objects.get(purpose=request.data.get('award_purpose')))
-
-        print('New Page added: ' + title)
-        return Response({'success': True}, status=status.HTTP_200_OK)
-
-
-class AwardDetail(APIView):
-    permission_classes = (AllowAny,)
-    parser_classes = (parsers.JSONParser, parsers.FormParser)
-    renderer_classes = (renderers.JSONRenderer,)
-
-    def get(self, request, id=None, format=None):
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        try:
-            award = Award.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        serializer = AwardSerializer(award)
-        json_data = JSONRenderer().render(serializer.data)
-        return HttpResponse(json_data, content_type='json')
-
-    def put(self, request, id=None):
+    def update(self, request, pk=None):
         if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        try:
-            award = Award.objects.get(pk=id)
-        except ObjectDoesNotExist as e:
-            return Response({'success': False, 'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        if request.data.get('title') != None:
-            award.title = bleach.clean(request.data.get('title'))
-        if request.data.get('description') != None:
-            award.description = bleach.clean(request.data.get('description'))
-        if request.data.get('award_link') != None:
-            award.award_link = bleach.clean(request.data.get('award_link'))
-        if request.data.get('stem_field') != None:
-            stem_field = bleach.clean(request.data.get('stem_field'))
-            stem_field_object = StemField.objects.get_or_create(field=stem_field)
-            award.stem_field.clear()
-            award.stem_field.add(stem_field_object[0])
-        if request.data.get('sponsor_org') != None:
-            award.sponsor_org = bleach.clean(request.data.get('sponsor_org'))
-        if request.data.get('recurring') != None:
-            award.recurring = bool(bleach.clean(request.data.get('recurring')))
-        if request.data.get('nom_req') != None:
-            award.nom_req = bool(bleach.clean(request.data.get('nom_req')))
-        if request.data.get('recur_interval') != None:
-            award.recur_interval = bleach.clean(request.data.get('recur_interval'))
-        if request.data.get('open_date') != None:
-            award.open_date = datetime.datetime.fromtimestamp(request.data.get('open_date'),pytz.utc)
-        if request.data.get('nom_deadline') != None:
-            award.nom_deadline = datetime.datetime.fromtimestamp(request.data.get('nom_deadline'),pytz.utc)
-        if request.data.get('subm_deadline') != None:
-            award.subm_deadline = datetime.datetime.fromtimestamp(request.data.get('subm_deadline'),pytz.utc)
-        if request.data.get('applicant_type') != None:
-            applicant_type = bleach.clean(request.data.get('applicant_type'))
-            applicant_type_object = ApplicantType.objects.get_or_create(appType=applicant_type)
-            award.applicant_type.clear()
-            award.applicant_type.add(applicant_type_object[0])
-        if request.data.get('award_purpose') != None:
-            award_purpose = bleach.clean(request.data.get('award_purpose'))
-            award_purpose_object = AwardPurpose.objects.get_or_create(purpose=award_purpose)
-            award.award_purpose.clear()
-            award.award_purpose.add(award_purpose_object[0])
-        if request.data.get('additional_info') != None:
-            award.additional_info = bleach.clean(request.data.get('additional_info'))
-        if request.data.get('source') != None:
-            award.source = bleach.clean(request.data.get('source'))
-        if request.data.get('previous_applicants') != None:
-            award.previous_applicants = int(request.data.get('previous_applicants'))
-        if request.data.get('created_by') != None:
-            created_by = "1"  # request.user.id  # TODO input validation - make this take user from request - cant get postman to work
-            print("created by:", created_by)
-            user = get_object_or_404(User, pk=created_by)
-            print("user=" + str(user))
-            profile = Profile.objects.get(user=user)
-            award.created_by = profile
-        if request.data.get('created_on') != None:
-            award.created_on = int(request.data.get('created_on'))
+            return Response({'success': False},status=status.HTTP_401_UNAUTHORIZED)
 
-        try:
-            award.clean_fields()
-        except ValidationError as e:
-            print(e)
-            return Response({'success': False, 'error': e}, status=status.HTTP_400_BAD_REQUEST)
+        serializer = api.AwardSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-        award.save()
-        print('Award updated: ' + award.title)
-        return Response({'success': True}, status=status.HTTP_200_OK)
+        serializer.save()
 
-    def delete(self, request, id=None):
-        if not request.user.is_superuser:
-            return Response({'success': False},status=HTTP_401_UNAUTHORIZED)
-        print('REQUEST DATA')
-        print(str(request.data))
-
-        Award.objects.get(pk=id).delete()
-        return Response({'success': True}, status=status.HTTP_200_OK)
+        return Response(serializer.data)
 
 
 class StemFieldList(APIView):

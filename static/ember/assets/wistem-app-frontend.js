@@ -2805,19 +2805,22 @@ define('wistem-app-frontend/models/award', ['exports', 'ember-data'], function (
   });
   exports.default = _emberData.default.Model.extend({
 
-    AwardTitle: _emberData.default.attr('string'),
-    AwardDescription: _emberData.default.attr('string'),
-    AwardLink: _emberData.default.attr('string'),
-    STEMType: _emberData.default.attr('string'),
-    AwardSponsor: _emberData.default.attr('string'),
-    STEMField: _emberData.default.attr('string'),
-    OpenDate: _emberData.default.attr('date', {
+    title: _emberData.default.attr('string'),
+    description: _emberData.default.attr('string'),
+    awardlink: _emberData.default.attr('string'),
+    sponsororg: _emberData.default.attr('string'),
+    recurring: _emberData.default.attr('string'),
+    nomreq: _emberData.default.attr('boolean'),
+    opendate: _emberData.default.attr('date', {
       defaultValue: function defaultValue() {
         return new Date();
       }
     }),
-    SubmissionDate: _emberData.default.attr('date'),
-    ApplicantType: _emberData.default.attr('string')
+    nomdeadline: _emberData.default.attr('date'),
+    submdeadline: _emberData.default.attr('date'),
+    source: _emberData.default.attr('string'),
+    previousapplicants: _emberData.default.attr('number'),
+    createdon: _emberData.default.attr('date')
 
   });
 });
@@ -2910,7 +2913,11 @@ define('wistem-app-frontend/routes/awards', ['exports'], function (exports) {
       //   awardType: 'important',
       //   image: 'http://srts.info/wp-content/uploads/2014/09/gold-trophy.jpg',
       // }];
-      return this.store.findAll('award');
+      // var award = this.store.findRecord('award',1).then((record)=>{
+      //   record.set('title','savable');
+      //   record.save();
+      // });
+      return this.store.findAll('awards');
     }
   });
 });
