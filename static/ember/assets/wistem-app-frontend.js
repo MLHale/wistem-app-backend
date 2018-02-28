@@ -2873,7 +2873,8 @@ define('wistem-app-frontend/models/profile', ['exports', 'ember-data'], function
     college: _emberData.default.attr('string'),
     dept: _emberData.default.attr('string'),
     otherdetails: _emberData.default.attr('string'),
-    user: _emberData.default.belongsTo('user')
+    user: _emberData.default.belongsTo('user'),
+    areasofinterest: _emberData.default.hasMany('areaofinterest')
   });
 });
 define('wistem-app-frontend/models/stemfield', ['exports', 'ember-data'], function (exports, _emberData) {
@@ -2993,7 +2994,7 @@ define('wistem-app-frontend/routes/awards', ['exports'], function (exports) {
       //   record.set('title','savable');
       //   record.save();
       // });
-      return this.store.findAll('award', { include: 'applicanttypes,awardpurposes,stemfields,createdby' });
+      return this.store.findAll('award', { include: 'applicanttypes,awardpurposes,stemfields,createdby,createdby.areasofinterest,createdby.user' });
     }
   });
 });

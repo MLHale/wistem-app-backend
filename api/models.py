@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: models.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T11:59:10-06:00
+# @Last modified time: 2018-02-28T12:13:23-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -33,7 +33,7 @@ class Profile(models.Model):
     college = models.CharField(max_length=1000, blank=True)
     dept = models.CharField(max_length=1000, blank=True)
     otherdetails = models.CharField(max_length=1000, blank=True)
-    areasofinterest = models.ManyToManyField('AreaOfInterest',blank=True)
+    areasofinterest = models.ManyToManyField('Areaofinterest', related_name='profiles', blank=True)
 
     def __str__(self):
         return str(self.user.username)
@@ -74,9 +74,9 @@ class Award(models.Model):
     createdon = models.DateTimeField(auto_now_add=True)
 
     # Relationships
-    stemfields = models.ManyToManyField('StemField', related_name='awards', blank=True)
-    applicanttypes = models.ManyToManyField('ApplicantType', related_name='awards', blank=True)
-    awardpurposes = models.ManyToManyField('AwardPurpose', related_name='awards', blank=True)
+    stemfields = models.ManyToManyField('Stemfield', related_name='awards', blank=True)
+    applicanttypes = models.ManyToManyField('Applicanttype', related_name='awards', blank=True)
+    awardpurposes = models.ManyToManyField('Awardpurpose', related_name='awards', blank=True)
     createdby = models.ForeignKey('Profile', related_name='awards', on_delete=models.PROTECT)
 
     def __str__(self):
@@ -158,16 +158,13 @@ class UserSerializer(serializers.ModelSerializer):
 class ProfileSerializer(serializers.ModelSerializer):
     included_serializers = {
         'user': UserSerializer,
+        'areasofinterest': AreaofinterestSerializer
     }
-    # Related fields
-    # user = UserSerializer()
-    #areasofinterest = AreaOfInterestSerializer(many=True)
 
     class Meta:
         model = Profile
-        fields = ('id', 'org', 'college', 'dept', 'otherdetails','user')
+        fields = ('id', 'org', 'college', 'dept', 'otherdetails','user', 'areasofinterest')
 
-        #'applicanttype','createdby','awardpurpose','stemfield'
 
     class JSONAPIMeta:
 		included_resources = ['user']
@@ -179,12 +176,6 @@ class AwardSerializer(serializers.ModelSerializer):
         'awardpurposes': AwardpurposeSerializer,
         'stemfields': StemfieldSerializer
     }
-
-    # Related fields
-    # createdby = ProfileSerializer()
-    # applicanttype = ApplicantTypeSerializer(many=True, read_only=True)
-    # awardpurpose = AwardPurposeSerializer(many=True, read_only=True)
-    # stemfield = StemFieldSerializer(many=True, read_only=True)
 
     class Meta:
         model = Award
