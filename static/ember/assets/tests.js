@@ -40,9 +40,14 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'components/view-list-button.js should pass ESLint\n\n');
   });
 
-  QUnit.test('controllers/add-award.js', function (assert) {
+  QUnit.test('controllers/application.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/add-award.js should pass ESLint\n\n16:7 - \'Ember\' is not defined. (no-undef)\n16:20 - \'config\' is not defined. (no-undef)\n18:11 - Unexpected console statement. (no-console)');
+    assert.ok(true, 'controllers/application.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('controllers/awards.js', function (assert) {
+    assert.expect(1);
+    assert.ok(false, 'controllers/awards.js should pass ESLint\n\n18:32 - \'$\' is not defined. (no-undef)');
   });
 
   QUnit.test('controllers/edit-award.js', function (assert) {
@@ -63,6 +68,21 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
   QUnit.test('controllers/search.js', function (assert) {
     assert.expect(1);
     assert.ok(false, 'controllers/search.js should pass ESLint\n\n8:32 - \'$\' is not defined. (no-undef)');
+  });
+
+  QUnit.test('initializers/auth-manager.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'initializers/auth-manager.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('initializers/navigation.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'initializers/navigation.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('initializers/notification-messages.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'initializers/notification-messages.js should pass ESLint\n\n');
   });
 
   QUnit.test('models/applicanttype.js', function (assert) {
@@ -110,11 +130,6 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'router.js should pass ESLint\n\n');
   });
 
-  QUnit.test('routes/about.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/about.js should pass ESLint\n\n');
-  });
-
   QUnit.test('routes/awardinfo.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'routes/awardinfo.js should pass ESLint\n\n');
@@ -125,14 +140,9 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'routes/awards.js should pass ESLint\n\n');
   });
 
-  QUnit.test('routes/contact.js', function (assert) {
+  QUnit.test('routes/index.js', function (assert) {
     assert.expect(1);
-    assert.ok(true, 'routes/contact.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('routes/home.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/home.js should pass ESLint\n\n');
+    assert.ok(true, 'routes/index.js should pass ESLint\n\n');
   });
 
   QUnit.test('routes/login.js', function (assert) {
@@ -148,6 +158,16 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
   QUnit.test('routes/search.js', function (assert) {
     assert.expect(1);
     assert.ok(false, 'routes/search.js should pass ESLint\n\n5:17 - \'Ember\' is not defined. (no-undef)\n128:17 - \'Ember\' is not defined. (no-undef)\n136:17 - \'Ember\' is not defined. (no-undef)\n143:17 - \'Ember\' is not defined. (no-undef)\n153:17 - \'Ember\' is not defined. (no-undef)');
+  });
+
+  QUnit.test('services/auth-manager.js', function (assert) {
+    assert.expect(1);
+    assert.ok(false, 'services/auth-manager.js should pass ESLint\n\n35:3 - Unexpected console statement. (no-console)\n52:5 - Unexpected console statement. (no-console)\n82:5 - Unexpected console statement. (no-console)\n92:3 - Unexpected console statement. (no-console)\n96:5 - Unexpected console statement. (no-console)\n136:5 - Unexpected console statement. (no-console)\n151:5 - Unexpected console statement. (no-console)');
+  });
+
+  QUnit.test('services/navigation.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'services/navigation.js should pass ESLint\n\n');
   });
 });
 define('wistem-app-frontend/tests/helpers/destroy-app', ['exports'], function (exports) {
@@ -413,6 +433,16 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
     assert.ok(true, 'test-helper.js should pass ESLint\n\n');
   });
 
+  QUnit.test('unit/controllers/application-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/controllers/application-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/controllers/awards-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/controllers/awards-test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('unit/controllers/register-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/controllers/register-test.js should pass ESLint\n\n');
@@ -421,6 +451,21 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
   QUnit.test('unit/controllers/search-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/controllers/search-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/initializers/auth-manager-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/initializers/auth-manager-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/initializers/navigation-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/initializers/navigation-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/initializers/notification-messages-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/initializers/notification-messages-test.js should pass ESLint\n\n');
   });
 
   QUnit.test('unit/models/applicanttype-test.js', function (assert) {
@@ -458,9 +503,9 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
     assert.ok(true, 'unit/routes/awardinfo-test.js should pass ESLint\n\n');
   });
 
-  QUnit.test('unit/routes/home-test.js', function (assert) {
+  QUnit.test('unit/routes/index-test.js', function (assert) {
     assert.expect(1);
-    assert.ok(true, 'unit/routes/home-test.js should pass ESLint\n\n');
+    assert.ok(true, 'unit/routes/index-test.js should pass ESLint\n\n');
   });
 
   QUnit.test('unit/routes/login-test.js', function (assert) {
@@ -476,6 +521,44 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
   QUnit.test('unit/routes/search-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/search-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/services/auth-manager-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/services/auth-manager-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/services/navigation-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/services/navigation-test.js should pass ESLint\n\n');
+  });
+});
+define('wistem-app-frontend/tests/unit/controllers/application-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('controller:application', 'Unit | Controller | application', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
+  });
+});
+define('wistem-app-frontend/tests/unit/controllers/awards-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('controller:awards', 'Unit | Controller | awards', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var controller = this.subject();
+    assert.ok(controller);
   });
 });
 define('wistem-app-frontend/tests/unit/controllers/register-test', ['ember-qunit'], function (_emberQunit) {
@@ -504,6 +587,93 @@ define('wistem-app-frontend/tests/unit/controllers/search-test', ['ember-qunit']
   (0, _emberQunit.test)('it exists', function (assert) {
     var controller = this.subject();
     assert.ok(controller);
+  });
+});
+define('wistem-app-frontend/tests/unit/initializers/auth-manager-test', ['wistem-app-frontend/initializers/auth-manager', 'qunit', 'wistem-app-frontend/tests/helpers/destroy-app'], function (_authManager, _qunit, _destroyApp) {
+  'use strict';
+
+  var Application = Ember.Application;
+  var run = Ember.run;
+
+
+  (0, _qunit.module)('Unit | Initializer | auth manager', {
+    beforeEach: function beforeEach() {
+      var _this = this;
+
+      run(function () {
+        _this.application = Application.create();
+        _this.application.deferReadiness();
+      });
+    },
+    afterEach: function afterEach() {
+      (0, _destroyApp.default)(this.application);
+    }
+  });
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    (0, _authManager.initialize)(this.application);
+
+    // you would normally confirm the results of the initializer here
+    assert.ok(true);
+  });
+});
+define('wistem-app-frontend/tests/unit/initializers/navigation-test', ['wistem-app-frontend/initializers/navigation', 'qunit', 'wistem-app-frontend/tests/helpers/destroy-app'], function (_navigation, _qunit, _destroyApp) {
+  'use strict';
+
+  var Application = Ember.Application;
+  var run = Ember.run;
+
+
+  (0, _qunit.module)('Unit | Initializer | navigation', {
+    beforeEach: function beforeEach() {
+      var _this = this;
+
+      run(function () {
+        _this.application = Application.create();
+        _this.application.deferReadiness();
+      });
+    },
+    afterEach: function afterEach() {
+      (0, _destroyApp.default)(this.application);
+    }
+  });
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    (0, _navigation.initialize)(this.application);
+
+    // you would normally confirm the results of the initializer here
+    assert.ok(true);
+  });
+});
+define('wistem-app-frontend/tests/unit/initializers/notification-messages-test', ['wistem-app-frontend/initializers/notification-messages', 'qunit', 'wistem-app-frontend/tests/helpers/destroy-app'], function (_notificationMessages, _qunit, _destroyApp) {
+  'use strict';
+
+  var Application = Ember.Application;
+  var run = Ember.run;
+
+
+  (0, _qunit.module)('Unit | Initializer | notification messages', {
+    beforeEach: function beforeEach() {
+      var _this = this;
+
+      run(function () {
+        _this.application = Application.create();
+        _this.application.deferReadiness();
+      });
+    },
+    afterEach: function afterEach() {
+      (0, _destroyApp.default)(this.application);
+    }
+  });
+
+  // Replace this with your real tests.
+  (0, _qunit.test)('it works', function (assert) {
+    (0, _notificationMessages.initialize)(this.application);
+
+    // you would normally confirm the results of the initializer here
+    assert.ok(true);
   });
 });
 define('wistem-app-frontend/tests/unit/models/applicanttype-test', ['ember-qunit'], function (_emberQunit) {
@@ -603,10 +773,10 @@ define('wistem-app-frontend/tests/unit/routes/awardinfo-test', ['ember-qunit'], 
     assert.ok(route);
   });
 });
-define('wistem-app-frontend/tests/unit/routes/home-test', ['ember-qunit'], function (_emberQunit) {
+define('wistem-app-frontend/tests/unit/routes/index-test', ['ember-qunit'], function (_emberQunit) {
   'use strict';
 
-  (0, _emberQunit.moduleFor)('route:home', 'Unit | Route | home', {
+  (0, _emberQunit.moduleFor)('route:index', 'Unit | Route | index', {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
   });
@@ -653,6 +823,34 @@ define('wistem-app-frontend/tests/unit/routes/search-test', ['ember-qunit'], fun
   (0, _emberQunit.test)('it exists', function (assert) {
     var route = this.subject();
     assert.ok(route);
+  });
+});
+define('wistem-app-frontend/tests/unit/services/auth-manager-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('service:auth-manager', 'Unit | Service | auth manager', {
+    // Specify the other units that are required for this test.
+    // needs: ['service:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var service = this.subject();
+    assert.ok(service);
+  });
+});
+define('wistem-app-frontend/tests/unit/services/navigation-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('service:navigation', 'Unit | Service | navigation', {
+    // Specify the other units that are required for this test.
+    // needs: ['service:foo']
+  });
+
+  // Replace this with your real tests.
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var service = this.subject();
+    assert.ok(service);
   });
 });
 require('wistem-app-frontend/tests/test-helper');
