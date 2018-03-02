@@ -1366,7 +1366,7 @@ define('wistem-app-frontend/controllers/application', ['exports'], function (exp
   exports.default = Controller.extend({
     actions: {
       externalLink: function externalLink(item) {
-        window.open(item.link);
+        window.open(item.route);
       },
       openDialog: function openDialog(event) {
         this.set('dialogOrigin', Ember.$(event.currentTarget));
@@ -1390,6 +1390,113 @@ define('wistem-app-frontend/controllers/awards', ['exports'], function (exports)
   });
   var Controller = Ember.Controller;
   exports.default = Controller.extend({
+    filters: Ember.ObjectProxy.create({ content: Ember.Object.create({
+        title: null,
+        stemfields: Ember.ArrayProxy.create({ content: Ember.A([]) }),
+        applicanttypes: Ember.ArrayProxy.create({ content: Ember.A([]) }),
+        description: null,
+        awardlink: '',
+        sponsor: null,
+        sources: Ember.ArrayProxy.create({ content: Ember.A([]) }),
+        purposes: Ember.ArrayProxy.create({ content: Ember.A([]) })
+      }) }),
+    filteredAwards: Ember.computed('model.awards.@each', 'filters.title', 'filters.sponsororg', 'filters.description', 'filters.awardlink', 'filters.stemfields.@each', 'filters.sources.@each', 'filters.purposes.@each', 'filters.applicanttypes.@each', function () {
+      var _this = this;
+
+      var filters = this.get('filters');
+      var awards = this.get('model.awards');
+      console.log('filtering');
+
+      // filter by award title
+      if (filters.get('title')) {
+        var regex = new RegExp(filters.get('title'), "i");
+        awards = awards.filter(function (award) {
+          return regex.test(award.get('title'));
+        });
+      }
+
+      // filter by sponsoring organization
+      if (filters.get('sponsororg')) {
+        var regex = new RegExp(filters.get('sponsororg'), "i");
+        awards = awards.filter(function (award) {
+          return regex.test(award.get('sponsororg'));
+        });
+      }
+
+      // filter by award link
+      if (filters.get('awardlink')) {
+        var regex = new RegExp(filters.get('awardlink'), "i");
+        awards = awards.filter(function (award) {
+          return regex.test(award.get('awardlink'));
+        });
+      }
+
+      // filter by award description
+      if (filters.get('description')) {
+        var regex = new RegExp(filters.get('description'), "i");
+        awards = awards.filter(function (award) {
+          return regex.test(award.get('description'));
+        });
+      }
+
+      // filter by applicanttypes
+      var applicanttypeFilters = filters.get('applicanttypes');
+      if (applicanttypeFilters.get('length') > 0) {
+        var applicanttypeset = Ember.A([]);
+        applicanttypeFilters.forEach(function (applicanttype) {
+          // all awards that have a purpose that matches the current one
+          applicanttypeset.addObjects(awards.filter(function (award) {
+            return award.get('applicanttypes').includes(applicanttype);
+          }, _this));
+        });
+        // ensure awards are not duplicated if they match multiple criteria
+        awards = applicanttypeset.uniq();
+      }
+
+      // filter by stem field
+      var stemfieldFilters = filters.get('stemfields');
+      if (stemfieldFilters.get('length') > 0) {
+        var stemset = Ember.A([]);
+        stemfieldFilters.forEach(function (stemfield) {
+          // all awards that have a stem field that matches the current one
+          stemset.addObjects(awards.filter(function (award) {
+            return award.get('stemfields').includes(stemfield);
+          }, _this));
+        });
+        // ensure awards are not duplicated if they match multiple criteria
+        awards = stemset.uniq();
+      }
+
+      // filter by source
+      var sourceFilters = filters.get('sources');
+      if (sourceFilters.get('length') > 0) {
+        var sourceset = Ember.A([]);
+        sourceFilters.forEach(function (source) {
+          // all awards that have a source that matches the current one
+          sourceset.addObjects(awards.filter(function (award) {
+            return award.get('source.name') === source.get('name');
+          }, _this));
+        });
+        // ensure awards are not duplicated if they match multiple criteria
+        awards = sourceset.uniq();
+      }
+
+      // filter by purpose
+      var purposeFilters = filters.get('purposes');
+      if (purposeFilters.get('length') > 0) {
+        var purposeset = Ember.A([]);
+        purposeFilters.forEach(function (purpose) {
+          // all awards that have a purpose that matches the current one
+          purposeset.addObjects(awards.filter(function (award) {
+            return award.get('awardpurposes').includes(purpose);
+          }, _this));
+        });
+        // ensure awards are not duplicated if they match multiple criteria
+        awards = purposeset.uniq();
+      }
+
+      return awards;
+    }),
     actions: {
       openDialog: function openDialog(item, event) {
         this.set('dialogOrigin', $(event.currentTarget));
@@ -1430,24 +1537,11 @@ define('wistem-app-frontend/controllers/login', ['exports'], function (exports) 
     value: true
   });
   var Controller = Ember.Controller;
-
-
-  var user = {
-    profile: {
-      name: 'Admin',
-      email: 'admin@unomaha.edu'
-    }
-  };
-
   exports.default = Controller.extend({
     actions: {
-      login: function login(username, password) {
-        if (username === 'admin' && password === 'password') {
-          this.set('currentuser', user);
-          this.transitionToRoute('search');
-        } else {
-          this.set('hidden', true);
-        }
+      login: function login() {
+        console.log('login called');
+        this.get('auth').login();
       }
     }
   });
@@ -1478,6 +1572,7 @@ define('wistem-app-frontend/controllers/search', ['exports'], function (exports)
   });
   var Controller = Ember.Controller;
   exports.default = Controller.extend({
+    sources: ['Federal Government', 'State Government', 'Local Government', 'Internal', 'Private Industry'],
     actions: {
 
       /* Dialog */
@@ -1694,6 +1789,19 @@ define('wistem-app-frontend/helpers/gte', ['exports', 'ember-truth-helpers/helpe
     }
   });
 });
+define('wistem-app-frontend/helpers/is-after', ['exports', 'ember-moment/helpers/is-after'], function (exports, _isAfter) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _isAfter.default;
+    }
+  });
+});
 define('wistem-app-frontend/helpers/is-array', ['exports', 'ember-truth-helpers/helpers/is-array'], function (exports, _isArray) {
   'use strict';
 
@@ -1713,6 +1821,32 @@ define('wistem-app-frontend/helpers/is-array', ['exports', 'ember-truth-helpers/
     }
   });
 });
+define('wistem-app-frontend/helpers/is-before', ['exports', 'ember-moment/helpers/is-before'], function (exports, _isBefore) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _isBefore.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/is-between', ['exports', 'ember-moment/helpers/is-between'], function (exports, _isBetween) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _isBetween.default;
+    }
+  });
+});
 define('wistem-app-frontend/helpers/is-equal', ['exports', 'ember-truth-helpers/helpers/is-equal'], function (exports, _isEqual) {
   'use strict';
 
@@ -1729,6 +1863,45 @@ define('wistem-app-frontend/helpers/is-equal', ['exports', 'ember-truth-helpers/
     enumerable: true,
     get: function () {
       return _isEqual.isEqual;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/is-same-or-after', ['exports', 'ember-moment/helpers/is-same-or-after'], function (exports, _isSameOrAfter) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _isSameOrAfter.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/is-same-or-before', ['exports', 'ember-moment/helpers/is-same-or-before'], function (exports, _isSameOrBefore) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _isSameOrBefore.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/is-same', ['exports', 'ember-moment/helpers/is-same'], function (exports, _isSame) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _isSame.default;
     }
   });
 });
@@ -1789,6 +1962,175 @@ define('wistem-app-frontend/helpers/lte', ['exports', 'ember-truth-helpers/helpe
     }
   });
 });
+define('wistem-app-frontend/helpers/moment-add', ['exports', 'ember-moment/helpers/moment-add'], function (exports, _momentAdd) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentAdd.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-calendar', ['exports', 'ember-moment/helpers/moment-calendar'], function (exports, _momentCalendar) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentCalendar.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-diff', ['exports', 'ember-moment/helpers/moment-diff'], function (exports, _momentDiff) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentDiff.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-duration', ['exports', 'ember-moment/helpers/moment-duration'], function (exports, _momentDuration) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentDuration.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-format', ['exports', 'ember-moment/helpers/moment-format'], function (exports, _momentFormat) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentFormat.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-from-now', ['exports', 'ember-moment/helpers/moment-from-now'], function (exports, _momentFromNow) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentFromNow.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-from', ['exports', 'ember-moment/helpers/moment-from'], function (exports, _momentFrom) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentFrom.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-subtract', ['exports', 'ember-moment/helpers/moment-subtract'], function (exports, _momentSubtract) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentSubtract.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-to-date', ['exports', 'ember-moment/helpers/moment-to-date'], function (exports, _momentToDate) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentToDate.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-to-now', ['exports', 'ember-moment/helpers/moment-to-now'], function (exports, _momentToNow) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentToNow.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-to', ['exports', 'ember-moment/helpers/moment-to'], function (exports, _momentTo) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _momentTo.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment-unix', ['exports', 'ember-moment/helpers/unix'], function (exports, _unix) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _unix.default;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/moment', ['exports', 'ember-moment/helpers/moment'], function (exports, _moment) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _moment.default;
+    }
+  });
+});
 define('wistem-app-frontend/helpers/not-eq', ['exports', 'ember-truth-helpers/helpers/not-equal'], function (exports, _notEqual) {
   'use strict';
 
@@ -1824,6 +2166,19 @@ define('wistem-app-frontend/helpers/not', ['exports', 'ember-truth-helpers/helpe
     enumerable: true,
     get: function () {
       return _not.not;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/now', ['exports', 'ember-moment/helpers/now'], function (exports, _now) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _now.default;
     }
   });
 });
@@ -1924,6 +2279,19 @@ define('wistem-app-frontend/helpers/transition-to', ['exports', 'ember-transitio
     enumerable: true,
     get: function () {
       return _transitionTo.transitionTo;
+    }
+  });
+});
+define('wistem-app-frontend/helpers/unix', ['exports', 'ember-moment/helpers/unix'], function (exports, _unix) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  Object.defineProperty(exports, 'default', {
+    enumerable: true,
+    get: function () {
+      return _unix.default;
     }
   });
 });
@@ -2171,7 +2539,7 @@ define('wistem-app-frontend/initializers/notification-messages', ['exports'], fu
    * @Email:  mlhale@unomaha.edu
    * @Filename: notification-messages.js
    * @Last modified by:   matthale
-   * @Last modified time: 2018-03-01T00:55:48-06:00
+   * @Last modified time: 2018-03-01T17:11:29-06:00
    * @Copyright: Copyright (C) 2018 Matthew L. Hale
    */
 
@@ -2302,11 +2670,12 @@ define('wistem-app-frontend/models/award', ['exports', 'ember-data'], function (
     }),
     nomdeadline: _emberData.default.attr('date'),
     submdeadline: _emberData.default.attr('date'),
-    source: _emberData.default.attr('string'),
+
     previousapplicants: _emberData.default.attr('number'),
     createdon: _emberData.default.attr('date'),
 
     // Related fields
+    source: _emberData.default.belongsTo('source'),
     createdby: _emberData.default.belongsTo('user'),
     applicanttypes: _emberData.default.hasMany('applicanttype'),
     awardpurposes: _emberData.default.hasMany('awardpurpose'),
@@ -2339,6 +2708,17 @@ define('wistem-app-frontend/models/profile', ['exports', 'ember-data'], function
     areasofinterest: _emberData.default.hasMany('areaofinterest')
   });
 });
+define('wistem-app-frontend/models/source', ['exports', 'ember-data'], function (exports, _emberData) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = _emberData.default.Model.extend({
+    name: _emberData.default.attr('string'),
+    awards: _emberData.default.hasMany('award')
+  });
+});
 define('wistem-app-frontend/models/stemfield', ['exports', 'ember-data'], function (exports, _emberData) {
   'use strict';
 
@@ -2360,7 +2740,8 @@ define('wistem-app-frontend/models/user', ['exports', 'ember-data'], function (e
     username: _emberData.default.attr('string'),
     email: _emberData.default.attr('string'),
     firstname: _emberData.default.attr('string'),
-    lastname: _emberData.default.attr('string')
+    lastname: _emberData.default.attr('string'),
+    issuperuser: _emberData.default.attr('boolean')
   });
 });
 define('wistem-app-frontend/resolver', ['exports', 'ember-resolver'], function (exports, _emberResolver) {
@@ -2393,6 +2774,7 @@ define('wistem-app-frontend/router', ['exports', 'wistem-app-frontend/config/env
     this.route('awards');
     this.route('AddAward');
     this.route('EditAward');
+    this.route('profile');
   });
 
   exports.default = Router;
@@ -2413,9 +2795,17 @@ define('wistem-app-frontend/routes/awards', ['exports'], function (exports) {
     value: true
   });
   var Route = Ember.Route;
+  var RSVP = Ember.RSVP;
   exports.default = Route.extend({
     model: function model() {
-      return this.store.findAll('award', { include: 'applicanttypes,awardpurposes,stemfields,createdby,createdby.areasofinterest,createdby.user' });
+      return RSVP.hash({
+        awards: this.store.findAll('award', { include: 'applicanttypes,awardpurposes,stemfields,createdby,createdby.areasofinterest,createdby.user,source' }),
+        stemfields: this.store.findAll('stemfield'),
+        applicanttypes: this.store.findAll('applicanttype'),
+        sources: this.store.findAll('source'),
+        purposes: this.store.findAll('awardpurpose')
+
+      });
     }
   });
 });
@@ -2429,6 +2819,15 @@ define('wistem-app-frontend/routes/index', ['exports'], function (exports) {
   exports.default = Route.extend({});
 });
 define('wistem-app-frontend/routes/login', ['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var Route = Ember.Route;
+  exports.default = Route.extend({});
+});
+define('wistem-app-frontend/routes/profile', ['exports'], function (exports) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -2559,38 +2958,6 @@ define('wistem-app-frontend/routes/search', ['exports'], function (exports) {
         awardpurpose: this.getAwardPurpose()
       };
       return data;
-    },
-    getStemFields: function getStemFields() {
-      var items = Ember.A([]);
-      items.addObject("Math");
-      items.addObject("Science");
-      items.addObject("Technology");
-      items.addObject("Engineering");
-      return items;
-    },
-    getApplicantTypes: function getApplicantTypes() {
-      var items = Ember.A([]);
-      items.addObject("Faculty");
-      items.addObject("Staff");
-      items.addObject("Students");
-      return items;
-    },
-    getAwardSources: function getAwardSources() {
-      var items = Ember.A([]);
-      items.addObject("Federal Government");
-      items.addObject("State Government");
-      items.addObject("Local Government");
-      items.addObject("Internal");
-      items.addObject("Private Industry");
-      items.addObject("Other");
-      return items;
-    },
-    getAwardPurpose: function getAwardPurpose() {
-      var items = Ember.A([]);
-      items.addObject("Mentoring");
-      items.addObject("Projects");
-      items.addObject("Other");
-      return items;
     }
   });
 });
@@ -2674,10 +3041,19 @@ define('wistem-app-frontend/services/auth-manager', ['exports'], function (expor
 						localStorage.removeItem('password');
 					}
 					auth.set('password', '');
+					auth.set('errorMsg', '');
+					auth.get('notifications').success('Login successful. Loading your data...', {
+						clearDuration: 3000,
+						autoClear: true
+					});
 				} else {
 					//errors
 					console.log('Login POST Request to /api/session/ was unsuccessful.');
 					auth.set('errorMsg', response.data.message);
+					auth.get('notifications').warning('' + response.data.message, {
+						clearDuration: 3000,
+						autoClear: true
+					});
 				}
 			});
 		},
@@ -2700,10 +3076,10 @@ define('wistem-app-frontend/services/auth-manager', ['exports'], function (expor
 					auth.set('username', localStorage.username);
 					auth.set('password', localStorage.password);
 				}
-				//turn of eye tracking
-				// console.log('Disabling Eyetracking at http://localhost:8001/session/');
-				// Ember.$.ajax({url: 'http://localhost:8001/session/', type: 'DELETE'})
-
+				auth.get('notifications').success('You are now logged out!', {
+					clearDuration: 3000,
+					autoClear: true
+				});
 				auth.get('routing').transitionTo('login');
 			});
 		},
@@ -2816,20 +3192,31 @@ define('wistem-app-frontend/services/constants', ['exports'], function (exports)
     MEDIA_PRIORITY: ['xl', 'gt-lg', 'lg', 'gt-md', 'md', 'gt-sm', 'sm', 'gt-xs', 'xs', 'print']
   });
 });
-define('wistem-app-frontend/services/navigation', ['exports'], function (exports) {
+define('wistem-app-frontend/services/moment', ['exports', 'ember-moment/services/moment', 'wistem-app-frontend/config/environment'], function (exports, _moment, _environment) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  var Service = Ember.Service;
-  var ArrayProxy = Ember.ArrayProxy;
-  var A = Ember.A;
-  exports.default = Service.extend({
-    externalmenuitems: ArrayProxy.create({ content: A([]) }),
-    internalmenuitems: ArrayProxy.create({ content: A([{ route: 'index', icon: 'home', title: 'home' }, { route: 'awards', icon: 'view_list', title: "awards" }]) }),
-    dynamicbuttons: ArrayProxy.create({ content: A() })
+  var get = Ember.get;
+  exports.default = _moment.default.extend({
+    defaultFormat: get(_environment.default, 'moment.outputFormat')
   });
+});
+define('wistem-app-frontend/services/navigation', ['exports', 'wistem-app-frontend/config/environment'], function (exports, _environment) {
+    'use strict';
+
+    Object.defineProperty(exports, "__esModule", {
+        value: true
+    });
+    var Service = Ember.Service;
+    var ArrayProxy = Ember.ArrayProxy;
+    var A = Ember.A;
+    exports.default = Service.extend({
+        menuitems: ArrayProxy.create({ content: A([{ route: 'index', icon: 'home', title: 'home', type: 'internal' }, { route: 'awards', icon: 'view_list', title: "awards", type: 'internal' }]) }),
+        adminmenuitems: ArrayProxy.create({ content: A([{ route: _environment.default.serverName + '/admin/api/award/add/', icon: 'add', title: "add a new award", type: 'external' }, { route: _environment.default.serverName + '/admin/api/award/', icon: 'edit', title: "edit an award", type: 'external' }]) }),
+        dynamicbuttons: ArrayProxy.create({ content: A() })
+    });
 });
 define('wistem-app-frontend/services/notification-messages-service', ['exports', 'ember-cli-notifications/services/notification-messages-service'], function (exports, _notificationMessagesService) {
   'use strict';
@@ -3117,7 +3504,7 @@ define("wistem-app-frontend/templates/application", ["exports"], function (expor
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "Lj2Yh4yQ", "block": "{\"symbols\":[\"menu\",\"content\",\"menu\",\"content\",\"item\",\"item\"],\"statements\":[[6,\"div\"],[9,\"class\",\"container\"],[7],[0,\"\\n\"],[4,\"paper-toolbar\",null,[[\"accent\"],[true]],{\"statements\":[[4,\"paper-toolbar-tools\",null,null,{\"statements\":[[4,\"paper-menu\",null,null,{\"statements\":[[4,\"component\",[[19,3,[\"trigger\"]]],null,{\"statements\":[[4,\"paper-button\",null,[[\"iconButton\"],[true]],{\"statements\":[[0,\"            \"],[1,[25,\"paper-icon\",[\"menu\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[4,\"component\",[[19,3,[\"content\"]]],[[\"width\",\"class\"],[4,\"main-app-menu\"]],{\"statements\":[[4,\"each\",[[20,[\"navigation\",\"externalmenuitems\"]]],null,{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"externalLink\",[19,6,[]]],null]]],{\"statements\":[[0,\"              \"],[4,\"if\",[[19,6,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,6,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n              \"],[6,\"span\"],[7],[1,[19,6,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[6]},null],[4,\"each\",[[20,[\"navigation\",\"internalmenuitems\"]]],null,{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"transition-to\",[[19,5,[\"route\"]]],null]]],{\"statements\":[[0,\"              \"],[4,\"if\",[[19,5,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,5,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n              \"],[6,\"span\"],[7],[1,[19,5,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[5]},null]],\"parameters\":[4]},null]],\"parameters\":[3]},null],[0,\"      \"],[6,\"h2\"],[7],[0,\"\\n        \"],[4,\"link-to\",[\"index\"],null,{\"statements\":[[0,\"WiSTEM Award Tracker\"]],\"parameters\":[]},null],[0,\"\\n      \"],[8],[0,\"\\n      \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n\"],[4,\"if\",[[20,[\"auth\",\"isLoggedIn\"]]],null,{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-column flex-33 flex-sm-100 layout-align-center-center\"],[7],[0,\"\\n\"],[4,\"paper-menu\",null,[[\"position\"],[\"target-right target\"]],{\"statements\":[[4,\"component\",[[19,1,[\"trigger\"]]],null,{\"statements\":[[4,\"paper-button\",null,null,{\"statements\":[[0,\"                \"],[1,[20,[\"auth\",\"user\",\"username\"]],false],[0,\"\\n                \"],[1,[25,\"paper-icon\",[\"arrow_drop_down\"],[[\"class\"],[\"md-menu-origin\"]]],false],[0,\"\\n\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[4,\"component\",[[19,1,[\"content\"]]],null,{\"statements\":[[4,\"component\",[[19,2,[\"menu-item\"]]],[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"logout\"],null]]],{\"statements\":[[0,\"                \"],[6,\"p\"],[9,\"style\",\"width: 190px;\"],[7],[0,\"Logout\"],[8],[0,\"\\n                \"],[1,[25,\"paper-icon\",[\"power_settings_new\"],[[\"class\"],[\"md-menu-align-target\"]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[2]},null]],\"parameters\":[1]},null],[0,\"        \"],[8],[0,\"\\n\"]],\"parameters\":[]},{\"statements\":[[4,\"paper-button\",null,[[\"onClick\"],[[25,\"transition-to\",[\"login\"],null]]],{\"statements\":[[0,\"          Login\\n          \"],[1,[25,\"paper-icon\",[\"exit_to_app\"],[[\"class\"],[\"md-menu-origin\"]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]}]],\"parameters\":[]},null]],\"parameters\":[]},null],[0,\"  \"],[1,[18,\"paper-toaster\"],false],[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"main layout-row\"],[7],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"flex\"],[7],[0,\"\\n      \"],[1,[18,\"outlet\"],false],[0,\"\\n    \"],[8],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"footer layout-row layout-align-space-between-end\"],[7],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"left-footer\"],[7],[0,\"\\n      \"],[6,\"p\"],[9,\"class\",\"credit\"],[7],[0,\"\\n        © 2018 \"],[6,\"a\"],[9,\"href\",\"https://www.unomaha.edu/wistem-professional-development/index.php\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"WiSTEM\"],[8],[0,\", site created by \"],[6,\"a\"],[9,\"href\",\"https://github.com/MLHale/CYBR8470/\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"Students\"],[8],[0,\" and \"],[6,\"a\"],[9,\"href\",\"http://faculty.ist.unomaha.edu/mhale/\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"Dr. Matthew L. Hale\"],[8],[0,\"\\n      \"],[8],[0,\"\\n    \"],[8],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"center-footer\"],[7],[0,\"\\n    \"],[8],[0,\"\\n  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/application.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "+lFUvdn1", "block": "{\"symbols\":[\"menu\",\"content\",\"menu\",\"content\",\"item\",\"item\"],\"statements\":[[2,\"\\n@Author: Matthew Hale <matthale>\\n@Date:   2018-03-01T16:19:15-06:00\\n@Email:  mlhale@unomaha.edu\\n@Filename: application.hbs\\n@Last modified by:   matthale\\n@Last modified time: 2018-03-01T17:13:48-06:00\\n@Copyright: Copyright (C) 2018 Matthew L. Hale\\n\"],[0,\"\\n\\n\\n\\n\"],[6,\"div\"],[9,\"class\",\"container\"],[7],[0,\"\\n  \"],[1,[25,\"notification-container\",null,[[\"position\"],[\"bottom-left\"]]],false],[0,\"\\n\"],[4,\"paper-toolbar\",null,[[\"accent\"],[true]],{\"statements\":[[4,\"paper-toolbar-tools\",null,null,{\"statements\":[[4,\"paper-menu\",null,null,{\"statements\":[[4,\"component\",[[19,3,[\"trigger\"]]],null,{\"statements\":[[4,\"paper-button\",null,[[\"iconButton\"],[true]],{\"statements\":[[0,\"            \"],[1,[25,\"paper-icon\",[\"menu\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[4,\"component\",[[19,3,[\"content\"]]],[[\"width\",\"class\"],[4,\"main-app-menu\"]],{\"statements\":[[4,\"each\",[[20,[\"navigation\",\"menuitems\"]]],null,{\"statements\":[[4,\"if\",[[25,\"eq\",[[19,6,[\"type\"]],\"internal\"],null]],null,{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"transition-to\",[[19,6,[\"route\"]]],null]]],{\"statements\":[[0,\"                \"],[4,\"if\",[[19,6,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,6,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n                \"],[6,\"span\"],[7],[1,[19,6,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"externalLink\",[19,6,[]]],null]]],{\"statements\":[[0,\"                \"],[4,\"if\",[[19,6,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,6,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n                \"],[6,\"span\"],[7],[1,[19,6,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]}]],\"parameters\":[6]},null],[4,\"if\",[[20,[\"auth\",\"user\",\"issuperuser\"]]],null,{\"statements\":[[4,\"each\",[[20,[\"navigation\",\"adminmenuitems\"]]],null,{\"statements\":[[4,\"if\",[[25,\"eq\",[[19,5,[\"type\"]],\"internal\"],null]],null,{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"transition-to\",[[19,5,[\"route\"]]],null]]],{\"statements\":[[0,\"                  \"],[4,\"if\",[[19,5,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,5,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n                  \"],[6,\"span\"],[7],[1,[19,5,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"externalLink\",[19,5,[]]],null]]],{\"statements\":[[0,\"                  \"],[4,\"if\",[[19,5,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,5,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n                  \"],[6,\"span\"],[7],[1,[19,5,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]}]],\"parameters\":[5]},null]],\"parameters\":[]},null]],\"parameters\":[4]},null]],\"parameters\":[3]},null],[0,\"      \"],[6,\"h2\"],[7],[0,\"\\n        \"],[4,\"link-to\",[\"index\"],null,{\"statements\":[[0,\"WiSTEM Award Tracker\"]],\"parameters\":[]},null],[0,\"\\n      \"],[8],[0,\"\\n      \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n\"],[4,\"if\",[[20,[\"auth\",\"isLoggedIn\"]]],null,{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-column flex-33 flex-sm-100 layout-align-center-center\"],[7],[0,\"\\n\"],[4,\"paper-menu\",null,[[\"position\"],[\"target-right target\"]],{\"statements\":[[4,\"component\",[[19,1,[\"trigger\"]]],null,{\"statements\":[[4,\"paper-button\",null,null,{\"statements\":[[0,\"                \"],[1,[20,[\"auth\",\"user\",\"username\"]],false],[0,\"\\n                \"],[1,[25,\"paper-icon\",[\"arrow_drop_down\"],[[\"class\"],[\"md-menu-origin\"]]],false],[0,\"\\n\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[4,\"component\",[[19,1,[\"content\"]]],null,{\"statements\":[[4,\"component\",[[19,2,[\"menu-item\"]]],[[\"onClick\"],[[25,\"transition-to\",[\"profile\"],null]]],{\"statements\":[[0,\"                \"],[6,\"p\"],[9,\"style\",\"width: 150px;\"],[7],[0,\"Your account\"],[8],[0,\"\\n                \"],[1,[25,\"paper-icon\",[\"person\"],[[\"class\"],[\"md-menu-align-target\"]]],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"component\",[[19,2,[\"menu-item\"]]],[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"logout\"],null]]],{\"statements\":[[0,\"                \"],[6,\"p\"],[9,\"style\",\"width: 150px;\"],[7],[0,\"Logout\"],[8],[0,\"\\n                \"],[1,[25,\"paper-icon\",[\"power_settings_new\"],[[\"class\"],[\"md-menu-align-target\"]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[2]},null]],\"parameters\":[1]},null],[0,\"        \"],[8],[0,\"\\n\"]],\"parameters\":[]},{\"statements\":[[4,\"paper-button\",null,[[\"onClick\"],[[25,\"transition-to\",[\"login\"],null]]],{\"statements\":[[0,\"          Login\\n          \"],[1,[25,\"paper-icon\",[\"exit_to_app\"],[[\"class\"],[\"md-menu-origin\"]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]}]],\"parameters\":[]},null]],\"parameters\":[]},null],[0,\"  \"],[1,[18,\"paper-toaster\"],false],[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"main layout-row\"],[7],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"flex\"],[7],[0,\"\\n      \"],[1,[18,\"outlet\"],false],[0,\"\\n    \"],[8],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"footer layout-row layout-align-space-between-end\"],[7],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"left-footer\"],[7],[0,\"\\n      \"],[6,\"p\"],[9,\"class\",\"credit\"],[7],[0,\"\\n        © 2018 \"],[6,\"a\"],[9,\"href\",\"https://www.unomaha.edu/wistem-professional-development/index.php\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"WiSTEM\"],[8],[0,\", created by \"],[6,\"a\"],[9,\"href\",\"http://faculty.ist.unomaha.edu/mhale/\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"Dr. Matthew L. Hale\"],[8],[0,\" with help from \"],[6,\"a\"],[9,\"href\",\"https://github.com/MLHale/CYBR8470/\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"CYBR 8470 Students\"],[8],[0,\"\\n      \"],[8],[0,\"\\n    \"],[8],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"center-footer\"],[7],[0,\"\\n    \"],[8],[0,\"\\n  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/application.hbs" } });
 });
 define("wistem-app-frontend/templates/awardinfo", ["exports"], function (exports) {
   "use strict";
@@ -3133,7 +3520,7 @@ define("wistem-app-frontend/templates/awards", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "96qhOFL/", "block": "{\"symbols\":[\"award\",\"listitem\",\"type\",\"panel\",\"expanded\",\"advsearch\",\"expanded\",\"purpose\",\"awardsource\",\"applicant\",\"stemfields\"],\"statements\":[[4,\"paper-expansion-panel\",null,null,{\"statements\":[[4,\"component\",[[19,4,[\"collapsed\"]]],null,{\"statements\":[[0,\"    \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Refine your search\"],[8],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"md-panel-summary\"],[7],[8],[0,\"\\n    \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_down\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,4,[\"expanded\"]]],null,{\"statements\":[[4,\"component\",[[19,5,[\"header\"]]],null,{\"statements\":[[0,\"      \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Search for awards\"],[8],[0,\"\\n      \"],[6,\"div\"],[9,\"class\",\"md-panel-summary\"],[7],[8],[0,\"\\n      \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_up\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,5,[\"content\"]]],null,{\"statements\":[[0,\"      \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n        \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Award Title\",[20,[\"title\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"title\"]]],null]],null]]]],false],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"flex-30\"],[7],[0,\"\\n          Filter by stem field:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"stemfields\"]],[20,[\"stemfield\"]],\"Select stem fields...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"stemfield\"]]],null]],null]]],{\"statements\":[[0,\"            \"],[1,[19,11,[]],false],[0,\"\\n\"]],\"parameters\":[11]},null],[0,\"        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"flex-30\"],[7],[0,\"\\n          Filter by who can apply:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"applicanttype\"]],[20,[\"applicanttype\"]],\"Select applicant types...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"applicanttype\"]]],null]],null]]],{\"statements\":[[0,\"            \"],[1,[19,10,[]],false],[0,\"\\n\"]],\"parameters\":[10]},null],[0,\"        \"],[8],[0,\"\\n      \"],[8],[0,\"\\n\"],[4,\"paper-expansion-panel\",null,null,{\"statements\":[[4,\"component\",[[19,6,[\"collapsed\"]]],null,{\"statements\":[[0,\"          \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Advanced search\"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"md-panel-summary\"],[7],[8],[0,\"\\n          \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_down\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,6,[\"expanded\"]]],null,{\"statements\":[[4,\"component\",[[19,7,[\"header\"]]],null,{\"statements\":[[0,\"            \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Advanced search\"],[8],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"md-panel-summary\"],[7],[8],[0,\"\\n            \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_up\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,7,[\"content\"]]],null,{\"statements\":[[0,\"            \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n              \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Description\",[20,[\"description\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"description\"]]],null]],null]]]],false],[0,\"\\n              \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Award URL\",[20,[\"awardurl\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardurl\"]]],null]],null]]]],false],[0,\"\\n              \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Sponsor\",[20,[\"sponsor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"sponsor\"]]],null]],null]]]],false],[0,\"\\n            \"],[8],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n\"],[4,\"power-select-multiple\",null,[[\"class\",\"options\",\"selected\",\"placeholder\",\"onchange\"],[\"flex\",[20,[\"model\",\"awardsources\"]],[20,[\"awardsources\"]],\"Sources\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardsources\"]]],null]],null]]],{\"statements\":[[0,\"                \"],[1,[19,9,[]],false],[0,\"\\n\"]],\"parameters\":[9]},null],[4,\"power-select-multiple\",null,[[\"class\",\"options\",\"selected\",\"placeholder\",\"onchange\"],[\"flex\",[20,[\"model\",\"awardpurpose\"]],[20,[\"awardpurpose\"]],\"Purpose\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardpurpose\"]]],null]],null]]],{\"statements\":[[0,\"                \"],[1,[19,8,[]],false],[0,\"\\n\"]],\"parameters\":[8]},null],[0,\"            \"],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[7]},null]],\"parameters\":[6]},null]],\"parameters\":[]},null],[4,\"component\",[[19,5,[\"footer\"]]],null,{\"statements\":[[0,\"        \"],[4,\"paper-button\",null,[[\"accent\",\"class\",\"onClick\"],[true,\"flex\",[25,\"action\",[[19,0,[]],\"search\"],null]]],{\"statements\":[[0,\"Find Awards\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[5]},null]],\"parameters\":[4]},null],[0,\"\\n\"],[4,\"paper-list\",null,null,{\"statements\":[[0,\"  \"],[4,\"paper-subheader\",null,null,{\"statements\":[[0,\"Click an award below to find more information about the application.\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"each\",[[20,[\"model\"]]],null,{\"statements\":[[4,\"paper-item\",null,[[\"class\",\"onClick\"],[\"md-3-line\",[25,\"action\",[[19,0,[]],\"openDialog\",[19,1,[]]],null]]],{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"md-list-item-text\"],[7],[0,\"\\n          \"],[6,\"h3\"],[7],[6,\"strong\"],[7],[0,\"Award name:\"],[8],[0,\" \"],[1,[19,1,[\"title\"]],false],[8],[0,\"\\n          \"],[6,\"h4\"],[7],[6,\"strong\"],[7],[0,\"Deadline:\"],[8],[0,\" \"],[1,[19,1,[\"submdeadline\"]],false],[8],[0,\"\\n          \"],[6,\"p\"],[7],[6,\"strong\"],[7],[0,\"Description:\"],[8],[1,[19,1,[\"description\"]],false],[8],[0,\"\\n\\n\"],[0,\"\\n        \"],[8],[0,\"\\n\\n\"],[4,\"component\",[[19,2,[\"button\"]]],[[\"secondary\"],[true]],{\"statements\":[[4,\"paper-chips\",null,[[\"readOnly\",\"content\"],[true,[19,1,[\"applicanttypes\"]]]],{\"statements\":[[0,\"              \"],[1,[19,3,[\"name\"]],false],[0,\"\\n\"]],\"parameters\":[3]},null]],\"parameters\":[]},null],[0,\"        \"],[1,[18,\"paper-divider\"],false],[0,\"\\n\"]],\"parameters\":[2]},null]],\"parameters\":[1]},null]],\"parameters\":[]},null],[0,\"\\n\\n\"],[4,\"if\",[[20,[\"showDialog\"]]],null,{\"statements\":[[4,\"paper-dialog\",null,[[\"class\",\"onClose\",\"origin\",\"clickOutsideToClose\"],[\"flex\",[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null],[20,[\"dialogOrigin\"]],true]],{\"statements\":[[4,\"paper-toolbar\",null,null,{\"statements\":[[4,\"paper-toolbar-tools\",null,null,{\"statements\":[[0,\"        \"],[6,\"h2\"],[7],[1,[20,[\"selectedAward\",\"title\"]],false],[8],[0,\"\\n        \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n        \"],[4,\"paper-button\",null,[[\"iconButton\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null]]],{\"statements\":[[1,[25,\"paper-icon\",null,[[\"icon\"],[\"close\"]]],false]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-content\",null,null,{\"statements\":[[0,\"      \"],[1,[25,\"award-display\",null,[[\"selectedAward\"],[[20,[\"selectedAward\"]]]]],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-actions\",null,[[\"class\"],[\"layout-row\"]],{\"statements\":[[0,\"      \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n      \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"closeDialog\",\"ok\"],null]]],{\"statements\":[[0,\"OK\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/awards.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "HYqZ6san", "block": "{\"symbols\":[\"award\",\"listitem\",\"type\",\"panel\",\"expanded\",\"advsearch\",\"expanded\",\"purpose\",\"awardsource\",\"applicanttype\",\"stemfield\"],\"statements\":[[4,\"paper-expansion-panel\",null,null,{\"statements\":[[4,\"component\",[[19,4,[\"collapsed\"]]],null,{\"statements\":[[0,\"    \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Refine your search\"],[8],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"md-panel-summary\"],[7],[8],[0,\"\\n    \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_down\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,4,[\"expanded\"]]],null,{\"statements\":[[4,\"component\",[[19,5,[\"header\"]]],null,{\"statements\":[[0,\"      \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Search for awards\"],[8],[0,\"\\n      \"],[6,\"div\"],[9,\"class\",\"md-panel-summary\"],[7],[8],[0,\"\\n      \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_up\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,5,[\"content\"]]],null,{\"statements\":[[0,\"      \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n        \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Award Title\",[20,[\"filters\",\"title\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"filters\",\"title\"]]],null]],null]]]],false],[0,\"\\n        \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Sponsor\",[20,[\"filters\",\"sponsororg\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"filters\",\"sponsororg\"]]],null]],null]]]],false],[0,\"\\n\\n        \"],[6,\"div\"],[9,\"class\",\"flex-25\"],[7],[0,\"\\n          Filter by stem field:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"stemfields\"]],[20,[\"filters\",\"stemfields\"]],\"Select stem fields...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"filters\",\"stemfields\"]]],null]],null]]],{\"statements\":[[0,\"            \"],[1,[19,11,[\"name\"]],false],[0,\"\\n\"]],\"parameters\":[11]},null],[0,\"        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"flex-25\"],[7],[0,\"\\n          Filter by who can apply:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"applicanttypes\"]],[20,[\"filters\",\"applicanttypes\"]],\"Select applicant types...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"filters\",\"applicanttypes\"]]],null]],null]]],{\"statements\":[[0,\"            \"],[1,[19,10,[\"name\"]],false],[0,\"\\n\"]],\"parameters\":[10]},null],[0,\"        \"],[8],[0,\"\\n      \"],[8],[0,\"\\n\"],[4,\"paper-expansion-panel\",null,null,{\"statements\":[[4,\"component\",[[19,6,[\"collapsed\"]]],null,{\"statements\":[[0,\"          \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Advanced search\"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"md-panel-summary\"],[7],[8],[0,\"\\n          \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_down\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,6,[\"expanded\"]]],null,{\"statements\":[[4,\"component\",[[19,7,[\"header\"]]],null,{\"statements\":[[0,\"            \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Advanced search\"],[8],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"md-panel-summary\"],[7],[8],[0,\"\\n            \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_up\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,7,[\"content\"]]],null,{\"statements\":[[0,\"            \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n              \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Award URL\",[20,[\"filters\",\"awardlink\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"filters\",\"awardlink\"]]],null]],null]]]],false],[0,\"\\n              \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Description\",[20,[\"filters\",\"description\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"filters\",\"description\"]]],null]],null]]]],false],[0,\"\\n            \"],[8],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n\"],[4,\"power-select-multiple\",null,[[\"class\",\"options\",\"selected\",\"placeholder\",\"onchange\"],[\"flex\",[20,[\"model\",\"sources\"]],[20,[\"filters\",\"sources\"]],\"Sources\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"filters\",\"sources\"]]],null]],null]]],{\"statements\":[[0,\"                \"],[1,[19,9,[\"name\"]],false],[0,\"\\n\"]],\"parameters\":[9]},null],[4,\"power-select-multiple\",null,[[\"class\",\"options\",\"selected\",\"placeholder\",\"onchange\"],[\"flex\",[20,[\"model\",\"purposes\"]],[20,[\"filters\",\"purposes\"]],\"Purpose\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"filters\",\"purposes\"]]],null]],null]]],{\"statements\":[[0,\"                \"],[1,[19,8,[\"name\"]],false],[0,\"\\n\"]],\"parameters\":[8]},null],[0,\"            \"],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[7]},null]],\"parameters\":[6]},null]],\"parameters\":[]},null]],\"parameters\":[5]},null]],\"parameters\":[4]},null],[0,\"\\n\"],[4,\"paper-list\",null,null,{\"statements\":[[0,\"  \"],[4,\"paper-subheader\",null,null,{\"statements\":[[0,\"Click an award below to find more information about the application.\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"each\",[[20,[\"filteredAwards\"]]],null,{\"statements\":[[4,\"paper-item\",null,[[\"class\",\"onClick\"],[\"md-3-line\",[25,\"action\",[[19,0,[]],\"openDialog\",[19,1,[]]],null]]],{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"md-list-item-text\"],[7],[0,\"\\n          \"],[6,\"h3\"],[7],[6,\"strong\"],[7],[0,\"Award name:\"],[8],[0,\" \"],[1,[19,1,[\"title\"]],false],[8],[0,\"\\n          \"],[6,\"h4\"],[7],[6,\"strong\"],[7],[0,\"Deadline:\"],[8],[0,\" \"],[1,[19,1,[\"submdeadline\"]],false],[8],[0,\"\\n          \"],[6,\"p\"],[7],[6,\"strong\"],[7],[0,\"Description:\"],[8],[1,[19,1,[\"description\"]],false],[8],[0,\"\\n        \"],[8],[0,\"\\n\\n\"],[4,\"component\",[[19,2,[\"button\"]]],[[\"secondary\"],[true]],{\"statements\":[[4,\"paper-chips\",null,[[\"readOnly\",\"content\"],[true,[19,1,[\"applicanttypes\"]]]],{\"statements\":[[0,\"              \"],[1,[19,3,[\"name\"]],false],[0,\"\\n\"]],\"parameters\":[3]},null]],\"parameters\":[]},null],[0,\"        \"],[1,[18,\"paper-divider\"],false],[0,\"\\n\"]],\"parameters\":[2]},null]],\"parameters\":[1]},null]],\"parameters\":[]},null],[0,\"\\n\\n\"],[4,\"if\",[[20,[\"showDialog\"]]],null,{\"statements\":[[4,\"paper-dialog\",null,[[\"class\",\"onClose\",\"origin\",\"clickOutsideToClose\"],[\"flex\",[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null],[20,[\"dialogOrigin\"]],true]],{\"statements\":[[4,\"paper-toolbar\",null,[[\"accent\"],[true]],{\"statements\":[[4,\"paper-toolbar-tools\",null,null,{\"statements\":[[0,\"        \"],[6,\"h2\"],[7],[1,[20,[\"selectedAward\",\"title\"]],false],[8],[0,\"\\n        \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n        \"],[4,\"paper-button\",null,[[\"iconButton\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null]]],{\"statements\":[[1,[25,\"paper-icon\",null,[[\"icon\"],[\"close\"]]],false]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-content\",null,null,{\"statements\":[[0,\"      \"],[1,[25,\"award-display\",null,[[\"selectedAward\"],[[20,[\"selectedAward\"]]]]],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-actions\",null,[[\"class\"],[\"layout-row\"]],{\"statements\":[[0,\"      \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n      \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"closeDialog\",\"ok\"],null]]],{\"statements\":[[0,\"OK\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/awards.hbs" } });
 });
 define("wistem-app-frontend/templates/components/async-button", ["exports"], function (exports) {
   "use strict";
@@ -3205,7 +3592,15 @@ define("wistem-app-frontend/templates/login", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "LNPuL+4C", "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[6,\"h3\"],[7],[0,\"Please log in\"],[8],[0,\"\\n\"],[6,\"p\"],[7],[0,\"\\n  \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Name\",[20,[\"name\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"name\"]]],null]],null]]]],false],[0,\"\\n\"],[8],[0,\"\\n\"],[6,\"p\"],[7],[0,\"\\n  \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex-40\",\"Password\",\"password\",[20,[\"password\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"password\"]]],null]],null]]]],false],[0,\"\\n\"],[8],[0,\"\\n\"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"login\",[20,[\"name\"]],[20,[\"password\"]]],null]]],{\"statements\":[[0,\"login\"]],\"parameters\":[]},null],[0,\"\\n\\n\\n\"],[6,\"div\"],[10,\"class\",[26,[[25,\"if\",[[25,\"not\",[[20,[\"hidden\"]]],null],\"hidden\"],null]]]],[9,\"style\",\"color:red\"],[7],[0,\"\\n  Wrong user name and / or password. Please try again\\n\"],[8],[0,\"\\n\"],[6,\"div\"],[9,\"align\",\"center\"],[7],[0,\"\\nDon't have an account?\\n\"],[4,\"link-to\",[\"register\"],[[\"class\"],[\"button\"]],{\"statements\":[[0,\"Sign up!\\n\"]],\"parameters\":[]},null],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/login.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "tg1RysdH", "block": "{\"symbols\":[],\"statements\":[[2,\"\\n@Author: Matthew Hale <matthale>\\n@Date:   2018-03-01T16:19:15-06:00\\n@Email:  mlhale@unomaha.edu\\n@Filename: login.hbs\\n@Last modified by:   matthale\\n@Last modified time: 2018-03-01T17:22:41-06:00\\n@Copyright: Copyright (C) 2018 Matthew L. Hale\\n\"],[0,\"\\n\\n\\n\"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Name\",[20,[\"auth\",\"username\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"auth\",\"username\"]]],null]],null]]]],false],[0,\"\\n\"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex-40\",\"Password\",\"password\",[20,[\"auth\",\"password\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"auth\",\"password\"]]],null]],null]]]],false],[0,\"\\n\"],[4,\"paper-button\",null,[[\"raised\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"login\"],null]]],{\"statements\":[[0,\"login\"]],\"parameters\":[]},null],[0,\"\\n\\n\\n\\n\"],[6,\"div\"],[9,\"align\",\"center\"],[7],[0,\"\\nDon't have an account?\\n\"],[4,\"link-to\",[\"register\"],[[\"class\"],[\"button\"]],{\"statements\":[[0,\"Sign up!\\n\"]],\"parameters\":[]},null],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/login.hbs" } });
+});
+define("wistem-app-frontend/templates/profile", ["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = Ember.HTMLBars.template({ "id": "YKehJ6JF", "block": "{\"symbols\":[],\"statements\":[[0,\"Award watching preferences, profile features, and notifications will be supported in a future release.\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/profile.hbs" } });
 });
 define("wistem-app-frontend/templates/register", ["exports"], function (exports) {
   "use strict";
@@ -3258,6 +3653,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("wistem-app-frontend/app")["default"].create({"name":"wistem-app-frontend","version":"0.0.0+5b24cf37"});
+  require("wistem-app-frontend/app")["default"].create({"name":"wistem-app-frontend","version":"0.0.0+50140b81"});
 }
 //# sourceMappingURL=wistem-app-frontend.map

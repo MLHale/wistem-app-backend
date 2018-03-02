@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: models.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T12:13:23-06:00
+# @Last modified time: 2018-03-02T01:35:12-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -40,6 +40,37 @@ class Profile(models.Model):
 
 
 class Award(models.Model):
+    title = models.CharField(max_length=1000, blank=False)
+    description = models.TextField(blank=True)
+    awardlink = models.URLField(max_length=1000, blank=False)
+    sponsororg = models.CharField(max_length=1000, blank=True)
+
+    recurring = models.BooleanField(default=False)
+    nomreq = models.BooleanField(default=False)
+    recurinterval = models.CharField(max_length=1000, blank=True)
+    opendate = models.DateTimeField()
+    nomdeadline = models.DateTimeField()
+    submdeadline = models.DateTimeField()
+
+    additionalinfo = models.TextField(blank=True)
+
+    previousapplicants = models.IntegerField(default=0, blank=False)
+    createdon = models.DateTimeField(auto_now_add=True)
+
+    # Relationships
+    source = models.ForeignKey('Source', related_name='awards', on_delete=models.PROTECT, blank=True)
+    stemfields = models.ManyToManyField('Stemfield', related_name='awards', blank=True)
+    applicanttypes = models.ManyToManyField('Applicanttype', related_name='awards', blank=True)
+    awardpurposes = models.ManyToManyField('Awardpurpose', related_name='awards', blank=True)
+    createdby = models.ForeignKey('Profile', related_name='awards', on_delete=models.PROTECT)
+
+    def __str__(self):
+        return str(self.title)
+
+	class JSONAPIMeta:
+		resource_name = "awards"
+
+class Source(models.Model):
     # Award Source choices
     FED = 'federal'
     LOCAL = 'local'
@@ -55,35 +86,18 @@ class Award(models.Model):
         (PRIV, 'Private Industry'),
         (SOURCE_OTHER, 'Other')
     )
-
-    title = models.CharField(max_length=1000, blank=False)
-    description = models.TextField(blank=True)
-    awardlink = models.URLField(max_length=1000, blank=False)
-    sponsororg = models.CharField(max_length=1000, blank=False)
-
-    recurring = models.BooleanField(default=False)
-    nomreq = models.BooleanField(default=False)
-    recurinterval = models.CharField(max_length=1000, blank=False)
-    opendate = models.DateTimeField()
-    nomdeadline = models.DateTimeField()
-    submdeadline = models.DateTimeField()
-
-    additionalinfo = models.TextField(blank=True)
-    source = models.CharField(max_length=30, choices=AWARD_SOURCE_CHOICES, default=SOURCE_OTHER)
-    previousapplicants = models.IntegerField(default=0, blank=False)
-    createdon = models.DateTimeField(auto_now_add=True)
-
-    # Relationships
-    stemfields = models.ManyToManyField('Stemfield', related_name='awards', blank=True)
-    applicanttypes = models.ManyToManyField('Applicanttype', related_name='awards', blank=True)
-    awardpurposes = models.ManyToManyField('Awardpurpose', related_name='awards', blank=True)
-    createdby = models.ForeignKey('Profile', related_name='awards', on_delete=models.PROTECT)
+    name = models.CharField(max_length=100, choices=AWARD_SOURCE_CHOICES, default=SOURCE_OTHER, blank=False, unique=True)
 
     def __str__(self):
-        return str(self.title)
+        return str(self.name)
 
 	class JSONAPIMeta:
-		resource_name = "awards"
+		resource_name = "sources"
+
+class SourceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Source
+        fields = ('id','name')
 
 
 class Applicanttype(models.Model):
@@ -149,10 +163,11 @@ class AreaofinterestSerializer(serializers.ModelSerializer):
 class UserSerializer(serializers.ModelSerializer):
     lastname = serializers.CharField(source='last_name')
     firstname = serializers.CharField(source='first_name')
+    issuperuser = serializers.CharField(source='is_superuser')
     class Meta:
 		resource_name = 'users'
 		model = User
-		fields = ('id', 'username', 'lastname', 'firstname', 'email',)
+		fields = ('id', 'username', 'lastname', 'firstname', 'email', 'issuperuser')
 
 
 class ProfileSerializer(serializers.ModelSerializer):
@@ -174,7 +189,8 @@ class AwardSerializer(serializers.ModelSerializer):
         'createdby': ProfileSerializer,
         'applicanttypes': ApplicanttypeSerializer,
         'awardpurposes': AwardpurposeSerializer,
-        'stemfields': StemfieldSerializer
+        'stemfields': StemfieldSerializer,
+        'source': SourceSerializer
     }
 
     class Meta:
@@ -183,4 +199,4 @@ class AwardSerializer(serializers.ModelSerializer):
 
 
     class JSONAPIMeta:
-		included_resources = ['createdby']
+		included_resources = ['createdby','applicanttypes', 'awardpurposes','stemfields','source']

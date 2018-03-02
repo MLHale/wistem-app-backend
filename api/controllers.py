@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: controllers.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T11:53:53-06:00
+# @Last modified time: 2018-03-01T23:01:18-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -153,6 +153,40 @@ class StemfieldViewSet(viewsets.ModelViewSet):
         admin_or_401(request)
 
         serializer = api.StemfieldSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data)
+
+
+class SourceViewSet(viewsets.ModelViewSet):
+    """
+    Source endpoint
+    """
+    resource_name = 'sources'
+    queryset = api.Source.objects.all()
+    serializer_class = api.SourceSerializer
+    permission_classes = (AllowAny,)
+    filter_backends = (DjangoFilterBackend,)
+    filter_fields = ('name',)
+
+    def create(self, request):
+        admin_or_401(request)
+
+        serializer = api.SourceSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer.save()
+
+        return Response(serializer.data)
+
+    def update(self, request, pk=None):
+        admin_or_401(request)
+
+        serializer = api.SourceSerializer(data=request.data)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

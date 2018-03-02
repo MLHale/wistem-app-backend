@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: urls.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T11:37:49-06:00
+# @Last modified time: 2018-03-01T23:02:08-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -27,7 +27,7 @@ router.register(r'stemfields', controllers.StemfieldViewSet)
 router.register(r'awardpurposes', controllers.AwardpurposeViewSet)
 router.register(r'areaofinterests', controllers.AreaofinterestViewSet)
 router.register(r'applicanttypes', controllers.ApplicanttypeViewSet)
-
+router.register(r'sources', controllers.SourceViewSet)
 
 urlpatterns = [
     url(r'^session', csrf_exempt(controllers.Session.as_view())),

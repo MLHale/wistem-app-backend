@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: admin.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-02-28T11:21:50-06:00
+# @Last modified time: 2018-03-01T22:53:43-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -22,3 +22,4 @@ admin.site.register(Awardpurpose)
 admin.site.register(Areaofinterest)
 admin.site.register(Profile)
 admin.site.register(Applicanttype)
+admin.site.register(Source)

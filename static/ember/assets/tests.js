@@ -47,7 +47,7 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
 
   QUnit.test('controllers/awards.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/awards.js should pass ESLint\n\n18:32 - \'$\' is not defined. (no-undef)');
+    assert.ok(false, 'controllers/awards.js should pass ESLint\n\n41:5 - Unexpected console statement. (no-console)\n53:11 - \'regex\' is already defined. (no-redeclare)\n61:11 - \'regex\' is already defined. (no-redeclare)\n69:11 - \'regex\' is already defined. (no-redeclare)\n135:32 - \'$\' is not defined. (no-undef)');
   });
 
   QUnit.test('controllers/edit-award.js', function (assert) {
@@ -57,7 +57,7 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
 
   QUnit.test('controllers/login.js', function (assert) {
     assert.expect(1);
-    assert.ok(true, 'controllers/login.js should pass ESLint\n\n');
+    assert.ok(false, 'controllers/login.js should pass ESLint\n\n18:7 - Unexpected console statement. (no-console)');
   });
 
   QUnit.test('controllers/register.js', function (assert) {
@@ -67,7 +67,7 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
 
   QUnit.test('controllers/search.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/search.js should pass ESLint\n\n8:32 - \'$\' is not defined. (no-undef)');
+    assert.ok(false, 'controllers/search.js should pass ESLint\n\n21:32 - \'$\' is not defined. (no-undef)');
   });
 
   QUnit.test('initializers/auth-manager.js', function (assert) {
@@ -110,6 +110,11 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'models/profile.js should pass ESLint\n\n');
   });
 
+  QUnit.test('models/source.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'models/source.js should pass ESLint\n\n');
+  });
+
   QUnit.test('models/stemfield.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'models/stemfield.js should pass ESLint\n\n');
@@ -150,6 +155,11 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'routes/login.js should pass ESLint\n\n');
   });
 
+  QUnit.test('routes/profile.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'routes/profile.js should pass ESLint\n\n');
+  });
+
   QUnit.test('routes/register.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'routes/register.js should pass ESLint\n\n');
@@ -157,12 +167,12 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
 
   QUnit.test('routes/search.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'routes/search.js should pass ESLint\n\n5:17 - \'Ember\' is not defined. (no-undef)\n128:17 - \'Ember\' is not defined. (no-undef)\n136:17 - \'Ember\' is not defined. (no-undef)\n143:17 - \'Ember\' is not defined. (no-undef)\n153:17 - \'Ember\' is not defined. (no-undef)');
+    assert.ok(false, 'routes/search.js should pass ESLint\n\n17:17 - \'Ember\' is not defined. (no-undef)');
   });
 
   QUnit.test('services/auth-manager.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'services/auth-manager.js should pass ESLint\n\n35:3 - Unexpected console statement. (no-console)\n52:5 - Unexpected console statement. (no-console)\n82:5 - Unexpected console statement. (no-console)\n92:3 - Unexpected console statement. (no-console)\n96:5 - Unexpected console statement. (no-console)\n136:5 - Unexpected console statement. (no-console)\n151:5 - Unexpected console statement. (no-console)');
+    assert.ok(false, 'services/auth-manager.js should pass ESLint\n\n35:3 - Unexpected console statement. (no-console)\n52:5 - Unexpected console statement. (no-console)\n87:5 - Unexpected console statement. (no-console)\n101:3 - Unexpected console statement. (no-console)\n105:5 - Unexpected console statement. (no-console)\n145:5 - Unexpected console statement. (no-console)\n160:5 - Unexpected console statement. (no-console)');
   });
 
   QUnit.test('services/navigation.js', function (assert) {
@@ -488,6 +498,11 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
     assert.ok(true, 'unit/models/profile-test.js should pass ESLint\n\n');
   });
 
+  QUnit.test('unit/models/source-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/models/source-test.js should pass ESLint\n\n');
+  });
+
   QUnit.test('unit/models/stemfield-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/models/stemfield-test.js should pass ESLint\n\n');
@@ -511,6 +526,11 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
   QUnit.test('unit/routes/login-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/login-test.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('unit/routes/profile-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'unit/routes/profile-test.js should pass ESLint\n\n');
   });
 
   QUnit.test('unit/routes/register-test.js', function (assert) {
@@ -732,6 +752,20 @@ define('wistem-app-frontend/tests/unit/models/profile-test', ['ember-qunit'], fu
     assert.ok(!!model);
   });
 });
+define('wistem-app-frontend/tests/unit/models/source-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleForModel)('source', 'Unit | Model | source', {
+    // Specify the other units that are required for this test.
+    needs: []
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var model = this.subject();
+    // let store = this.store();
+    assert.ok(!!model);
+  });
+});
 define('wistem-app-frontend/tests/unit/models/stemfield-test', ['ember-qunit'], function (_emberQunit) {
   'use strict';
 
@@ -790,6 +824,19 @@ define('wistem-app-frontend/tests/unit/routes/login-test', ['ember-qunit'], func
   'use strict';
 
   (0, _emberQunit.moduleFor)('route:login', 'Unit | Route | login', {
+    // Specify the other units that are required for this test.
+    // needs: ['controller:foo']
+  });
+
+  (0, _emberQunit.test)('it exists', function (assert) {
+    var route = this.subject();
+    assert.ok(route);
+  });
+});
+define('wistem-app-frontend/tests/unit/routes/profile-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleFor)('route:profile', 'Unit | Route | profile', {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
   });
