@@ -31,15 +31,6 @@ define('wistem-app-frontend/app', ['exports', 'wistem-app-frontend/resolver', 'e
 
   exports.default = App;
 });
-define('wistem-app-frontend/components/add-award', ['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Component = Ember.Component;
-  exports.default = Component.extend({});
-});
 define('wistem-app-frontend/components/async-button', ['exports', 'ember-cli-html5-validation/components/async-button'], function (exports, _asyncButton) {
   'use strict';
 
@@ -47,24 +38,6 @@ define('wistem-app-frontend/components/async-button', ['exports', 'ember-cli-htm
     value: true
   });
   exports.default = _asyncButton.default;
-});
-define('wistem-app-frontend/components/award-display', ['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Component = Ember.Component;
-  exports.default = Component.extend({});
-});
-define('wistem-app-frontend/components/award-listing', ['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Component = Ember.Component;
-  exports.default = Component.extend({});
 });
 define('wistem-app-frontend/components/basic-dropdown', ['exports', 'ember-basic-dropdown/components/basic-dropdown'], function (exports, _basicDropdown) {
   'use strict';
@@ -115,21 +88,6 @@ define('wistem-app-frontend/components/basic-dropdown/trigger', ['exports', 'emb
     enumerable: true,
     get: function () {
       return _trigger.default;
-    }
-  });
-});
-define('wistem-app-frontend/components/edit-award', ['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Component = Ember.Component;
-  exports.default = Component.extend({
-    actions: {
-      submitButton: function submitButton() {
-        alert('Okay!');
-      }
     }
   });
 });
@@ -1321,15 +1279,6 @@ define('wistem-app-frontend/components/validatable-form', ['exports', 'ember-cli
   });
   exports.default = _validatableForm.default;
 });
-define('wistem-app-frontend/components/view-list-button', ['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Component = Ember.Component;
-  exports.default = Component.extend({});
-});
 define('wistem-app-frontend/components/virtual-each', ['exports', 'virtual-each/components/virtual-each/component'], function (exports, _component) {
   'use strict';
 
@@ -1365,9 +1314,17 @@ define('wistem-app-frontend/controllers/application', ['exports'], function (exp
   var Controller = Ember.Controller;
   exports.default = Controller.extend({
     actions: {
+      /**
+        Open external links dispatched from the nav menu
+      **/
       externalLink: function externalLink(item) {
         window.open(item.route);
       },
+
+
+      /**
+        Set of functions related to opening and closing menu options
+      **/
       openDialog: function openDialog(event) {
         this.set('dialogOrigin', Ember.$(event.currentTarget));
         this.set('showDialog', true);
@@ -1376,6 +1333,11 @@ define('wistem-app-frontend/controllers/application', ['exports'], function (exp
         this.set('result', result);
         this.set('showDialog', false);
       },
+
+
+      /**
+        Pass logout action onward to auth service
+      **/
       logout: function logout() {
         this.get('auth').logout();
       }
@@ -1390,6 +1352,9 @@ define('wistem-app-frontend/controllers/awards', ['exports'], function (exports)
   });
   var Controller = Ember.Controller;
   exports.default = Controller.extend({
+    /**
+      Filters are bound to search interface fields
+    **/
     filters: Ember.ObjectProxy.create({ content: Ember.Object.create({
         title: null,
         stemfields: Ember.ArrayProxy.create({ content: Ember.A([]) }),
@@ -1400,12 +1365,16 @@ define('wistem-app-frontend/controllers/awards', ['exports'], function (exports)
         sources: Ember.ArrayProxy.create({ content: Ember.A([]) }),
         purposes: Ember.ArrayProxy.create({ content: Ember.A([]) })
       }) }),
+
+    /**
+      FilteredAwards are displayed in the search interface. The field is binding-aware, meaning it updates anytime the attached filter field is updated.
+      The output of filteredAwards is the set of awards that match all criteria. Regex is used where appropriate for partial matching.
+    **/
     filteredAwards: Ember.computed('model.awards.@each', 'filters.title', 'filters.sponsororg', 'filters.description', 'filters.awardlink', 'filters.stemfields.@each', 'filters.sources.@each', 'filters.purposes.@each', 'filters.applicanttypes.@each', function () {
       var _this = this;
 
       var filters = this.get('filters');
       var awards = this.get('model.awards');
-      console.log('filtering');
 
       // filter by award title
       if (filters.get('title')) {
@@ -1497,7 +1466,11 @@ define('wistem-app-frontend/controllers/awards', ['exports'], function (exports)
 
       return awards;
     }),
+
     actions: {
+      /**
+        Set of functions related to opening and closing modals that display additional award details
+      **/
       openDialog: function openDialog(item, event) {
         this.set('dialogOrigin', $(event.currentTarget));
         this.set('selectedAward', item);
@@ -1507,26 +1480,12 @@ define('wistem-app-frontend/controllers/awards', ['exports'], function (exports)
         this.set('result', result);
         this.set('showDialog', false);
       },
+
+
+      /**
+        Not currently in use. Filters update automatically without the need to "submit"
+      **/
       search: function search() {}
-    }
-  });
-});
-define("wistem-app-frontend/controllers/edit-award", ["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Controller = Ember.Controller;
-  exports.default = Controller.extend({
-
-    actions: {
-      submitButton: function submitButton() {
-        console.log("You have edited an award");
-      },
-      addsubmitButton: function addsubmitButton() {
-        console.log("You have added  new award");
-      }
     }
   });
 });
@@ -1539,14 +1498,16 @@ define('wistem-app-frontend/controllers/login', ['exports'], function (exports) 
   var Controller = Ember.Controller;
   exports.default = Controller.extend({
     actions: {
+      /**
+        Pass login action onward to auth service
+      **/
       login: function login() {
-        console.log('login called');
         this.get('auth').login();
       }
     }
   });
 });
-define('wistem-app-frontend/controllers/register', ['exports'], function (exports) {
+define('wistem-app-frontend/controllers/register', ['exports', 'wistem-app-frontend/config/environment'], function (exports, _environment) {
   'use strict';
 
   Object.defineProperty(exports, "__esModule", {
@@ -1554,39 +1515,70 @@ define('wistem-app-frontend/controllers/register', ['exports'], function (export
   });
   var Controller = Ember.Controller;
   exports.default = Controller.extend({
-    actions: {
-      create: function create(username, password, email, college, department) {
-        if (username === 'admin') {
-          this.transitionToRoute('search');
-        } else {
-          this.set('hidden', true);
-        }
+    emailValidation: [{
+      message: 'Please provide email in a valid format',
+      validate: function validate(inputValue) {
+        var emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
+        return emailPattern.test(inputValue);
       }
-    } });
-});
-define('wistem-app-frontend/controllers/search', ['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Controller = Ember.Controller;
-  exports.default = Controller.extend({
-    sources: ['Federal Government', 'State Government', 'Local Government', 'Internal', 'Private Industry'],
+    }],
+    passwordValidation: [{
+      message: 'Password is too short',
+      validate: function validate(inputValue) {
+        var valid = false;
+        if (inputValue) {
+          valid = inputValue.length >= 8;
+        }
+        return valid;
+      }
+    }],
+    passwordsValid: Ember.computed('model.password', 'confirmpassword', function () {
+      return this.get('model.password') === this.get('confirmpassword') && this.get('model.password') != null;
+    }),
+    emailsValid: Ember.computed('model.email', 'confirmemail', function () {
+      return this.get('model.email') === this.get('confirmemail') && this.get('model.email') != null;
+    }),
+    invalidForm: Ember.computed('passwordsValid', 'emailsValid', 'model.username', function () {
+      return !(this.get('emailsValid') && this.get('passwordsValid') && this.get('model.username') != null);
+    }),
     actions: {
+      register: function register() {
+        this.set('validationErrorMsg', '');
+        var user = this.get('model');
+        var controller = this;
 
-      /* Dialog */
-      openDialog: function openDialog(item, event) {
-        this.set('dialogOrigin', $(event.currentTarget));
-        this.set('selectedAward', item);
-        this.set('showDialog', true);
-      },
-      closeDialog: function closeDialog(result) {
-        this.set('result', result);
-        this.set('showDialog', false);
-      },
-      flatButton: function flatButton(title, fields, applicanttype, description, url, sponsor) {
-        alert('You are searching for title ' + title + ' Fields: ' + fields + ' Applicant types: ' + applicanttype + ' description ' + description + ' url ' + url + ' sponsor ' + sponsor);
+        var requestdata = {
+          'username': user.get("username"),
+          'password': user.get('password'),
+          'email': user.get('email')
+        };
+        Ember.$.post(_environment.default.serverName + '/api/register/', requestdata, function (response) {
+          var errMsg = '';
+          if (response.data.status === "error") {
+            if (response.data.username) {
+              errMsg = response.data.username;
+            } else if (response.data.email) {
+              errMsg = response.data.email;
+            } else {
+              errMsg = "An unknown error occured. Please try again";
+            }
+            controller.set('validationErrorMsg', errMsg);
+            controller.get('notifications').warning('' + controller.get('validationErrorMsg'), {
+              clearDuration: 3000,
+              autoClear: true
+            });
+          } else {
+            //success
+            controller.set('success', true);
+            controller.get('auth').set('username', user.get('username'));
+            controller.get('auth').set('password', user.get('password'));
+            controller.get('notifications').success('Successful registration.', {
+              clearDuration: 3000,
+              autoClear: true
+            });
+            controller.transitionToRoute('login');
+          }
+        });
       }
     }
   });
@@ -2341,10 +2333,13 @@ define('wistem-app-frontend/initializers/auth-manager', ['exports'], function (e
    * @Email:  mlhale@unomaha.edu
    * @Filename: auth-manager.js
    * @Last modified by:   matthale
-   * @Last modified time: 2018-03-01T00:55:05-06:00
+   * @Last modified time: 2018-03-02T01:57:50-06:00
    * @Copyright: Copyright (C) 2018 Matthew L. Hale
    */
 
+  /**
+   Inject auth service into other routes, controllers, and components for later use.
+  **/
   function initialize(application) {
     application.inject('route', 'auth', 'service:auth-manager');
     application.inject('controller', 'auth', 'service:auth-manager');
@@ -2512,10 +2507,13 @@ define('wistem-app-frontend/initializers/navigation', ['exports'], function (exp
    * @Email:  mlhale@unomaha.edu
    * @Filename: navigation.js
    * @Last modified by:   matthale
-   * @Last modified time: 2018-03-01T00:29:55-06:00
+   * @Last modified time: 2018-03-02T01:57:58-06:00
    * @Copyright: Copyright (C) 2018 Matthew L. Hale
    */
 
+  /**
+   Inject navigation service into other routes, controllers, and components for later use.
+  **/
   function initialize(application) {
     application.inject('component', 'navigation', 'service:navigation');
     application.inject('controller', 'navigation', 'service:navigation');
@@ -2539,10 +2537,13 @@ define('wistem-app-frontend/initializers/notification-messages', ['exports'], fu
    * @Email:  mlhale@unomaha.edu
    * @Filename: notification-messages.js
    * @Last modified by:   matthale
-   * @Last modified time: 2018-03-01T17:11:29-06:00
+   * @Last modified time: 2018-03-02T01:58:04-06:00
    * @Copyright: Copyright (C) 2018 Matthew L. Hale
    */
 
+  /**
+   Inject notification service into other routes, controllers, and components for later use.
+  **/
   function initialize(application) {
     application.inject('route', 'notifications', 'service:notification-messages');
     application.inject('controller', 'notifications', 'service:notification-messages');
@@ -2656,7 +2657,6 @@ define('wistem-app-frontend/models/award', ['exports', 'ember-data'], function (
     value: true
   });
   exports.default = _emberData.default.Model.extend({
-
     title: _emberData.default.attr('string'),
     description: _emberData.default.attr('string'),
     awardlink: _emberData.default.attr('string'),
@@ -2670,7 +2670,6 @@ define('wistem-app-frontend/models/award', ['exports', 'ember-data'], function (
     }),
     nomdeadline: _emberData.default.attr('date'),
     submdeadline: _emberData.default.attr('date'),
-
     previousapplicants: _emberData.default.attr('number'),
     createdon: _emberData.default.attr('date'),
 
@@ -2704,6 +2703,8 @@ define('wistem-app-frontend/models/profile', ['exports', 'ember-data'], function
     college: _emberData.default.attr('string'),
     dept: _emberData.default.attr('string'),
     otherdetails: _emberData.default.attr('string'),
+
+    // Related fields
     user: _emberData.default.belongsTo('user'),
     areasofinterest: _emberData.default.hasMany('areaofinterest')
   });
@@ -2767,26 +2768,13 @@ define('wistem-app-frontend/router', ['exports', 'wistem-app-frontend/config/env
   });
 
   Router.map(function () {
-    this.route('search');
     this.route('register');
     this.route('login');
-    this.route('awardinfo');
     this.route('awards');
-    this.route('AddAward');
-    this.route('EditAward');
     this.route('profile');
   });
 
   exports.default = Router;
-});
-define('wistem-app-frontend/routes/awardinfo', ['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Route = Ember.Route;
-  exports.default = Route.extend({});
 });
 define('wistem-app-frontend/routes/awards', ['exports'], function (exports) {
   'use strict';
@@ -2797,6 +2785,9 @@ define('wistem-app-frontend/routes/awards', ['exports'], function (exports) {
   var Route = Ember.Route;
   var RSVP = Ember.RSVP;
   exports.default = Route.extend({
+    /**
+      Load awards for display and other fields for filtering interface
+    **/
     model: function model() {
       return RSVP.hash({
         awards: this.store.findAll('award', { include: 'applicanttypes,awardpurposes,stemfields,createdby,createdby.areasofinterest,createdby.user,source' }),
@@ -2804,7 +2795,6 @@ define('wistem-app-frontend/routes/awards', ['exports'], function (exports) {
         applicanttypes: this.store.findAll('applicanttype'),
         sources: this.store.findAll('source'),
         purposes: this.store.findAll('awardpurpose')
-
       });
     }
   });
@@ -2843,121 +2833,10 @@ define('wistem-app-frontend/routes/register', ['exports'], function (exports) {
     value: true
   });
   var Route = Ember.Route;
-  exports.default = Route.extend({});
-});
-define('wistem-app-frontend/routes/search', ['exports'], function (exports) {
-  'use strict';
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  var Route = Ember.Route;
+  var RSVP = Ember.RSVP;
   exports.default = Route.extend({
-    getData: function getData() {
-      var items = Ember.A([]);
-      items.addObject({
-        id: 1,
-
-        title: 'Award for awesomeness Number 1',
-        description: 'description',
-        award_link: 'https://gogole.com',
-        sponsor_org: 'Whats in this one?',
-        stem_field: ["Science", "Math", "Technology"],
-        recurring: true,
-        nom_req: false,
-        recur_interval: 'yearly',
-        open_date: '2017-11-03',
-        nom_deadline: '2018-11-03',
-        subm_deadline: '2018-11-03',
-        applicant_type: 'Type',
-        award_purpose: ["Science", "Math", "Technology"],
-        additional_info: 'a long text',
-        source: 'Federal government',
-        previous_applicants: 20,
-        created_by: 'Ties to profile',
-        created_on: '2017-10-03'
-
-      });
-      items.addObject({
-        id: 2,
-
-        title: 'Award for awesomeness Number 2',
-        description: 'description',
-        award_link: 'https://gogole.com',
-        sponsor_org: 'Whats in this one?',
-        stem_field: ["Science", "Math", "Technology"],
-        recurring: true,
-        nom_req: false,
-        recur_interval: 'yearly',
-        open_date: '2017-11-03',
-        nom_deadline: '2018-11-03',
-        subm_deadline: '2018-11-03',
-        applicant_type: 'Type',
-        award_purpose: ["Science", "Math", "Technology"],
-        additional_info: 'a long text',
-        source: 'Federal government',
-        previous_applicants: 20,
-        created_by: 'Ties to profile',
-        created_on: '2017-10-03'
-
-      });
-      items.addObject({
-        id: 3,
-
-        title: 'Award for awesomeness Number 3',
-        description: 'description',
-        award_link: 'https://gogole.com',
-        sponsor_org: 'Whats in this one?',
-        stem_field: ["Science", "Math", "Technology"],
-        recurring: true,
-        nom_req: false,
-        recur_interval: 'yearly',
-        open_date: '2017-11-03',
-        nom_deadline: '2018-11-03',
-        subm_deadline: '2018-11-03',
-        applicant_type: 'Type',
-        award_purpose: ["Science", "Math", "Technology"],
-        additional_info: 'a long text',
-        source: 'Federal government',
-        previous_applicants: 20,
-        created_by: 'Ties to profile',
-        created_on: '2017-10-03'
-
-      });
-      items.addObject({
-        id: 4,
-
-        title: 'Award for awesomeness Number 4',
-        description: 'description',
-        award_link: 'https://gogole.com',
-        sponsor_org: 'Whats in this one?',
-        stem_field: ["Science", "Math", "Technology"],
-        recurring: true,
-        nom_req: false,
-        recur_interval: 'yearly',
-        open_date: '2017-11-03',
-        nom_deadline: '2018-11-03',
-        subm_deadline: '2018-11-03',
-        applicant_type: 'Type',
-        award_purpose: ["Science", "Math", "Technology"],
-        additional_info: 'a long text',
-        source: 'Federal government',
-        previous_applicants: 20,
-        created_by: 'Ties to profile',
-        created_on: '2017-10-03'
-
-      });
-      return items;
-    },
     model: function model() {
-      var data = {
-        awards: this.getData(),
-        stemfields: this.getStemFields(),
-        applicanttype: this.getApplicantTypes(),
-        awardsources: this.getAwardSources(),
-        awardpurpose: this.getAwardPurpose()
-      };
-      return data;
+      return this.store.createRecord('user');
     }
   });
 });
@@ -3204,19 +3083,24 @@ define('wistem-app-frontend/services/moment', ['exports', 'ember-moment/services
   });
 });
 define('wistem-app-frontend/services/navigation', ['exports', 'wistem-app-frontend/config/environment'], function (exports, _environment) {
-    'use strict';
+  'use strict';
 
-    Object.defineProperty(exports, "__esModule", {
-        value: true
-    });
-    var Service = Ember.Service;
-    var ArrayProxy = Ember.ArrayProxy;
-    var A = Ember.A;
-    exports.default = Service.extend({
-        menuitems: ArrayProxy.create({ content: A([{ route: 'index', icon: 'home', title: 'home', type: 'internal' }, { route: 'awards', icon: 'view_list', title: "awards", type: 'internal' }]) }),
-        adminmenuitems: ArrayProxy.create({ content: A([{ route: _environment.default.serverName + '/admin/api/award/add/', icon: 'add', title: "add a new award", type: 'external' }, { route: _environment.default.serverName + '/admin/api/award/', icon: 'edit', title: "edit an award", type: 'external' }]) }),
-        dynamicbuttons: ArrayProxy.create({ content: A() })
-    });
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var Service = Ember.Service;
+  var ArrayProxy = Ember.ArrayProxy;
+  var A = Ember.A;
+  exports.default = Service.extend({
+    /**
+      Set of items to be displayed in the nav menu
+    **/
+    menuitems: ArrayProxy.create({ content: A([{ route: 'index', icon: 'home', title: 'home', type: 'internal' }, { route: 'awards', icon: 'view_list', title: "awards", type: 'internal' }]) }),
+    /**
+      Set of items to be displayed in the nav menu, if the user is an admin
+    **/
+    adminmenuitems: ArrayProxy.create({ content: A([{ route: _environment.default.serverName + '/admin/api/award/add/', icon: 'add', title: "add a new award", type: 'external' }, { route: _environment.default.serverName + '/admin/api/award/', icon: 'edit', title: "edit an award", type: 'external' }]) })
+  });
 });
 define('wistem-app-frontend/services/notification-messages-service', ['exports', 'ember-cli-notifications/services/notification-messages-service'], function (exports, _notificationMessagesService) {
   'use strict';
@@ -3506,14 +3390,6 @@ define("wistem-app-frontend/templates/application", ["exports"], function (expor
   });
   exports.default = Ember.HTMLBars.template({ "id": "+lFUvdn1", "block": "{\"symbols\":[\"menu\",\"content\",\"menu\",\"content\",\"item\",\"item\"],\"statements\":[[2,\"\\n@Author: Matthew Hale <matthale>\\n@Date:   2018-03-01T16:19:15-06:00\\n@Email:  mlhale@unomaha.edu\\n@Filename: application.hbs\\n@Last modified by:   matthale\\n@Last modified time: 2018-03-01T17:13:48-06:00\\n@Copyright: Copyright (C) 2018 Matthew L. Hale\\n\"],[0,\"\\n\\n\\n\\n\"],[6,\"div\"],[9,\"class\",\"container\"],[7],[0,\"\\n  \"],[1,[25,\"notification-container\",null,[[\"position\"],[\"bottom-left\"]]],false],[0,\"\\n\"],[4,\"paper-toolbar\",null,[[\"accent\"],[true]],{\"statements\":[[4,\"paper-toolbar-tools\",null,null,{\"statements\":[[4,\"paper-menu\",null,null,{\"statements\":[[4,\"component\",[[19,3,[\"trigger\"]]],null,{\"statements\":[[4,\"paper-button\",null,[[\"iconButton\"],[true]],{\"statements\":[[0,\"            \"],[1,[25,\"paper-icon\",[\"menu\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[4,\"component\",[[19,3,[\"content\"]]],[[\"width\",\"class\"],[4,\"main-app-menu\"]],{\"statements\":[[4,\"each\",[[20,[\"navigation\",\"menuitems\"]]],null,{\"statements\":[[4,\"if\",[[25,\"eq\",[[19,6,[\"type\"]],\"internal\"],null]],null,{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"transition-to\",[[19,6,[\"route\"]]],null]]],{\"statements\":[[0,\"                \"],[4,\"if\",[[19,6,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,6,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n                \"],[6,\"span\"],[7],[1,[19,6,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"externalLink\",[19,6,[]]],null]]],{\"statements\":[[0,\"                \"],[4,\"if\",[[19,6,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,6,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n                \"],[6,\"span\"],[7],[1,[19,6,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]}]],\"parameters\":[6]},null],[4,\"if\",[[20,[\"auth\",\"user\",\"issuperuser\"]]],null,{\"statements\":[[4,\"each\",[[20,[\"navigation\",\"adminmenuitems\"]]],null,{\"statements\":[[4,\"if\",[[25,\"eq\",[[19,5,[\"type\"]],\"internal\"],null]],null,{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"transition-to\",[[19,5,[\"route\"]]],null]]],{\"statements\":[[0,\"                  \"],[4,\"if\",[[19,5,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,5,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n                  \"],[6,\"span\"],[7],[1,[19,5,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},{\"statements\":[[4,\"component\",[[19,4,[\"menu-item\"]]],[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"externalLink\",[19,5,[]]],null]]],{\"statements\":[[0,\"                  \"],[4,\"if\",[[19,5,[\"icon\"]]],null,{\"statements\":[[1,[25,\"paper-icon\",[[19,5,[\"icon\"]]],null],false]],\"parameters\":[]},null],[0,\"\\n                  \"],[6,\"span\"],[7],[1,[19,5,[\"title\"]],false],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]}]],\"parameters\":[5]},null]],\"parameters\":[]},null]],\"parameters\":[4]},null]],\"parameters\":[3]},null],[0,\"      \"],[6,\"h2\"],[7],[0,\"\\n        \"],[4,\"link-to\",[\"index\"],null,{\"statements\":[[0,\"WiSTEM Award Tracker\"]],\"parameters\":[]},null],[0,\"\\n      \"],[8],[0,\"\\n      \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n\"],[4,\"if\",[[20,[\"auth\",\"isLoggedIn\"]]],null,{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-column flex-33 flex-sm-100 layout-align-center-center\"],[7],[0,\"\\n\"],[4,\"paper-menu\",null,[[\"position\"],[\"target-right target\"]],{\"statements\":[[4,\"component\",[[19,1,[\"trigger\"]]],null,{\"statements\":[[4,\"paper-button\",null,null,{\"statements\":[[0,\"                \"],[1,[20,[\"auth\",\"user\",\"username\"]],false],[0,\"\\n                \"],[1,[25,\"paper-icon\",[\"arrow_drop_down\"],[[\"class\"],[\"md-menu-origin\"]]],false],[0,\"\\n\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[4,\"component\",[[19,1,[\"content\"]]],null,{\"statements\":[[4,\"component\",[[19,2,[\"menu-item\"]]],[[\"onClick\"],[[25,\"transition-to\",[\"profile\"],null]]],{\"statements\":[[0,\"                \"],[6,\"p\"],[9,\"style\",\"width: 150px;\"],[7],[0,\"Your account\"],[8],[0,\"\\n                \"],[1,[25,\"paper-icon\",[\"person\"],[[\"class\"],[\"md-menu-align-target\"]]],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"component\",[[19,2,[\"menu-item\"]]],[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"logout\"],null]]],{\"statements\":[[0,\"                \"],[6,\"p\"],[9,\"style\",\"width: 150px;\"],[7],[0,\"Logout\"],[8],[0,\"\\n                \"],[1,[25,\"paper-icon\",[\"power_settings_new\"],[[\"class\"],[\"md-menu-align-target\"]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[2]},null]],\"parameters\":[1]},null],[0,\"        \"],[8],[0,\"\\n\"]],\"parameters\":[]},{\"statements\":[[4,\"paper-button\",null,[[\"onClick\"],[[25,\"transition-to\",[\"login\"],null]]],{\"statements\":[[0,\"          Login\\n          \"],[1,[25,\"paper-icon\",[\"exit_to_app\"],[[\"class\"],[\"md-menu-origin\"]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]}]],\"parameters\":[]},null]],\"parameters\":[]},null],[0,\"  \"],[1,[18,\"paper-toaster\"],false],[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"main layout-row\"],[7],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"flex\"],[7],[0,\"\\n      \"],[1,[18,\"outlet\"],false],[0,\"\\n    \"],[8],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"footer layout-row layout-align-space-between-end\"],[7],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"left-footer\"],[7],[0,\"\\n      \"],[6,\"p\"],[9,\"class\",\"credit\"],[7],[0,\"\\n        © 2018 \"],[6,\"a\"],[9,\"href\",\"https://www.unomaha.edu/wistem-professional-development/index.php\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"WiSTEM\"],[8],[0,\", created by \"],[6,\"a\"],[9,\"href\",\"http://faculty.ist.unomaha.edu/mhale/\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"Dr. Matthew L. Hale\"],[8],[0,\" with help from \"],[6,\"a\"],[9,\"href\",\"https://github.com/MLHale/CYBR8470/\"],[9,\"target\",\"_blank\"],[9,\"style\",\"color: inherit;\"],[7],[0,\"CYBR 8470 Students\"],[8],[0,\"\\n      \"],[8],[0,\"\\n    \"],[8],[0,\"\\n    \"],[6,\"div\"],[9,\"class\",\"center-footer\"],[7],[0,\"\\n    \"],[8],[0,\"\\n  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/application.hbs" } });
 });
-define("wistem-app-frontend/templates/awardinfo", ["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.default = Ember.HTMLBars.template({ "id": "P70xsCLD", "block": "{\"symbols\":[\"form\"],\"statements\":[[4,\"paper-content\",null,null,{\"statements\":[[4,\"paper-form\",null,null,{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-column centered-form\"],[7],[0,\"\\n          \"],[6,\"h4\"],[7],[0,\"Enter New Award Information\"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Award Title\",[20,[\"awardtitle\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardtitle\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Sponsoring Organization\",[20,[\"sponser\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"sponser\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column flex-50\"],[7],[0,\"\\n            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"URL/Web link for the Award\",[20,[\"awardurl\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardurl\"]]],null]],null],true]]],false],[0,\"\\n          \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Select the STEM field targeted by the Award. Check all that apply.\\n                If the award targets a very specific area, check 'Other' and Specify area \"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"science\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"science\"]]],null]],null]]],{\"statements\":[[0,\"              Natural Science \"],[1,[18,\"science\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"it\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"it\"]]],null]],null]]],{\"statements\":[[0,\"              Information Technology \"],[1,[18,\"it\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"engineering\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"engineering\"]]],null]],null]]],{\"statements\":[[0,\"              Engineering \"],[1,[18,\"engineering\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"math\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"math\"]]],null]],null]]],{\"statements\":[[0,\"              Mathematics \"],[1,[18,\"math\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"stem\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"stem\"]]],null]],null]]],{\"statements\":[[0,\"              The Art part of STEM (STEAM) \"],[1,[18,\"stem\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"discipline\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"discipline\"]]],null]],null]]],{\"statements\":[[0,\"              All Disciplines \"],[1,[18,\"discipline\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"other\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"other\"]]],null]],null]]],{\"statements\":[[0,\"              Other: \"],[1,[18,\"other\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other area\",[20,[\"other\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"other\"]]],null]],null],true]]],false],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"layout layout-sm-column\"],[7],[0,\"\\n          \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex\",\"Submission date\",\"date\",[20,[\"date\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"date\"]]],null]],null]]]],false],[0,\"\\n        \"],[8],[0,\"\\n          \"],[6,\"div\"],[9,\"class\",\"layout-sm-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Select the applicant type. Check all that apply.\"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"staff\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"staff\"]]],null]],null]]],{\"statements\":[[0,\"              Staff \"],[1,[18,\"staff\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"professor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"professor\"]]],null]],null]]],{\"statements\":[[0,\"              Faculty-Professor \"],[1,[18,\"professor\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"tenured\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"tenured\"]]],null]],null]]],{\"statements\":[[0,\"              Tenured-Faculty \"],[1,[18,\"tenured\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"nontenured\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"nontenured\"]]],null]],null]]],{\"statements\":[[0,\"              Non-tenured Faculty \"],[1,[18,\"nontenured\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"phd\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"phd\"]]],null]],null]]],{\"statements\":[[0,\"              PhD Required \"],[1,[18,\"phd\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"discipline\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"discipline\"]]],null]],null]]],{\"statements\":[[0,\"              Graduare Faculty\"],[1,[18,\"discipline\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"Graduate\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"Graduate\"]]],null]],null]]],{\"statements\":[[0,\"              Student (Graduate) \"],[1,[18,\"Graduate\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"Undergraduate\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"Undergraduate\"]]],null]],null]]],{\"statements\":[[0,\"              Student (Undergraduate) \"],[1,[18,\"Undergraduate\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"otherstaff\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherstaff\"]]],null]],null]]],{\"statements\":[[0,\"              Other: \"],[1,[18,\"otherstaff\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"            \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other staff\",[20,[\"otherstf\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherstf\"]]],null]],null],true]]],false],[0,\"\\n        \"],[8],[0,\"\\n\\n          \"],[6,\"div\"],[9,\"class\",\"layout-column\"],[7],[0,\"\\n            \"],[6,\"h5\"],[7],[0,\"Award Requirements. Check all that apply.\"],[8],[0,\"\\n\"],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"advise\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"advise\"]]],null]],null]]],{\"statements\":[[0,\"              Advising \"],[1,[18,\"advise\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"mentor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"mentor\"]]],null]],null]]],{\"statements\":[[0,\"              Mentoring \"],[1,[18,\"mentor\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"research\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"research\"]]],null]],null]]],{\"statements\":[[0,\"              Research and Creativity \"],[1,[18,\"research\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"teaching\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"teaching\"]]],null]],null]]],{\"statements\":[[0,\"              Teaching \"],[1,[18,\"teaching\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"outreach\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"outreach\"]]],null]],null]]],{\"statements\":[[0,\"              Outreach (Community Engagement) \"],[1,[18,\"outreach\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"service\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"service\"]]],null]],null]]],{\"statements\":[[0,\"              Service Learning\"],[1,[18,\"service\"],false],[0,\"\\n\"]],\"parameters\":[]},null],[4,\"paper-checkbox\",null,[[\"value\",\"onChange\"],[[20,[\"otherreq\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"otherreq\"]]],null]],null]]],{\"statements\":[[0,\"              Other :\\n\"]],\"parameters\":[]},null],[0,\"              \"],[1,[25,\"component\",[[19,1,[\"input\"]]],[[\"label\",\"value\",\"onChange\",\"required\"],[\"Specify other requirements\",[20,[\"othersreq\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"othersreq\"]]],null]],null],true]]],false],[0,\"\\n        \"],[4,\"component\",[[19,1,[\"submit-button\"]]],[[\"raised\",\"primary\"],[true,true]],{\"statements\":[[0,\"Submit for review\"]],\"parameters\":[]},null],[0,\"\\n      \"],[8],[0,\"\\n      \"],[8],[0,\"\\n\"]],\"parameters\":[1]},null]],\"parameters\":[]},null],[1,[18,\"outlet\"],false],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/awardinfo.hbs" } });
-});
 define("wistem-app-frontend/templates/awards", ["exports"], function (exports) {
   "use strict";
 
@@ -3529,30 +3405,6 @@ define("wistem-app-frontend/templates/components/async-button", ["exports"], fun
     value: true
   });
   exports.default = Ember.HTMLBars.template({ "id": "Tz9YJNeR", "block": "{\"symbols\":[],\"statements\":[[4,\"if\",[[20,[\"isLoading\"]]],null,{\"statements\":[[0,\"  Loading...\\n\"]],\"parameters\":[]},{\"statements\":[[4,\"if\",[[20,[\"isDefault\"]]],null,{\"statements\":[[0,\"    \"],[1,[18,\"value\"],false],[0,\"\\n\"]],\"parameters\":[]},{\"statements\":[[4,\"if\",[[20,[\"isValid\"]]],null,{\"statements\":[[0,\"      Success!\\n\"]],\"parameters\":[]},{\"statements\":[[0,\"      Error!\\n\"]],\"parameters\":[]}]],\"parameters\":[]}]],\"parameters\":[]}]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/async-button.hbs" } });
-});
-define("wistem-app-frontend/templates/components/award-display", ["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.default = Ember.HTMLBars.template({ "id": "PzC+dDMT", "block": "{\"symbols\":[\"purpose\",\"stem\"],\"statements\":[[6,\"div\"],[7],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Deadline: \"],[1,[20,[\"selectedAward\",\"subm_deadline\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Description: \"],[1,[20,[\"selectedAward\",\"description\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Sponsor: \"],[1,[20,[\"selectedAward\",\"sponsor_org\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    STEM Fields:\\n\"],[4,\"each\",[[20,[\"selectedAward\",\"stem_field\"]]],null,{\"statements\":[[0,\"      \"],[1,[19,2,[]],false],[0,\"\\n\"]],\"parameters\":[2]},null],[0,\"  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Award Purpose:\\n\"],[4,\"each\",[[20,[\"selectedAward\",\"award_purpose\"]]],null,{\"statements\":[[0,\"      \"],[1,[19,1,[]],false],[0,\"\\n\"]],\"parameters\":[1]},null],[0,\"  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Source: \"],[1,[20,[\"selectedAward\",\"source\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Additional Information: \"],[1,[20,[\"selectedAward\",\"additional_info\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Nomination Required: \"],[1,[20,[\"selectedAward\",\"nom_req\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Submition deadline: \"],[1,[20,[\"selectedAward\",\"subm_deadline\"]],false],[0,\"\\n  \"],[8],[0,\"\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/award-display.hbs" } });
-});
-define("wistem-app-frontend/templates/components/award-listing", ["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.default = Ember.HTMLBars.template({ "id": "e6yz4yqw", "block": "{\"symbols\":[\"applicant\"],\"statements\":[[4,\"paper-item\",null,[[\"class\"],[\"md-3-line\"]],{\"statements\":[[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"md-list-item-text\"],[7],[0,\"\\n    \"],[6,\"h2\"],[7],[1,[20,[\"item\",\"title\"]],false],[8],[0,\"\\n    \"],[6,\"h4\"],[7],[0,\"\\n      \"],[6,\"div\"],[7],[0,\"Applicants:\\n\"],[4,\"each\",[[20,[\"item\",\"typeofapplicant\"]]],null,{\"statements\":[[0,\"        \"],[1,[19,1,[]],false],[0,\"\\n\"]],\"parameters\":[1]},null],[0,\"    \"],[8],[0,\"\\n    \"],[8],[0,\"\\n    \"],[6,\"p\"],[7],[0,\"Deadline: \"],[1,[20,[\"item\",\"subm_deadline\"]],false],[8],[0,\"\\n  \"],[8],[0,\"\\n  \"],[1,[18,\"paper-divider\"],false],[0,\"\\n\\n\"]],\"parameters\":[]},null]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/award-listing.hbs" } });
-});
-define("wistem-app-frontend/templates/components/edit-award", ["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.default = Ember.HTMLBars.template({ "id": "RgKXLDuR", "block": "{\"symbols\":[\"&default\"],\"statements\":[[11,1]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/edit-award.hbs" } });
 });
 define("wistem-app-frontend/templates/components/ember-login", ["exports"], function (exports) {
   "use strict";
@@ -3570,21 +3422,13 @@ define("wistem-app-frontend/templates/components/transition-group", ["exports"],
   });
   exports.default = Ember.HTMLBars.template({ "id": "FpS0luq5", "block": "{\"symbols\":[\"&default\"],\"statements\":[[11,1],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/transition-group.hbs" } });
 });
-define("wistem-app-frontend/templates/components/view-list-button", ["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.default = Ember.HTMLBars.template({ "id": "HHZtj6Vn", "block": "{\"symbols\":[],\"statements\":[[4,\"link-to\",[\"awards\"],[[\"class\"],[\"button\"]],{\"statements\":[[0,\"  ViewList\\n\"]],\"parameters\":[]},null]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/view-list-button.hbs" } });
-});
 define("wistem-app-frontend/templates/index", ["exports"], function (exports) {
   "use strict";
 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "T9H0cfTA", "block": "{\"symbols\":[\"card\",\"title\",\"text\"],\"statements\":[[6,\"div\"],[9,\"class\",\"layout-row landing-page-container\"],[7],[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"layout-column flex\"],[7],[0,\"\\n\"],[4,\"paper-card\",null,[[\"class\"],[\"landing-page-card\"]],{\"statements\":[[4,\"component\",[[19,1,[\"title\"]]],null,{\"statements\":[[4,\"component\",[[19,2,[\"text\"]]],null,{\"statements\":[[0,\"          \"],[4,\"component\",[[19,3,[\"headline\"]]],null,{\"statements\":[[0,\"Welcome to the WiSTEM Award Tracker App\"]],\"parameters\":[]},null],[0,\"\\n\\n          \"],[6,\"br\"],[7],[8],[0,\"\\n          \"],[6,\"p\"],[7],[0,\"The Award tracker was created to help faculty, staff, and students find the resources they need to apply for awards and scholarships. The award tracker collates known awards from various internal and external sources\"],[8],[0,\"\\n\"]],\"parameters\":[3]},null],[0,\"\\n\"]],\"parameters\":[2]},null],[4,\"component\",[[19,1,[\"content\"]]],null,{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n          \"],[4,\"paper-button\",null,[[\"class\",\"raised\",\"onClick\"],[\"flex\",true,[25,\"transition-to\",[\"awards\"],null]]],{\"statements\":[[0,\"Get started  \"],[1,[25,\"paper-icon\",[\"send\"],null],false]],\"parameters\":[]},null],[0,\"\\n        \"],[8],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[1]},null],[0,\"  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/index.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "0cQ/I+l1", "block": "{\"symbols\":[\"card\",\"title\",\"text\"],\"statements\":[[6,\"div\"],[9,\"class\",\"layout-row landing-page-container\"],[7],[0,\"\\n  \"],[6,\"div\"],[9,\"class\",\"layout-column flex\"],[7],[0,\"\\n\"],[4,\"paper-card\",null,[[\"class\"],[\"landing-page-card\"]],{\"statements\":[[4,\"component\",[[19,1,[\"title\"]]],null,{\"statements\":[[4,\"component\",[[19,2,[\"text\"]]],null,{\"statements\":[[0,\"          \"],[4,\"component\",[[19,3,[\"headline\"]]],null,{\"statements\":[[0,\"Welcome to the WiSTEM Award Tracker App\"]],\"parameters\":[]},null],[0,\"\\n\\n          \"],[6,\"br\"],[7],[8],[0,\"\\n          \"],[6,\"p\"],[7],[0,\"The Award tracker was created to help faculty, staff, and students find the resources they need to apply for awards and scholarships. The award tracker collates known awards from various internal and external sources\"],[8],[0,\"\\n\"]],\"parameters\":[3]},null]],\"parameters\":[2]},null],[4,\"component\",[[19,1,[\"content\"]]],null,{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n          \"],[4,\"paper-button\",null,[[\"class\",\"raised\",\"onClick\"],[\"flex\",true,[25,\"transition-to\",[\"awards\"],null]]],{\"statements\":[[0,\"Get started  \"],[1,[25,\"paper-icon\",[\"send\"],null],false]],\"parameters\":[]},null],[0,\"\\n        \"],[8],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[1]},null],[0,\"  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/index.hbs" } });
 });
 define("wistem-app-frontend/templates/login", ["exports"], function (exports) {
   "use strict";
@@ -3592,7 +3436,7 @@ define("wistem-app-frontend/templates/login", ["exports"], function (exports) {
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "tg1RysdH", "block": "{\"symbols\":[],\"statements\":[[2,\"\\n@Author: Matthew Hale <matthale>\\n@Date:   2018-03-01T16:19:15-06:00\\n@Email:  mlhale@unomaha.edu\\n@Filename: login.hbs\\n@Last modified by:   matthale\\n@Last modified time: 2018-03-01T17:22:41-06:00\\n@Copyright: Copyright (C) 2018 Matthew L. Hale\\n\"],[0,\"\\n\\n\\n\"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Name\",[20,[\"auth\",\"username\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"auth\",\"username\"]]],null]],null]]]],false],[0,\"\\n\"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex-40\",\"Password\",\"password\",[20,[\"auth\",\"password\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"auth\",\"password\"]]],null]],null]]]],false],[0,\"\\n\"],[4,\"paper-button\",null,[[\"raised\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"login\"],null]]],{\"statements\":[[0,\"login\"]],\"parameters\":[]},null],[0,\"\\n\\n\\n\\n\"],[6,\"div\"],[9,\"align\",\"center\"],[7],[0,\"\\nDon't have an account?\\n\"],[4,\"link-to\",[\"register\"],[[\"class\"],[\"button\"]],{\"statements\":[[0,\"Sign up!\\n\"]],\"parameters\":[]},null],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/login.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "7pyhcGum", "block": "{\"symbols\":[\"card\",\"form\",\"title\",\"text\"],\"statements\":[[2,\"\\n@Author: Matthew Hale <matthale>\\n@Date:   2018-03-01T16:19:15-06:00\\n@Email:  mlhale@unomaha.edu\\n@Filename: login.hbs\\n@Last modified by:   matthale\\n@Last modified time: 2018-03-01T17:22:41-06:00\\n@Copyright: Copyright (C) 2018 Matthew L. Hale\\n\"],[0,\"\\n\\n\"],[6,\"div\"],[9,\"class\",\"layout-column flex layout-align-center-center\"],[7],[0,\"\\n\"],[4,\"paper-card\",null,[[\"class\"],[\"landing-page-card\"]],{\"statements\":[[4,\"component\",[[19,1,[\"title\"]]],null,{\"statements\":[[4,\"component\",[[19,3,[\"text\"]]],null,{\"statements\":[[0,\"        \"],[4,\"component\",[[19,4,[\"headline\"]]],null,{\"statements\":[[0,\"Login\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[4]},null]],\"parameters\":[3]},null],[4,\"component\",[[19,1,[\"content\"]]],null,{\"statements\":[[4,\"paper-form\",null,[[\"onSubmit\"],[[25,\"action\",[[19,0,[]],\"login\"],null]]],{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n          \"],[1,[25,\"component\",[[19,2,[\"input\"]]],[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Username\",[20,[\"auth\",\"username\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"auth\",\"username\"]]],null]],null]]]],false],[0,\"\\n          \"],[1,[25,\"component\",[[19,2,[\"input\"]]],[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex\",\"Password\",\"password\",[20,[\"auth\",\"password\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"auth\",\"password\"]]],null]],null]]]],false],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n          \"],[4,\"component\",[[19,2,[\"submit-button\"]]],[[\"class\",\"raised\"],[\"flex\",true]],{\"statements\":[[0,\"login\"]],\"parameters\":[]},null],[0,\"\\n        \"],[8],[0,\"\\n\"]],\"parameters\":[2]},null],[0,\"      \"],[6,\"div\"],[9,\"class\",\"layout-row layout-align-center\"],[7],[0,\"\\n        \"],[6,\"p\"],[7],[0,\"Not registered?\\n\"],[4,\"link-to\",[\"register\"],[[\"class\"],[\"button\"]],{\"statements\":[[0,\"            Create an account.\\n\"]],\"parameters\":[]},null],[0,\"        \"],[8],[0,\"\\n      \"],[8],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[1]},null],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/login.hbs" } });
 });
 define("wistem-app-frontend/templates/profile", ["exports"], function (exports) {
   "use strict";
@@ -3600,7 +3444,7 @@ define("wistem-app-frontend/templates/profile", ["exports"], function (exports) 
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "YKehJ6JF", "block": "{\"symbols\":[],\"statements\":[[0,\"Award watching preferences, profile features, and notifications will be supported in a future release.\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/profile.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "0FJAYl9k", "block": "{\"symbols\":[],\"statements\":[[6,\"p\"],[7],[0,\"Award watching preferences, profile features, and notifications will be supported in a future release.\"],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/profile.hbs" } });
 });
 define("wistem-app-frontend/templates/register", ["exports"], function (exports) {
   "use strict";
@@ -3608,15 +3452,7 @@ define("wistem-app-frontend/templates/register", ["exports"], function (exports)
   Object.defineProperty(exports, "__esModule", {
     value: true
   });
-  exports.default = Ember.HTMLBars.template({ "id": "+aBo4/SW", "block": "{\"symbols\":[],\"statements\":[[6,\"div\"],[9,\"style\",\"border-style: outset;\"],[9,\"align\",\"center\"],[7],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Username\",[20,[\"name\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"name\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"type\",\"value\",\"onChange\"],[\"flex-40\",\"Password\",\"password\",[20,[\"password\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"password\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Email\",[20,[\"email\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"email\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-40\",\"College\",[20,[\"college\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"college\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex-30\",\"Department\",[20,[\"department\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"department\"]]],null]],null]]]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"create\",[20,[\"name\"]],[20,[\"password\"]]],null]]],{\"statements\":[[0,\"Create Account\"]],\"parameters\":[]},null],[0,\"\\n\\n  \"],[6,\"div\"],[10,\"class\",[26,[[25,\"if\",[[25,\"not\",[[20,[\"hidden\"]]],null],\"hidden\"],null]]]],[9,\"style\",\"color:red\"],[7],[0,\"\\n    The create failed.. add some reason why\\n  \"],[8],[0,\"\\n\\n\"],[8]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/register.hbs" } });
-});
-define("wistem-app-frontend/templates/search", ["exports"], function (exports) {
-  "use strict";
-
-  Object.defineProperty(exports, "__esModule", {
-    value: true
-  });
-  exports.default = Ember.HTMLBars.template({ "id": "0FsG0oJ2", "block": "{\"symbols\":[\"item\",\"panel\",\"expanded\",\"advsearch\",\"expanded\",\"purpose\",\"awardsource\",\"applicant\",\"stemfields\"],\"statements\":[[4,\"paper-expansion-panel\",null,[[\"expanded\"],[true]],{\"statements\":[[4,\"component\",[[19,2,[\"collapsed\"]]],null,{\"statements\":[[0,\"    \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Search for awards\"],[8],[0,\"\\n    \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_down\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,2,[\"expanded\"]]],null,{\"statements\":[[4,\"component\",[[19,3,[\"header\"]]],null,{\"statements\":[[0,\"      \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Search for awards\"],[8],[0,\"\\n      \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_up\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,3,[\"content\"]]],null,{\"statements\":[[0,\"      \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n        \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Award Title\",[20,[\"title\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"title\"]]],null]],null]]]],false],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"flex-30\"],[7],[0,\"\\n          Filter by stem field:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"stemfields\"]],[20,[\"stemfield\"]],\"Select stem fields...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"stemfield\"]]],null]],null]]],{\"statements\":[[0,\"            \"],[1,[19,9,[]],false],[0,\"\\n\"]],\"parameters\":[9]},null],[0,\"        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"flex-30\"],[7],[0,\"\\n          Filter by who can apply:\\n\"],[4,\"power-select-multiple\",null,[[\"options\",\"selected\",\"placeholder\",\"onchange\"],[[20,[\"model\",\"applicanttype\"]],[20,[\"applicanttype\"]],\"Select applicant types...\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"applicanttype\"]]],null]],null]]],{\"statements\":[[0,\"            \"],[1,[19,8,[]],false],[0,\"\\n\"]],\"parameters\":[8]},null],[0,\"        \"],[8],[0,\"\\n      \"],[8],[0,\"\\n\"],[4,\"paper-expansion-panel\",null,null,{\"statements\":[[4,\"component\",[[19,4,[\"collapsed\"]]],null,{\"statements\":[[0,\"          \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Advanced search\"],[8],[0,\"\\n          \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_down\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,4,[\"expanded\"]]],null,{\"statements\":[[4,\"component\",[[19,5,[\"header\"]]],null,{\"statements\":[[0,\"            \"],[6,\"div\"],[9,\"class\",\"md-panel-title\"],[7],[0,\"Advanced search\"],[8],[0,\"\\n            \"],[1,[25,\"paper-icon\",[\"keyboard_arrow_up\"],null],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"component\",[[19,5,[\"content\"]]],null,{\"statements\":[[0,\"            \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n              \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Description\",[20,[\"description\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"description\"]]],null]],null]]]],false],[0,\"\\n              \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Award URL\",[20,[\"awardurl\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardurl\"]]],null]],null]]]],false],[0,\"\\n              \"],[1,[25,\"paper-input\",null,[[\"class\",\"label\",\"value\",\"onChange\"],[\"flex\",\"Sponsor\",[20,[\"sponsor\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"sponsor\"]]],null]],null]]]],false],[0,\"\\n            \"],[8],[0,\"\\n            \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n\"],[4,\"power-select-multiple\",null,[[\"class\",\"options\",\"selected\",\"placeholder\",\"onchange\"],[\"flex\",[20,[\"model\",\"awardsources\"]],[20,[\"awardsources\"]],\"Sources\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardsources\"]]],null]],null]]],{\"statements\":[[0,\"                \"],[1,[19,7,[]],false],[0,\"\\n\"]],\"parameters\":[7]},null],[4,\"power-select-multiple\",null,[[\"class\",\"options\",\"selected\",\"placeholder\",\"onchange\"],[\"flex\",[20,[\"model\",\"awardpurpose\"]],[20,[\"awardpurpose\"]],\"Purpose\",[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"awardpurpose\"]]],null]],null]]],{\"statements\":[[0,\"                \"],[1,[19,6,[]],false],[0,\"\\n\"]],\"parameters\":[6]},null],[0,\"            \"],[8],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[5]},null]],\"parameters\":[4]},null]],\"parameters\":[]},null],[4,\"component\",[[19,3,[\"footer\"]]],null,{\"statements\":[[0,\"        \"],[4,\"paper-button\",null,[[\"accent\",\"class\",\"onClick\"],[true,\"flex\",[25,\"action\",[[19,0,[]],\"search\"],null]]],{\"statements\":[[0,\"Find Awards\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[3]},null]],\"parameters\":[2]},null],[0,\"\\n\"],[4,\"paper-list\",null,null,{\"statements\":[[4,\"each\",[[20,[\"model\",\"awards\"]]],null,{\"statements\":[[4,\"paper-item\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"openDialog\",[19,1,[]]],null]]],{\"statements\":[[0,\"      \"],[1,[25,\"award-listing\",null,[[\"item\"],[[19,1,[]]]]],false],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[1]},null]],\"parameters\":[]},null],[0,\"\\n\\n\"],[4,\"if\",[[20,[\"showDialog\"]]],null,{\"statements\":[[4,\"paper-dialog\",null,[[\"class\",\"onClose\",\"origin\",\"clickOutsideToClose\"],[\"flex-77\",[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null],[20,[\"dialogOrigin\"]],true]],{\"statements\":[[4,\"paper-toolbar\",null,null,{\"statements\":[[4,\"paper-toolbar-tools\",null,null,{\"statements\":[[0,\"        \"],[6,\"h2\"],[7],[1,[20,[\"selectedAward\",\"title\"]],false],[8],[0,\"\\n        \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n        \"],[4,\"paper-button\",null,[[\"iconButton\",\"onClick\"],[true,[25,\"action\",[[19,0,[]],\"closeDialog\",\"cancel\"],null]]],{\"statements\":[[1,[25,\"paper-icon\",null,[[\"icon\"],[\"close\"]]],false]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-content\",null,null,{\"statements\":[[0,\"      \"],[1,[25,\"award-display\",null,[[\"selectedAward\"],[[20,[\"selectedAward\"]]]]],false],[0,\"\\n\"]],\"parameters\":[]},null],[0,\"\\n\"],[4,\"paper-dialog-actions\",null,[[\"class\"],[\"layout-row\"]],{\"statements\":[[0,\"      \"],[6,\"span\"],[9,\"class\",\"flex\"],[7],[8],[0,\"\\n      \"],[4,\"paper-button\",null,[[\"onClick\"],[[25,\"action\",[[19,0,[]],\"closeDialog\",\"ok\"],null]]],{\"statements\":[[0,\"OK\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"parameters\":[]},null]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/search.hbs" } });
+  exports.default = Ember.HTMLBars.template({ "id": "n4x4rg3Q", "block": "{\"symbols\":[\"card\",\"form\",\"title\",\"text\"],\"statements\":[[6,\"div\"],[9,\"class\",\"layout-column flex layout-align-center-center\"],[7],[0,\"\\n\"],[4,\"paper-card\",null,[[\"class\"],[\"landing-page-card\"]],{\"statements\":[[4,\"component\",[[19,1,[\"title\"]]],null,{\"statements\":[[4,\"component\",[[19,3,[\"text\"]]],null,{\"statements\":[[0,\"        \"],[4,\"component\",[[19,4,[\"headline\"]]],null,{\"statements\":[[0,\"Register for WiSTEM Award Tracker\"]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[4]},null]],\"parameters\":[3]},null],[4,\"component\",[[19,1,[\"content\"]]],null,{\"statements\":[[4,\"paper-form\",null,[[\"onSubmit\"],[[25,\"action\",[[19,0,[]],\"register\"],null]]],{\"statements\":[[0,\"        \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n          \"],[1,[25,\"component\",[[19,2,[\"input\"]]],[[\"class\",\"required\",\"customValidation\",\"label\",\"value\",\"onChange\"],[\"flex\",true,[20,[\"emailValidation\"]],\"Username\",[20,[\"model\",\"username\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"model\",\"username\"]]],null]],null]]]],false],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n          \"],[1,[25,\"component\",[[19,2,[\"input\"]]],[[\"class\",\"required\",\"label\",\"type\",\"customValidations\",\"value\",\"onChange\"],[\"flex\",true,\"Password\",\"password\",[20,[\"passwordValidation\"]],[20,[\"model\",\"password\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"model\",\"password\"]]],null]],null]]]],false],[0,\"\\n          \"],[1,[25,\"component\",[[19,2,[\"input\"]]],[[\"class\",\"required\",\"label\",\"type\",\"customValidations\",\"value\",\"onChange\"],[\"flex\",true,\"Confirm Password\",\"password\",[20,[\"passwordValidation\"]],[20,[\"confirmpassword\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"confirmpassword\"]]],null]],null]]]],false],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n          \"],[1,[25,\"component\",[[19,2,[\"input\"]]],[[\"class\",\"required\",\"type\",\"label\",\"customValidations\",\"value\",\"onChange\"],[\"flex\",true,\"email\",\"Email\",[20,[\"emailValidation\"]],[20,[\"model\",\"email\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"model\",\"email\"]]],null]],null]]]],false],[0,\"\\n          \"],[1,[25,\"component\",[[19,2,[\"input\"]]],[[\"class\",\"required\",\"type\",\"label\",\"customValidations\",\"value\",\"onChange\"],[\"flex\",true,\"email\",\"Email\",[20,[\"emailValidation\"]],[20,[\"confirmemail\"]],[25,\"action\",[[19,0,[]],[25,\"mut\",[[20,[\"confirmemail\"]]],null]],null]]]],false],[0,\"\\n        \"],[8],[0,\"\\n        \"],[6,\"div\"],[9,\"class\",\"layout-row\"],[7],[0,\"\\n          \"],[4,\"component\",[[19,2,[\"submit-button\"]]],[[\"class\",\"disabled\",\"raised\"],[\"flex\",[20,[\"invalidForm\"]],true]],{\"statements\":[[0,\"Register\"]],\"parameters\":[]},null],[0,\"\\n        \"],[8],[0,\"\\n\"]],\"parameters\":[2]},null]],\"parameters\":[]},null],[0,\"\\n\"]],\"parameters\":[1]},null],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/register.hbs" } });
 });
 define('wistem-app-frontend/utils/clamp', ['exports', 'ember-paper/utils/clamp'], function (exports, _clamp) {
   'use strict';

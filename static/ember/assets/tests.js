@@ -15,31 +15,6 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'app.js should pass ESLint\n\n');
   });
 
-  QUnit.test('components/add-award.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/add-award.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/award-display.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/award-display.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/award-listing.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/award-listing.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/edit-award.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/edit-award.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('components/view-list-button.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'components/view-list-button.js should pass ESLint\n\n');
-  });
-
   QUnit.test('controllers/application.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'controllers/application.js should pass ESLint\n\n');
@@ -47,27 +22,17 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
 
   QUnit.test('controllers/awards.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/awards.js should pass ESLint\n\n41:5 - Unexpected console statement. (no-console)\n53:11 - \'regex\' is already defined. (no-redeclare)\n61:11 - \'regex\' is already defined. (no-redeclare)\n69:11 - \'regex\' is already defined. (no-redeclare)\n135:32 - \'$\' is not defined. (no-undef)');
-  });
-
-  QUnit.test('controllers/edit-award.js', function (assert) {
-    assert.expect(1);
-    assert.ok(false, 'controllers/edit-award.js should pass ESLint\n\n7:7 - Unexpected console statement. (no-console)\n11:7 - Unexpected console statement. (no-console)');
+    assert.ok(false, 'controllers/awards.js should pass ESLint\n\n60:11 - \'regex\' is already defined. (no-redeclare)\n68:11 - \'regex\' is already defined. (no-redeclare)\n76:11 - \'regex\' is already defined. (no-redeclare)\n146:32 - \'$\' is not defined. (no-undef)');
   });
 
   QUnit.test('controllers/login.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/login.js should pass ESLint\n\n18:7 - Unexpected console statement. (no-console)');
+    assert.ok(true, 'controllers/login.js should pass ESLint\n\n');
   });
 
   QUnit.test('controllers/register.js', function (assert) {
     assert.expect(1);
-    assert.ok(false, 'controllers/register.js should pass ESLint\n\n5:48 - \'department\' is defined but never used. (no-unused-vars)');
-  });
-
-  QUnit.test('controllers/search.js', function (assert) {
-    assert.expect(1);
-    assert.ok(false, 'controllers/search.js should pass ESLint\n\n21:32 - \'$\' is not defined. (no-undef)');
+    assert.ok(false, 'controllers/register.js should pass ESLint\n\n34:19 - \'Ember\' is not defined. (no-undef)\n37:16 - \'Ember\' is not defined. (no-undef)\n40:16 - \'Ember\' is not defined. (no-undef)\n54:7 - \'Ember\' is not defined. (no-undef)\n68:2 - Mixed spaces and tabs. (no-mixed-spaces-and-tabs)\n69:2 - Mixed spaces and tabs. (no-mixed-spaces-and-tabs)\n70:2 - Mixed spaces and tabs. (no-mixed-spaces-and-tabs)\n78:2 - Mixed spaces and tabs. (no-mixed-spaces-and-tabs)\n79:2 - Mixed spaces and tabs. (no-mixed-spaces-and-tabs)\n80:2 - Mixed spaces and tabs. (no-mixed-spaces-and-tabs)');
   });
 
   QUnit.test('initializers/auth-manager.js', function (assert) {
@@ -135,11 +100,6 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'router.js should pass ESLint\n\n');
   });
 
-  QUnit.test('routes/awardinfo.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'routes/awardinfo.js should pass ESLint\n\n');
-  });
-
   QUnit.test('routes/awards.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'routes/awards.js should pass ESLint\n\n');
@@ -162,12 +122,7 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
 
   QUnit.test('routes/register.js', function (assert) {
     assert.expect(1);
-    assert.ok(true, 'routes/register.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('routes/search.js', function (assert) {
-    assert.expect(1);
-    assert.ok(false, 'routes/search.js should pass ESLint\n\n17:17 - \'Ember\' is not defined. (no-undef)');
+    assert.ok(false, 'routes/register.js should pass ESLint\n\n14:8 - \'RSVP\' is defined but never used. (no-unused-vars)');
   });
 
   QUnit.test('services/auth-manager.js', function (assert) {
@@ -339,64 +294,6 @@ define('wistem-app-frontend/tests/helpers/start-app', ['exports', 'wistem-app-fr
     });
   }
 });
-define('wistem-app-frontend/tests/integration/components/award-display-test', ['ember-qunit'], function (_emberQunit) {
-  'use strict';
-
-  (0, _emberQunit.moduleForComponent)('award-display', 'Integration | Component | award display', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      "id": "eIJc3h3h",
-      "block": "{\"symbols\":[],\"statements\":[[1,[18,\"award-display\"],false]],\"hasEval\":false}",
-      "meta": {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      "id": "mfqkr+el",
-      "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[4,\"award-display\",null,null,{\"statements\":[[0,\"      template block text\\n\"]],\"parameters\":[]},null],[0,\"  \"]],\"hasEval\":false}",
-      "meta": {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
-define('wistem-app-frontend/tests/integration/components/award-listing-test', ['ember-qunit'], function (_emberQunit) {
-  'use strict';
-
-  (0, _emberQunit.moduleForComponent)('award-listing', 'Integration | Component | award listing', {
-    integration: true
-  });
-
-  (0, _emberQunit.test)('it renders', function (assert) {
-    // Set any properties with this.set('myProperty', 'value');
-    // Handle any actions with this.on('myAction', function(val) { ... });
-
-    this.render(Ember.HTMLBars.template({
-      "id": "erEfdEWS",
-      "block": "{\"symbols\":[],\"statements\":[[1,[18,\"award-listing\"],false]],\"hasEval\":false}",
-      "meta": {}
-    }));
-
-    assert.equal(this.$().text().trim(), '');
-
-    // Template block usage:
-    this.render(Ember.HTMLBars.template({
-      "id": "fXBfsFRQ",
-      "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[4,\"award-listing\",null,null,{\"statements\":[[0,\"      template block text\\n\"]],\"parameters\":[]},null],[0,\"  \"]],\"hasEval\":false}",
-      "meta": {}
-    }));
-
-    assert.equal(this.$().text().trim(), 'template block text');
-  });
-});
 define('wistem-app-frontend/tests/test-helper', ['wistem-app-frontend/tests/helpers/resolver', 'ember-qunit', 'ember-cli-qunit'], function (_resolver, _emberQunit, _emberCliQunit) {
   'use strict';
 
@@ -428,16 +325,6 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
     assert.ok(true, 'helpers/start-app.js should pass ESLint\n\n');
   });
 
-  QUnit.test('integration/components/award-display-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/award-display-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('integration/components/award-listing-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'integration/components/award-listing-test.js should pass ESLint\n\n');
-  });
-
   QUnit.test('test-helper.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'test-helper.js should pass ESLint\n\n');
@@ -456,11 +343,6 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
   QUnit.test('unit/controllers/register-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/controllers/register-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('unit/controllers/search-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'unit/controllers/search-test.js should pass ESLint\n\n');
   });
 
   QUnit.test('unit/initializers/auth-manager-test.js', function (assert) {
@@ -513,11 +395,6 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
     assert.ok(true, 'unit/models/user-test.js should pass ESLint\n\n');
   });
 
-  QUnit.test('unit/routes/awardinfo-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'unit/routes/awardinfo-test.js should pass ESLint\n\n');
-  });
-
   QUnit.test('unit/routes/index-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/index-test.js should pass ESLint\n\n');
@@ -536,11 +413,6 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
   QUnit.test('unit/routes/register-test.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'unit/routes/register-test.js should pass ESLint\n\n');
-  });
-
-  QUnit.test('unit/routes/search-test.js', function (assert) {
-    assert.expect(1);
-    assert.ok(true, 'unit/routes/search-test.js should pass ESLint\n\n');
   });
 
   QUnit.test('unit/services/auth-manager-test.js', function (assert) {
@@ -585,20 +457,6 @@ define('wistem-app-frontend/tests/unit/controllers/register-test', ['ember-qunit
   'use strict';
 
   (0, _emberQunit.moduleFor)('controller:register', 'Unit | Controller | register', {
-    // Specify the other units that are required for this test.
-    // needs: ['controller:foo']
-  });
-
-  // Replace this with your real tests.
-  (0, _emberQunit.test)('it exists', function (assert) {
-    var controller = this.subject();
-    assert.ok(controller);
-  });
-});
-define('wistem-app-frontend/tests/unit/controllers/search-test', ['ember-qunit'], function (_emberQunit) {
-  'use strict';
-
-  (0, _emberQunit.moduleFor)('controller:search', 'Unit | Controller | search', {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
   });
@@ -794,19 +652,6 @@ define('wistem-app-frontend/tests/unit/models/user-test', ['ember-qunit'], funct
     assert.ok(!!model);
   });
 });
-define('wistem-app-frontend/tests/unit/routes/awardinfo-test', ['ember-qunit'], function (_emberQunit) {
-  'use strict';
-
-  (0, _emberQunit.moduleFor)('route:awardinfo', 'Unit | Route | awardinfo', {
-    // Specify the other units that are required for this test.
-    // needs: ['controller:foo']
-  });
-
-  (0, _emberQunit.test)('it exists', function (assert) {
-    var route = this.subject();
-    assert.ok(route);
-  });
-});
 define('wistem-app-frontend/tests/unit/routes/index-test', ['ember-qunit'], function (_emberQunit) {
   'use strict';
 
@@ -850,19 +695,6 @@ define('wistem-app-frontend/tests/unit/routes/register-test', ['ember-qunit'], f
   'use strict';
 
   (0, _emberQunit.moduleFor)('route:register', 'Unit | Route | register', {
-    // Specify the other units that are required for this test.
-    // needs: ['controller:foo']
-  });
-
-  (0, _emberQunit.test)('it exists', function (assert) {
-    var route = this.subject();
-    assert.ok(route);
-  });
-});
-define('wistem-app-frontend/tests/unit/routes/search-test', ['ember-qunit'], function (_emberQunit) {
-  'use strict';
-
-  (0, _emberQunit.moduleFor)('route:search', 'Unit | Route | search', {
     // Specify the other units that are required for this test.
     // needs: ['controller:foo']
   });
