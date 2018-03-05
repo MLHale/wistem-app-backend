@@ -15,6 +15,11 @@ define('wistem-app-frontend/tests/app.lint-test', [], function () {
     assert.ok(true, 'app.js should pass ESLint\n\n');
   });
 
+  QUnit.test('components/award-display.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'components/award-display.js should pass ESLint\n\n');
+  });
+
   QUnit.test('controllers/application.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'controllers/application.js should pass ESLint\n\n');
@@ -294,6 +299,35 @@ define('wistem-app-frontend/tests/helpers/start-app', ['exports', 'wistem-app-fr
     });
   }
 });
+define('wistem-app-frontend/tests/integration/components/award-display-test', ['ember-qunit'], function (_emberQunit) {
+  'use strict';
+
+  (0, _emberQunit.moduleForComponent)('award-display', 'Integration | Component | award display', {
+    integration: true
+  });
+
+  (0, _emberQunit.test)('it renders', function (assert) {
+    // Set any properties with this.set('myProperty', 'value');
+    // Handle any actions with this.on('myAction', function(val) { ... });
+
+    this.render(Ember.HTMLBars.template({
+      "id": "eIJc3h3h",
+      "block": "{\"symbols\":[],\"statements\":[[1,[18,\"award-display\"],false]],\"hasEval\":false}",
+      "meta": {}
+    }));
+
+    assert.equal(this.$().text().trim(), '');
+
+    // Template block usage:
+    this.render(Ember.HTMLBars.template({
+      "id": "mfqkr+el",
+      "block": "{\"symbols\":[],\"statements\":[[0,\"\\n\"],[4,\"award-display\",null,null,{\"statements\":[[0,\"      template block text\\n\"]],\"parameters\":[]},null],[0,\"  \"]],\"hasEval\":false}",
+      "meta": {}
+    }));
+
+    assert.equal(this.$().text().trim(), 'template block text');
+  });
+});
 define('wistem-app-frontend/tests/test-helper', ['wistem-app-frontend/tests/helpers/resolver', 'ember-qunit', 'ember-cli-qunit'], function (_resolver, _emberQunit, _emberCliQunit) {
   'use strict';
 
@@ -323,6 +357,11 @@ define('wistem-app-frontend/tests/tests.lint-test', [], function () {
   QUnit.test('helpers/start-app.js', function (assert) {
     assert.expect(1);
     assert.ok(true, 'helpers/start-app.js should pass ESLint\n\n');
+  });
+
+  QUnit.test('integration/components/award-display-test.js', function (assert) {
+    assert.expect(1);
+    assert.ok(true, 'integration/components/award-display-test.js should pass ESLint\n\n');
   });
 
   QUnit.test('test-helper.js', function (assert) {

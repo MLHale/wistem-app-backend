@@ -3,7 +3,7 @@
 # @Email:  mlhale@unomaha.edu
 # @Filename: models.py
 # @Last modified by:   matthale
-# @Last modified time: 2018-03-02T01:35:12-06:00
+# @Last modified time: 2018-03-05T14:15:06-06:00
 # @Copyright: Copyright (C) 2018 Matthew L. Hale
 
 
@@ -72,21 +72,21 @@ class Award(models.Model):
 
 class Source(models.Model):
     # Award Source choices
-    FED = 'federal'
-    LOCAL = 'local'
-    STATE = 'state'
-    PRIV = 'private_industry'
-    INT = 'internal'
-    SOURCE_OTHER = 'other'
-    AWARD_SOURCE_CHOICES = (
-        (FED, 'Federal Government'),
-        (STATE,'State Government'),
-        (LOCAL, 'Local Government'),
-        (INT, 'Internal'),
-        (PRIV, 'Private Industry'),
-        (SOURCE_OTHER, 'Other')
-    )
-    name = models.CharField(max_length=100, choices=AWARD_SOURCE_CHOICES, default=SOURCE_OTHER, blank=False, unique=True)
+    # FED = 'federal'
+    # LOCAL = 'local'
+    # STATE = 'state'
+    # PRIV = 'private_industry'
+    # INT = 'internal'
+    # SOURCE_OTHER = 'other'
+    # AWARD_SOURCE_CHOICES = (
+    #     (FED, 'Federal Government'),
+    #     (STATE,'State Government'),
+    #     (LOCAL, 'Local Government'),
+    #     (INT, 'Internal'),
+    #     (PRIV, 'Private Industry'),
+    #     (SOURCE_OTHER, 'Other')
+    # )
+    name = models.CharField(max_length=100, blank=False, unique=True) #choices=AWARD_SOURCE_CHOICES, default=SOURCE_OTHER,
 
     def __str__(self):
         return str(self.name)

@@ -39,6 +39,15 @@ define('wistem-app-frontend/components/async-button', ['exports', 'ember-cli-htm
   });
   exports.default = _asyncButton.default;
 });
+define('wistem-app-frontend/components/award-display', ['exports'], function (exports) {
+  'use strict';
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  var Component = Ember.Component;
+  exports.default = Component.extend({});
+});
 define('wistem-app-frontend/components/basic-dropdown', ['exports', 'ember-basic-dropdown/components/basic-dropdown'], function (exports, _basicDropdown) {
   'use strict';
 
@@ -3406,6 +3415,14 @@ define("wistem-app-frontend/templates/components/async-button", ["exports"], fun
   });
   exports.default = Ember.HTMLBars.template({ "id": "Tz9YJNeR", "block": "{\"symbols\":[],\"statements\":[[4,\"if\",[[20,[\"isLoading\"]]],null,{\"statements\":[[0,\"  Loading...\\n\"]],\"parameters\":[]},{\"statements\":[[4,\"if\",[[20,[\"isDefault\"]]],null,{\"statements\":[[0,\"    \"],[1,[18,\"value\"],false],[0,\"\\n\"]],\"parameters\":[]},{\"statements\":[[4,\"if\",[[20,[\"isValid\"]]],null,{\"statements\":[[0,\"      Success!\\n\"]],\"parameters\":[]},{\"statements\":[[0,\"      Error!\\n\"]],\"parameters\":[]}]],\"parameters\":[]}]],\"parameters\":[]}]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/async-button.hbs" } });
 });
+define("wistem-app-frontend/templates/components/award-display", ["exports"], function (exports) {
+  "use strict";
+
+  Object.defineProperty(exports, "__esModule", {
+    value: true
+  });
+  exports.default = Ember.HTMLBars.template({ "id": "+MOisJM1", "block": "{\"symbols\":[\"purpose\",\"stem\"],\"statements\":[[2,\"\\n@Author: Matthew Hale <matthale>\\n@Date:   2018-03-05T13:55:43-06:00\\n@Email:  mlhale@unomaha.edu\\n@Filename: award-display.hbs\\n@Last modified by:   matthale\\n@Last modified time: 2018-03-05T14:07:43-06:00\\n@Copyright: Copyright (C) 2018 Matthew L. Hale\\n\"],[0,\"\\n\\n\\n\\n\"],[6,\"div\"],[7],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Deadline: \"],[1,[25,\"moment-to\",[[20,[\"now\"]],[20,[\"selectedAward\",\"submdeadline\"]]],null],false],[0,\" (\"],[1,[25,\"moment-format\",[[20,[\"selectedAward\",\"submdeadline\"]],\"MM-DD-YYYY HH:mm\"],null],false],[0,\")\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Description: \"],[1,[20,[\"selectedAward\",\"description\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Sponsor: \"],[1,[20,[\"selectedAward\",\"sponsororg\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    STEM Fields:\\n\"],[4,\"each\",[[20,[\"selectedAward\",\"stemfield\"]]],null,{\"statements\":[[0,\"      \"],[1,[19,2,[\"name\"]],false],[0,\"\\n\"]],\"parameters\":[2]},null],[0,\"  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Award Purpose:\\n\"],[4,\"each\",[[20,[\"selectedAward\",\"awardpurpose\"]]],null,{\"statements\":[[0,\"      \"],[1,[19,1,[\"name\"]],false],[0,\"\\n\"]],\"parameters\":[1]},null],[0,\"  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Source: \"],[1,[20,[\"selectedAward\",\"source\",\"name\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Additional Information: \"],[1,[20,[\"selectedAward\",\"additionalinfo\"]],false],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Nomination Required: \"],[4,\"if\",[[20,[\"selectedAward\",\"nomreq\"]]],null,{\"statements\":[[0,\"Yes \"]],\"parameters\":[]},{\"statements\":[[0,\" No\"]],\"parameters\":[]}],[0,\"\\n  \"],[8],[0,\"\\n  \"],[6,\"p\"],[7],[0,\"\\n    Submission deadline:\\n  \"],[8],[0,\"\\n\"],[8],[0,\"\\n\"]],\"hasEval\":false}", "meta": { "moduleName": "wistem-app-frontend/templates/components/award-display.hbs" } });
+});
 define("wistem-app-frontend/templates/components/ember-login", ["exports"], function (exports) {
   "use strict";
 
@@ -3489,6 +3506,6 @@ catch(err) {
 });
 
 if (!runningTests) {
-  require("wistem-app-frontend/app")["default"].create({"name":"wistem-app-frontend","version":"0.0.0+50140b81"});
+  require("wistem-app-frontend/app")["default"].create({"name":"wistem-app-frontend","version":"0.0.0+71d46550"});
 }
 //# sourceMappingURL=wistem-app-frontend.map
